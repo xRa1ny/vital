@@ -120,4 +120,23 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(customVitalPlayerListener);
         getVitalComponentManager().registerVitalComponent(customVitalPlayerTimeoutHandler);
     }
+
+    /**
+     * Registers custom VitalPlayerManagement using the specified CustomVitalPlayerClass, instantiating every needed Dependency required for VitalPlayerManagement.
+     *
+     * @param customVitalPlayerClass The custom VitalPlayer Class.
+     * @param customVitalPlayerTimeout The custom VitalPlayerTimeout.
+     * @param <P> VitalPlayer
+     */
+    public <P extends VitalPlayer> void registerSimpleCustomPlayerManagement(@NotNull Class<P> customVitalPlayerClass, int customVitalPlayerTimeout) {
+        unregisterDefaultVitalPlayerManagement();
+
+        final CustomVitalPlayerManager<P> customVitalPlayerManager = new CustomVitalPlayerManager<>();
+        final CustomVitalPlayerListener<P> customVitalPlayerListener = new CustomVitalPlayerListener<>(getJavaPlugin(), customVitalPlayerManager, customVitalPlayerTimeout, customVitalPlayerClass);
+        final CustomVitalPlayerTimeoutHandler<P> customVitalPlayerTimeoutHandler = new CustomVitalPlayerTimeoutHandler<>(getJavaPlugin(), customVitalPlayerManager);
+
+        getVitalComponentManager().registerVitalComponent(customVitalPlayerManager);
+        getVitalComponentManager().registerVitalComponent(customVitalPlayerListener);
+        getVitalComponentManager().registerVitalComponent(customVitalPlayerTimeoutHandler);
+    }
 }
