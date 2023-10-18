@@ -21,20 +21,19 @@ public class VitalPlayer implements VitalComponent {
     private final Player player;
 
     /**
-     * the timeout of this user (unregisters this user when 0)
+     * the timeout of this user (unregisters this user when equal to the configured timeout in manager object)
      */
     @Getter
     @Setter
-    private long timeout;
+    private int timeout;
 
     /**
      * Creates a new instance of VitalPlayer for the given Minecraft player.
      *
      * @param player The Minecraft player to associate with this VitalPlayer.
      */
-    public VitalPlayer(@NotNull Player player, int timeout) {
+    public VitalPlayer(@NotNull Player player) {
         this.player = player;
-        this.timeout = timeout;
     }
 
     /**

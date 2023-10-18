@@ -54,12 +54,12 @@ public class VitalPlayerTimeoutHandler<T extends VitalPlayer> extends VitalRepea
             }
 
             // Check if the player's timeout has reached or fallen below zero.
-            if (vitalPlayer.getTimeout() <= 0) {
+            if (vitalPlayer.getTimeout() >= vitalPlayerManager.getVitalPlayerTimeout()) {
                 // Unregister the VitalPlayer if the timeout threshold is exceeded.
                 vitalPlayerManager.unregisterVitalComponent(vitalPlayer);
             } else {
-                // Decrease the player's timeout by 1 if they are still within the threshold.
-                vitalPlayer.setTimeout(vitalPlayer.getTimeout() - 1);
+                // Increase the player's timeout by 1 if they are still within the threshold.
+                vitalPlayer.setTimeout(vitalPlayer.getTimeout() + 1);
             }
         }
     }

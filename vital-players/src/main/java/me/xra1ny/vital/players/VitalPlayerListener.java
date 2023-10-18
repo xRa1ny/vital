@@ -18,18 +18,16 @@ import java.util.Optional;
  */
 public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalListener {
     private final VitalPlayerManager<T> vitalPlayerManager;
-    private final int vitalUserTimeout;
 
     /**
      * Creates a new instance of VitalPlayerListener.
      *
-     * @param javaPlugin            The JavaPlugin instance associated with the listener.
+     * @param javaPlugin         The JavaPlugin instance associated with the listener.
      * @param vitalPlayerManager The VitalUserManagement instance to manage VitalPlayer components.
      */
-    public VitalPlayerListener(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<T> vitalPlayerManager, int vitalPlayerTimeout) {
+    public VitalPlayerListener(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<T> vitalPlayerManager) {
         super(javaPlugin);
         this.vitalPlayerManager = vitalPlayerManager;
-        this.vitalUserTimeout = vitalPlayerTimeout;
     }
 
     /**
@@ -45,7 +43,7 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
 
         if (optionalVitalPlayer.isEmpty()) {
             // Create a new VitalPlayer for the joining player.
-            final T vitalPlayer = vitalPlayerType().getDeclaredConstructor(Player.class, int.class).newInstance(e.getPlayer(), vitalUserTimeout);
+            final T vitalPlayer = vitalPlayerType().getDeclaredConstructor(Player.class, int.class).newInstance(e.getPlayer());
 
             // Register the VitalPlayer with VitalUserManagement.
             vitalPlayerManager.registerVitalComponent(vitalPlayer);

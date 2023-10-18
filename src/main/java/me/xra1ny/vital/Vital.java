@@ -38,8 +38,8 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(defaultVitalConfig);
 
         // Register VitalPlayerManagement
-        final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager();
-        final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(getJavaPlugin(), defaultVitalPlayerManager, defaultVitalConfig.getVitalPlayerTimeout());
+        final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(defaultVitalConfig.getVitalPlayerTimeout());
+        final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(getJavaPlugin(), defaultVitalPlayerManager);
         final DefaultVitalPlayerTimeoutHandler defaultVitalPlayerTimeoutHandler = new DefaultVitalPlayerTimeoutHandler(getJavaPlugin(), defaultVitalPlayerManager);
 
         getVitalComponentManager().registerVitalComponent(defaultVitalPlayerManager);
@@ -131,8 +131,8 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     public <P extends VitalPlayer> void registerSimpleCustomPlayerManagement(@NotNull Class<P> customVitalPlayerClass, int customVitalPlayerTimeout) {
         unregisterDefaultVitalPlayerManagement();
 
-        final CustomVitalPlayerManager<P> customVitalPlayerManager = new CustomVitalPlayerManager<>();
-        final CustomVitalPlayerListener<P> customVitalPlayerListener = new CustomVitalPlayerListener<>(getJavaPlugin(), customVitalPlayerManager, customVitalPlayerTimeout, customVitalPlayerClass);
+        final CustomVitalPlayerManager<P> customVitalPlayerManager = new CustomVitalPlayerManager<>(customVitalPlayerTimeout);
+        final CustomVitalPlayerListener<P> customVitalPlayerListener = new CustomVitalPlayerListener<>(getJavaPlugin(), customVitalPlayerManager, customVitalPlayerClass);
         final CustomVitalPlayerTimeoutHandler<P> customVitalPlayerTimeoutHandler = new CustomVitalPlayerTimeoutHandler<>(getJavaPlugin(), customVitalPlayerManager);
 
         getVitalComponentManager().registerVitalComponent(customVitalPlayerManager);
