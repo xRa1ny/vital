@@ -58,7 +58,13 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
     @EventHandler
     public final void onPlayerLeaveServer(@NotNull PlayerQuitEvent e) {
         // Retrieve the VitalPlayer associated with the leaving player.
-        final T vitalPlayer = vitalPlayerManager.getVitalComponent(e.getPlayer().getUniqueId()).get();
+        final Optional<T> optionalVitalPlayer = vitalPlayerManager.getVitalComponent(e.getPlayer().getUniqueId());
+
+        if(optionalVitalPlayer.isEmpty()) {
+            return;
+        }
+
+        final T vitalPlayer = optionalVitalPlayer.get();
 
         // Unregister the VitalPlayer from VitalUserManagement.
         vitalPlayerManager.unregisterVitalComponent(vitalPlayer);
