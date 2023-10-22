@@ -22,6 +22,7 @@ public final class VitalMinigameManager implements VitalComponent {
      * @param <T> The type of minigame state.
      * @return True if the current state is of the specified class, otherwise false.
      */
+    @SuppressWarnings("unused")
     public <T extends VitalMinigameState> boolean isVitalMinigameState(@NotNull Class<T> vitalMinigameStateClass) {
         return vitalMinigameStateClass.equals(vitalMinigameState.getClass());
     }
@@ -32,6 +33,7 @@ public final class VitalMinigameManager implements VitalComponent {
      *
      * @param vitalMinigameState The new minigame state to set.
      */
+    @SuppressWarnings("unused")
     public void setVitalMinigameState(@NotNull VitalMinigameState vitalMinigameState) {
         if (this.vitalMinigameState != null) {
             if(this.vitalMinigameState instanceof VitalCountdownMinigameState vitalCountdownMinigameState) {

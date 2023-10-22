@@ -132,6 +132,7 @@ public abstract class VitalInventoryMenu implements AnnotatedVitalComponent<Vita
      *
      * @param player The player for whom the menu is opened.
      */
+    @SuppressWarnings({"deprecation", "DataFlowIssue"})
     public final void open(@NotNull Player player) {
         this.inventory = Bukkit.createInventory(this, this.size, this.title);
 

@@ -65,6 +65,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      *
      * @param player The player for whom to update the scoreboard.
      */
+    @SuppressWarnings("DataFlowIssue")
     private void update(@NotNull Player player) {
         player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         player.getPlayer().setScoreboard(this.vitalScoreboardContent.getBukkitScoreboard());
@@ -84,6 +85,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
     /**
      * Updates the content of this scoreboard, including titles and scores.
      */
+    @SuppressWarnings({"DataFlowIssue", "deprecation"})
     public void updateContent() {
         this.vitalScoreboardContent.update();
 
@@ -115,6 +117,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      *
      * @param player The player to remove.
      */
+    @SuppressWarnings("DataFlowIssue")
     public void remove(@NotNull Player player) {
         if (!this.playerList.contains(player)) {
             return;

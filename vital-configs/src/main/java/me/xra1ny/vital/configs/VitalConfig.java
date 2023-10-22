@@ -64,6 +64,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     /**
      * Initializes the configuration by creating the file and loading its contents.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @SneakyThrows
     private void initialize(@NotNull JavaPlugin javaPlugin) {
         this.configFile = new File(javaPlugin.getDataFolder(), name);
@@ -84,6 +85,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
      * @param <T>  The type of the returning value.
      * @return The value of the configuration key, or null if the key does not exist.
      */
+    @SuppressWarnings("unchecked")
     @Nullable
     public final <T> T get(@NotNull Class<T> type, @NotNull String key) {
         final Field field = ReflectionUtils.getAllFields(getClass()).stream()
@@ -104,6 +106,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     /**
      * Saves the configuration settings to the file.
      */
+    @SuppressWarnings({"unchecked", "deprecation"})
     @SneakyThrows
     public final void save() {
         for (Field field : ReflectionUtils.getAllFields(getClass())) {
@@ -118,6 +121,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
             Object fieldValue = field.get(this);
 
             if(fieldValue instanceof String stringFieldValue) {
+                //noinspection UnnecessaryUnicodeEscape
                 fieldValue = ChatColor.translateAlternateColorCodes('\u00A7', stringFieldValue);
             }
 
@@ -130,6 +134,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     /**
      * Updates the configuration, reloading all values from the file into class fields.
      */
+    @SuppressWarnings({"unchecked", "deprecation"})
     @SneakyThrows
     public final void update() {
         for (Field field : ReflectionUtils.getAllFields(getClass())) {

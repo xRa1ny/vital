@@ -21,6 +21,7 @@ import java.util.List;
  *
  * @author xRa1ny
  */
+@Getter(onMethod = @__(@NotNull))
 @Log
 public final class VitalHologramManager extends VitalComponentListManager<VitalHologram> {
 
@@ -29,13 +30,11 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
     /**
      * The config file of this hologram manager.
      */
-    @Getter(onMethod = @__(@NotNull))
     private final File configFile;
 
     /**
      * The config of this hologram manager.
      */
-    @Getter(onMethod = @__(@NotNull))
     private final FileConfiguration config;
 
     /**
@@ -81,6 +80,7 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      * Called when this VitalHologramManagement instance is registered.
      * Loads hologram data from the configuration file and creates VitalHologram instances.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void onVitalComponentRegistered() {
         for (String key : this.config.getKeys(false)) {

@@ -28,6 +28,7 @@ import java.util.UUID;
 public final class ItemBuilder {
 	private String name;
 
+	@SuppressWarnings("CanBeFinal")
 	@Builder.Default
 	private Material type = Material.COBBLESTONE;
 
@@ -40,6 +41,7 @@ public final class ItemBuilder {
 	@Singular("enchantment")
 	private Map<Enchantment, Integer> enchantments;
 
+	@SuppressWarnings("CanBeFinal")
 	@Builder.Default
 	private int amount = 1;
 
@@ -48,6 +50,7 @@ public final class ItemBuilder {
 	 *
 	 * @return The constructed ItemStack.
 	 */
+	@SuppressWarnings("deprecation")
 	@NotNull
 	public ItemStack toItemStack() {
 		// Create ItemStack and ItemMeta

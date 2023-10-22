@@ -65,11 +65,13 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         this.vitalCommandArgs = vitalCommandInfo.args();
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public final void onVitalComponentRegistered() {
         javaPlugin.getCommand(name).setExecutor(this);
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public final void onVitalComponentUnregistered() {
         javaPlugin.getCommand(name).setExecutor(null);
@@ -201,6 +203,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
             return true;
         } catch (Exception ex) {
             // Print any exceptions that occur during command execution.
+            //noinspection CallToPrintStackTrace
             ex.printStackTrace();
         }
 
@@ -209,7 +212,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
 
 
     @NotNull
-    private final VitalCommandReturnState executeCommandArgHandlerMethod(@NotNull CommandSender sender, @NotNull VitalCommandArg commandArg, @NotNull String @NotNull [] values) throws InvocationTargetException, IllegalAccessException {
+    private VitalCommandReturnState executeCommandArgHandlerMethod(@NotNull CommandSender sender, @NotNull VitalCommandArg commandArg, @NotNull String @NotNull [] values) throws InvocationTargetException, IllegalAccessException {
         // Initialize a variable to hold the handler method.
         Method commandArgHandlerMethod = null;
 

@@ -23,27 +23,26 @@ import java.util.UUID;
  *
  * @author xRa1ny
  */
+@Getter
 public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo> {
     /**
      * The current Cooldown of this VitalItemStack.
      */
-    @Getter
     @Setter
     private int currentCooldown = 0;
 
     /**
      * The Cooldown of this VitalItemStack.
      */
-    @Getter
     private int cooldown = 0;
 
-    @Getter
     private final boolean localised;
 
     /**
      * Creates a new VitalItemStack based on annotation-defined properties.
      * @see VitalItemStackInfo
      */
+    @SuppressWarnings("DataFlowIssue")
     public VitalItemStack() {
         @Nullable
         final VitalItemStackInfo info = getRequiredAnnotation();
@@ -102,7 +101,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
     public abstract void onRightClick(@NotNull PlayerInteractEvent e, @NotNull Player player);
 
     /**
-     * Called when this item has been left or right clicked, but the cooldown has not yet expired.
+     * Called when this item has been left or right-clicked, but the cooldown has not yet expired.
      * @param e The player interact event.
      * @param player The player.
      */
@@ -141,6 +140,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
         return super.toString().replace(getType() + " x " + getAmount(), getType() + " x 1");
     }
 
+    @SuppressWarnings({"DataFlowIssue", "deprecation"})
     @Override
     public final boolean equals(Object obj) {
         if(!(obj instanceof ItemStack item)) {

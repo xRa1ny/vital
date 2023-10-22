@@ -9,9 +9,9 @@ import me.xra1ny.vital.core.VitalComponentListManager;
  *
  * @author xRa1ny
  */
+@Getter
 @Log
 public class VitalPlayerManager<T extends VitalPlayer> extends VitalComponentListManager<T> {
-    @Getter
     private final int vitalPlayerTimeout;
 
     public VitalPlayerManager(int vitalPlayerTimeout) {

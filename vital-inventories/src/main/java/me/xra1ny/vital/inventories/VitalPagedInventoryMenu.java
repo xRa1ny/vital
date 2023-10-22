@@ -11,11 +11,11 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author xRa1ny
  */
+@Getter
 public abstract class VitalPagedInventoryMenu extends VitalInventoryMenu {
     /**
      * The current page of this paged inventory menu.
      */
-    @Getter
     private long page = 0;
 
     /**

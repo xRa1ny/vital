@@ -101,6 +101,7 @@ public final class VitalHologram implements VitalComponent {
     /**
      * Updates the hologram by recreating its elements.
      */
+    @SuppressWarnings("deprecation")
     public void update() {
         if(base == null) {
             base = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);

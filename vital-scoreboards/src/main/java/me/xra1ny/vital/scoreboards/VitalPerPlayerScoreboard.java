@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -58,6 +57,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      * updates the users specified scoreboard
      * @param player the player
      */
+    @SuppressWarnings("DataFlowIssue")
     public void update(@NotNull Player player) {
         if(!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
@@ -71,6 +71,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
         player.getPlayer().setScoreboard(scoreboard.getBukkitScoreboard());
     }
 
+    @SuppressWarnings({"DataFlowIssue", "deprecation"})
     private void updateContent(@NotNull Player player) {
         if(!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
@@ -107,6 +108,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      * removes the player specified from this per player scoreboard
      * @param player the player
      */
+    @SuppressWarnings("DataFlowIssue")
     public void remove(@NotNull Player player) {
         if(!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
@@ -125,19 +127,5 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
         }
 
         return lines;
-    }
-
-    /**
-     * retrieves the scoreboard content of the player specified
-     * @param player the player
-     * @return the scoreboard content of the player specified
-     */
-    @Nullable
-    public VitalScoreboardContent getContent(@NotNull Player player) {
-        if(!this.vitalScoreboardContentMap.containsKey(player)) {
-            return null;
-        }
-
-        return this.vitalScoreboardContentMap.get(player);
     }
 }

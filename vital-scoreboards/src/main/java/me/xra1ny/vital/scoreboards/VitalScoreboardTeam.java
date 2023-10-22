@@ -82,6 +82,7 @@ public final class VitalScoreboardTeam {
      * @param name      The name of the team.
      * @param scoreboard The scoreboard content to which the team belongs.
      */
+    @SuppressWarnings("deprecation")
     VitalScoreboardTeam(@NotNull String name, @NotNull VitalScoreboardContent scoreboard) {
         this.name = name;
         this.scoreboard = scoreboard;
@@ -91,6 +92,7 @@ public final class VitalScoreboardTeam {
     /**
      * Updates the properties and members of this scoreboard team.
      */
+    @SuppressWarnings("deprecation")
     public void update() {
         this.bukkitTeam.setDisplayName(this.name);
         this.bukkitTeam.setAllowFriendlyFire(this.friendlyFire);

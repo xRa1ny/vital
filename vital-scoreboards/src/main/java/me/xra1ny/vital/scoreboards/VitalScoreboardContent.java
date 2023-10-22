@@ -48,6 +48,7 @@ final class VitalScoreboardContent {
     /**
      * Updates the scoreboard content, including its title and teams.
      */
+    @SuppressWarnings("deprecation")
     public void update() {
         Objective objective = this.bukkitScoreboard.getObjective(ChatColor.stripColor(this.title));
 
