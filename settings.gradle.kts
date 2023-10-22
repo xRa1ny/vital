@@ -9,5 +9,6 @@ include(
         "vital-items",
         "vital-configs",
         "vital-holograms",
-        "vital-scoreboards"
+        "vital-scoreboards",
+        "vital-minigames"
 )

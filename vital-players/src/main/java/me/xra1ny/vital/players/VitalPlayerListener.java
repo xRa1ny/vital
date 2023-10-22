@@ -43,7 +43,7 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
 
         if (optionalVitalPlayer.isEmpty()) {
             // Create a new VitalPlayer for the joining player.
-            final T vitalPlayer = vitalPlayerType().getDeclaredConstructor(Player.class, int.class).newInstance(e.getPlayer());
+            final T vitalPlayer = vitalPlayerType().getDeclaredConstructor(Player.class).newInstance(e.getPlayer());
 
             // Register the VitalPlayer with VitalUserManagement.
             vitalPlayerManager.registerVitalComponent(vitalPlayer);
