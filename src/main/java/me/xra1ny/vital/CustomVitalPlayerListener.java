@@ -22,7 +22,7 @@ public class CustomVitalPlayerListener<T extends VitalPlayer> extends VitalPlaye
     }
 
     @Override
-    protected Class<T> vitalPlayerType() {
+    protected final Class<T> vitalPlayerType() {
         return customVitalPlayerClass;
     }
 }
