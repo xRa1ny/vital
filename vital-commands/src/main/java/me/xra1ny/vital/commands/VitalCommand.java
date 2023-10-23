@@ -54,7 +54,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      *
      * @param javaPlugin The JavaPlugin instance.
      */
-    VitalCommand(@NotNull JavaPlugin javaPlugin) {
+    public VitalCommand(@NotNull JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
 
         final VitalCommandInfo vitalCommandInfo = getRequiredAnnotation();
