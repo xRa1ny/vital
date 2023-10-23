@@ -109,14 +109,14 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      * Start the countdown.
      */
     @SuppressWarnings("unused")
-    public void startCountdown() {
+    public final void startCountdown() {
         vitalRepeatableTask.start();
     }
 
     /**
      * Stop the countdown.
      */
-    public void stopCountdown() {
+    public final void stopCountdown() {
         vitalRepeatableTask.stop();
     }
 
