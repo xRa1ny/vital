@@ -1,0 +1,13 @@
+# The name of your Plugin as it is registered in Bukkit (required).
+name: VitalFullSamplePlugin
+# The version of your Plugin as it is registered in Bukkit (required).
+version: 1.0
+# The api-version your Plugin uses, will most likely be the same major version your Plugin is running on (required for legacy code support).
+api-version: 1.20
+# The main Class of your Plugin that extends JavaPlugin (required).
+main: me.xra1ny.vital.samples.full.VitalFullSamplePlugin
+
+# The commands of your Plugin (required for custom commands).
+commands:
+  # The name of your custom command as it is defined in `@VitalCommandInfo(name = '...')` (required).
+  vitalsamplecommand:

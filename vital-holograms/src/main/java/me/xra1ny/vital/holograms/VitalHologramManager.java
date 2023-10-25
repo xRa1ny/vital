@@ -114,6 +114,6 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      */
     @Override
     public void onVitalComponentUnregistered() {
-        // Perform any cleanup or actions when unregistered, if needed.
+
     }
 }

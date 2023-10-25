@@ -12,3 +12,4 @@ include(
         "vital-scoreboards",
         "vital-minigames"
 )
+include("vital-samples")
