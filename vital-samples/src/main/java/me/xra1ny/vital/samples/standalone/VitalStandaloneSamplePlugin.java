@@ -21,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("unused")
 public class VitalStandaloneSamplePlugin extends JavaPlugin {
     /**
      * Using the `VitalCore<T>` Class, Vital is initialized with almost to no functionality allowing for maximum customization.

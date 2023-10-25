@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("DefaultAnnotationParam")
 @VitalInventoryMenuInfo(title = "VitalSampleInventoryMenu", background = Material.AIR, size = 9)
 public class VitalSampleInventoryMenu extends VitalInventoryMenu {
     public VitalSampleInventoryMenu(@Nullable VitalInventoryMenu previousMenu) {

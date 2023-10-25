@@ -10,4 +10,5 @@ main: me.xra1ny.vital.samples.full.VitalFullSamplePlugin
 # The commands of your Plugin (required for custom commands).
 commands:
   # The name of your custom command as it is defined in `@VitalCommandInfo(name = '...')` (required).
+  # noinspection YAMLSchemaValidation
   vitalsamplecommand:

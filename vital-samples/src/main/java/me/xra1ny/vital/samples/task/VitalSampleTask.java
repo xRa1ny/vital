@@ -5,6 +5,7 @@ import me.xra1ny.vital.tasks.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 @VitalRepeatableTaskInfo(interval = 1000) // measured in ms
 public class VitalSampleTask extends VitalRepeatableTask {
     public VitalSampleTask(@NotNull JavaPlugin javaPlugin) {

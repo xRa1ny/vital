@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("DefaultAnnotationParam")
 @VitalItemStackInfo(
         name = "",
         type = Material.STICK,

@@ -4,6 +4,7 @@ import me.xra1ny.vital.minigames.VitalMinigameState;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 public class VitalSampleMinigameState extends VitalMinigameState {
     public VitalSampleMinigameState(@NotNull JavaPlugin javaPlugin) {
         super(javaPlugin);

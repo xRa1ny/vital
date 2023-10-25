@@ -19,6 +19,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("unused")
 public class VitalFullSamplePlugin extends JavaPlugin {
     /**
      * Using the `Vital<T>` Class, Vital is initialized with default functionality many Plugins might need.
@@ -27,6 +28,7 @@ public class VitalFullSamplePlugin extends JavaPlugin {
      */
     private final Vital<VitalFullSamplePlugin> vital = new Vital<>(this);
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public void onEnable() {
         // Here we enable Vital.

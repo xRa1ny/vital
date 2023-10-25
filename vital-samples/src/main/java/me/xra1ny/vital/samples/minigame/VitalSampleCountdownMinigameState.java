@@ -5,6 +5,7 @@ import me.xra1ny.vital.minigames.VitalCountdownMinigameStateInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("unused")
 @VitalCountdownMinigameStateInfo(interval = 1000, countdown = 10)
 public class VitalSampleCountdownMinigameState extends VitalCountdownMinigameState {
     public VitalSampleCountdownMinigameState(@NotNull JavaPlugin javaPlugin) {

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@SuppressWarnings({"DefaultAnnotationParam", "unused"})
 @VitalCommandInfo(
         name = "vitalsamplecommand",
         permission = "me.xra1ny.command.vitalsamplecommand",

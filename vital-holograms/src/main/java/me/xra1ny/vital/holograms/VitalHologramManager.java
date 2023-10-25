@@ -21,6 +21,7 @@ import java.util.List;
  *
  * @author xRa1ny
  */
+@SuppressWarnings("unused")
 @Getter(onMethod = @__(@NotNull))
 @Log
 public final class VitalHologramManager extends VitalComponentListManager<VitalHologram> {
