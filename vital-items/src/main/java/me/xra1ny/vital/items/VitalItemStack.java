@@ -24,6 +24,7 @@ import java.util.UUID;
  * @author xRa1ny
  */
 @Getter
+@SuppressWarnings("unused")
 public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo> {
     /**
      * The current Cooldown of this VitalItemStack.
@@ -35,8 +36,6 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      * The Cooldown of this VitalItemStack.
      */
     private int cooldown = 0;
-
-    private final boolean localised;
 
     /**
      * Creates a new VitalItemStack based on annotation-defined properties.
@@ -64,16 +63,14 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
         setAmount(itemStack.getAmount());
         setItemMeta(meta);
         this.cooldown = info.cooldown();
-        this.localised = info.localised();
     }
 
     /**
      * Creates a new VitalItemStack based on an existing ItemStack.
      * @param itemStack The base ItemStack.
      * @param enchanted Whether to add enchantments.
-     * @param localised Whether to consider localization in comparison.
      */
-    public VitalItemStack(@NotNull ItemStack itemStack, boolean enchanted, boolean localised) {
+    public VitalItemStack(@NotNull ItemStack itemStack, boolean enchanted) {
         final ItemMeta meta = itemStack.getItemMeta();
 
         if(enchanted) {
@@ -83,7 +80,6 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
         setType(itemStack.getType());
         setAmount(itemStack.getAmount());
         setItemMeta(meta);
-        this.localised = localised;
     }
 
     /**
@@ -114,7 +110,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
     public abstract void onCooldownExpire(@NotNull Player player);
 
     /**
-     * Handles player interaction with this item, considering cooldowns.
+     * Handles player interaction with this item, considering cool-downs.
      * @param e The player interact event.
      * @param player The player.
      */
@@ -140,7 +136,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
         return super.toString().replace(getType() + " x " + getAmount(), getType() + " x 1");
     }
 
-    @SuppressWarnings({"DataFlowIssue", "deprecation"})
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public final boolean equals(Object obj) {
         if(!(obj instanceof ItemStack item)) {
@@ -149,10 +145,6 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
         if(!item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING)) {
             String toString = toString();
-
-            if(this.localised) {
-                toString = toString.replace(getItemMeta().getDisplayName(), "");
-            }
 
             return toString.equals(item.toString().replace(item.getType() + " x " + item.getAmount(), item.getType() + " x 1"));
         }

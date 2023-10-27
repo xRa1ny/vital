@@ -68,13 +68,6 @@ public @interface VitalItemStackInfo {
     int cooldown() default 0;
 
     /**
-     * Indicates whether the item stack's name and lore should be localized using the game's language.
-     *
-     * @return True if name and lore should be localized; false otherwise.
-     */
-    boolean localised() default false;
-
-    /**
      * Indicates whether the custom item stack should have enchantment visual effects.
      *
      * @return True if the item should appear as if enchanted; false otherwise.
