@@ -85,7 +85,7 @@ final class VitalScoreboardContent {
      *
      * @param team The scoreboard team to add.
      */
-    public void add(@NotNull VitalScoreboardTeam team) {
+    public void addTeam(@NotNull VitalScoreboardTeam team) {
         if (this.teams.contains(team)) {
             return;
         }
@@ -99,7 +99,7 @@ final class VitalScoreboardContent {
      *
      * @param team The scoreboard team to remove.
      */
-    public void remove(@NotNull VitalScoreboardTeam team) {
+    public void removeTeam(@NotNull VitalScoreboardTeam team) {
         if (!this.teams.contains(team)) {
             return;
         }

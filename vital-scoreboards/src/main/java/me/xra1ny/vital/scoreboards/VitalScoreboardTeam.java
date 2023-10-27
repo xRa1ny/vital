@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,12 +30,6 @@ public final class VitalScoreboardTeam {
      */
     @Getter(onMethod = @__({@NotNull, @Unmodifiable}))
     private final List<Player> playerList = new ArrayList<>();
-
-    /**
-     * The scoreboard content to which this team belongs.
-     */
-    @Getter(onMethod = @__(@NotNull))
-    private final VitalScoreboardContent scoreboard;
 
     /**
      * The team options for this scoreboard team.
@@ -79,14 +74,12 @@ public final class VitalScoreboardTeam {
     /**
      * Creates a new VitalScoreboardTeam with the specified name and associated scoreboard content.
      *
-     * @param name      The name of the team.
-     * @param scoreboard The scoreboard content to which the team belongs.
+     * @param name The name of the team.
      */
     @SuppressWarnings("deprecation")
-    VitalScoreboardTeam(@NotNull String name, @NotNull VitalScoreboardContent scoreboard) {
+    VitalScoreboardTeam(@NotNull String name, @NotNull Scoreboard scoreboard) {
         this.name = name;
-        this.scoreboard = scoreboard;
-        this.bukkitTeam = scoreboard.getBukkitScoreboard().registerNewTeam(ChatColor.stripColor(name));
+        this.bukkitTeam = scoreboard.registerNewTeam(ChatColor.stripColor(name));
     }
 
     /**
@@ -142,7 +135,7 @@ public final class VitalScoreboardTeam {
      *
      * @param player The player to add.
      */
-    public void addMember(@NotNull Player player) {
+    public void addPlayer(@NotNull Player player) {
         if (this.playerList.contains(player)) {
             return;
         }
@@ -156,7 +149,7 @@ public final class VitalScoreboardTeam {
      *
      * @param player The player to remove.
      */
-    public void removeMember(@NotNull Player player) {
+    public void removePlayer(@NotNull Player player) {
         if (!this.playerList.contains(player)) {
             return;
         }
