@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Here we define the meta information of our ItemStack.
+ */
 @VitalItemStackInfo(name = "SampleVitalItemStack", type = Material.STICK, cooldown = 1000/* measured in ms */)
 public final class SampleVitalItemStack extends VitalItemStack {
     private final VitalHologramManager vitalHologramManager;

@@ -11,6 +11,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 
 public final class SampleVitalListener extends VitalListener {
+    /**
+     * Here we define any dependencies.
+     */
     private final VitalItemStackManager vitalItemStackManager;
     private final VitalHologramManager vitalHologramManager;
 
