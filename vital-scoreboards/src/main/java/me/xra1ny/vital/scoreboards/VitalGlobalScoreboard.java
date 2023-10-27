@@ -103,7 +103,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      *
      * @param player The player to add.
      */
-    public void add(@NotNull Player player) {
+    public void addPlayer(@NotNull Player player) {
         if (this.playerList.contains(player)) {
             return;
         }
@@ -118,7 +118,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      * @param player The player to remove.
      */
     @SuppressWarnings("DataFlowIssue")
-    public void remove(@NotNull Player player) {
+    public void removePlayer(@NotNull Player player) {
         if (!this.playerList.contains(player)) {
             return;
         }
@@ -128,5 +128,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
 
         update();
     }
+
+
 }
 
