@@ -112,23 +112,29 @@ public final class VitalHologram implements VitalComponent {
         base.teleport(location);
 
         if (this.displayType != null) {
+            for(Entity entity : base.getPassengers()) {
+                entity.remove();
+            }
+
             final Item item = this.location.getWorld().dropItem(this.base.getEyeLocation(), new ItemStack(this.displayType));
+
             item.setPickupDelay(Integer.MAX_VALUE);
             this.base.addPassenger(item);
         }
 
+        final int initialBaseLineSize = baseLines.size();
+
         for (int i = this.lines.size() - 1; i > -1; i--) {
             final String line = this.lines.get(i);
-            final float height = (float) this.lines.size() - (float) i / 4;
-            final Location lineLoc = this.location.clone().add(0, this.lines.size() + .25, 0);
+            final Location lineLocation = this.location.clone().add(0, this.lines.size(), 0);
             final ArmorStand armorStand;
 
-            if(i >= baseLines.size()) {
-                armorStand = (ArmorStand) this.location.getWorld().spawnEntity(lineLoc.subtract(0, height, 0), EntityType.ARMOR_STAND);
+            if(i >= initialBaseLineSize) {
+                armorStand = (ArmorStand) this.location.getWorld().spawnEntity(lineLocation.subtract(0, 2 + (.25*i), 0), EntityType.ARMOR_STAND);
                 this.baseLines.add(armorStand);
             }else {
                 armorStand = baseLines.get(i);
-                armorStand.teleport(lineLoc);
+                armorStand.teleport(lineLocation);
             }
 
             armorStand.setVisible(false);
@@ -143,7 +149,7 @@ public final class VitalHologram implements VitalComponent {
      * Calls the update method to initialize the hologram.
      */
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
         update();
     }
 
@@ -152,7 +158,7 @@ public final class VitalHologram implements VitalComponent {
      * Calls the remove method to clean up the hologram and associated entities.
      */
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
         remove();
     }
 }

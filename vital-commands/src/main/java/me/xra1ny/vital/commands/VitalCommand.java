@@ -8,7 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,13 +21,8 @@ import java.util.List;
  *
  * @author xRa1ny
  */
+@Getter(onMethod = @__(@NotNull))
 public abstract class VitalCommand implements AnnotatedVitalComponent<VitalCommandInfo>, CommandExecutor, TabExecutor {
-    /**
-     * The JavaPlugin associated with this command.
-     */
-    @Getter(onMethod = @__(@NotNull))
-    private final JavaPlugin javaPlugin;
-
     /**
      * The name of the command.
      */
@@ -51,12 +45,8 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
 
     /**
      * Constructor for VitalCommand.
-     *
-     * @param javaPlugin The JavaPlugin instance.
      */
-    public VitalCommand(@NotNull JavaPlugin javaPlugin) {
-        this.javaPlugin = javaPlugin;
-
+    public VitalCommand() {
         final VitalCommandInfo vitalCommandInfo = getRequiredAnnotation();
 
         this.name = vitalCommandInfo.name();
@@ -65,16 +55,13 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         this.vitalCommandArgs = vitalCommandInfo.args();
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public final void onVitalComponentRegistered() {
-        javaPlugin.getCommand(name).setExecutor(this);
+    public final void onRegistered() {
+
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public final void onVitalComponentUnregistered() {
-        javaPlugin.getCommand(name).setExecutor(null);
+    public final void onUnregistered() {
     }
 
     /**

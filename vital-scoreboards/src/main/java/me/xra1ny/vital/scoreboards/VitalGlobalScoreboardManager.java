@@ -2,6 +2,7 @@ package me.xra1ny.vital.scoreboards;
 
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Manages a collection of global scoreboards for use in your plugin.
@@ -14,12 +15,22 @@ import me.xra1ny.vital.core.VitalComponentListManager;
 public final class VitalGlobalScoreboardManager extends VitalComponentListManager<VitalGlobalScoreboard> {
 
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
         log.info("Successfully registered VitalGlobalScoreboardManagement!");
     }
 
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
+
+    }
+
+    @Override
+    public void onVitalComponentRegistered(@NotNull VitalGlobalScoreboard vitalGlobalScoreboard) {
+
+    }
+
+    @Override
+    public void onVitalComponentUnregistered(@NotNull VitalGlobalScoreboard vitalGlobalScoreboard) {
 
     }
 }

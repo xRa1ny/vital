@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,16 +14,6 @@ import org.jetbrains.annotations.NotNull;
  * @author xRa1ny
  */
 public final class VitalInventoryMenuListener extends VitalListener {
-
-    /**
-     * Creates a new VitalInventoryMenuListener.
-     *
-     * @param javaPlugin The JavaPlugin instance.
-     */
-    public VitalInventoryMenuListener(@NotNull JavaPlugin javaPlugin) {
-        super(javaPlugin);
-    }
-
     /**
      * Handles the event when a player opens an inventory.
      *

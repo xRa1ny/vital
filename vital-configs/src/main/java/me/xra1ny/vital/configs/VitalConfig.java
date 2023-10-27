@@ -165,13 +165,13 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     }
 
     @Override
-    public final void onVitalComponentRegistered() {
+    public final void onRegistered() {
         update();
         save();
     }
 
     @Override
-    public final void onVitalComponentUnregistered() {
+    public final void onUnregistered() {
         save();
     }
 }

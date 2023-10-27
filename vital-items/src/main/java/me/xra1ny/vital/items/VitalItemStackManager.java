@@ -32,12 +32,22 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
     }
 
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
         log.info("Successfully registered VitalItemStackManagement!");
     }
 
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
+
+    }
+
+    @Override
+    public void onVitalComponentRegistered(@NotNull VitalItemStack vitalItemStack) {
+
+    }
+
+    @Override
+    public void onVitalComponentUnregistered(@NotNull VitalItemStack vitalItemStack) {
 
     }
 }

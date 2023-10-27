@@ -65,12 +65,12 @@ public class VitalPlayerTimeoutHandler<T extends VitalPlayer> extends VitalRepea
     }
 
     @Override
-    public final void onVitalComponentRegistered() {
+    public final void onRegistered() {
 
     }
 
     @Override
-    public final void onVitalComponentUnregistered() {
+    public final void onUnregistered() {
 
     }
 }

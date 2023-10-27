@@ -71,7 +71,7 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
      * Starts the cooldown handler task.
      */
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
         start();
     }
 
@@ -80,7 +80,7 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
      * Stops the cooldown handler task.
      */
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
         stop();
     }
 

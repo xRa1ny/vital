@@ -3,6 +3,7 @@ package me.xra1ny.vital.players;
 import lombok.Getter;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A management class responsible for handling and managing VitalPlayer components associated with players.
@@ -19,12 +20,22 @@ public class VitalPlayerManager<T extends VitalPlayer> extends VitalComponentLis
     }
 
     @Override
-    public final void onVitalComponentRegistered() {
+    public final void onRegistered() {
         log.info("Successfully registered VitalUserManagement!");
     }
 
     @Override
-    public final void onVitalComponentUnregistered() {
+    public final void onUnregistered() {
+
+    }
+
+    @Override
+    public void onVitalComponentRegistered(@NotNull T vitalPlayer) {
+
+    }
+
+    @Override
+    public void onVitalComponentUnregistered(@NotNull T vitalPlayer) {
 
     }
 }

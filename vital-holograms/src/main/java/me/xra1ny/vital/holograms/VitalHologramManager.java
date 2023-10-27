@@ -83,7 +83,7 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
         for (String key : this.config.getKeys(false)) {
             final ConfigurationSection section = this.config.getConfigurationSection(key);
 
@@ -114,7 +114,17 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      * Called when this VitalHologramManagement instance is unregistered.
      */
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
+
+    }
+
+    @Override
+    public void onVitalComponentRegistered(@NotNull VitalHologram vitalHologram) {
+
+    }
+
+    @Override
+    public void onVitalComponentUnregistered(@NotNull VitalHologram vitalHologram) {
 
     }
 }

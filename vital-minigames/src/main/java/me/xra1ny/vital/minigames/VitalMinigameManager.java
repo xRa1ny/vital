@@ -40,20 +40,20 @@ public final class VitalMinigameManager implements VitalComponent {
                 vitalCountdownMinigameState.stopCountdown();
             }
 
-            this.vitalMinigameState.onVitalComponentUnregistered();
+            this.vitalMinigameState.onUnregistered();
         }
 
-        vitalMinigameState.onVitalComponentRegistered();
+        vitalMinigameState.onRegistered();
         this.vitalMinigameState = vitalMinigameState;
     }
 
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
 
     }
 
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
 
     }
 }

@@ -16,7 +16,7 @@ public class CustomVitalPlayerListener<T extends VitalPlayer> extends VitalPlaye
      * @param vitalPlayerManager The VitalUserManagement instance to manage VitalPlayer components.
      */
     public CustomVitalPlayerListener(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<T> vitalPlayerManager, @NotNull Class<T> customVitalPlayerClass) {
-        super(javaPlugin, vitalPlayerManager);
+        super(vitalPlayerManager);
 
         this.customVitalPlayerClass = customVitalPlayerClass;
     }

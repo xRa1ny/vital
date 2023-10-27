@@ -11,7 +11,7 @@ public final class DefaultVitalPlayerListener extends VitalPlayerListener<VitalP
      * @param vitalPlayerManager The VitalUserManagement instance to manage VitalPlayer components.
      */
     public DefaultVitalPlayerListener(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<VitalPlayer> vitalPlayerManager) {
-        super(javaPlugin, vitalPlayerManager);
+        super(vitalPlayerManager);
     }
 
     @Override

@@ -12,12 +12,12 @@ import me.xra1ny.vital.core.VitalComponent;
  */
 abstract class VitalScoreboard implements VitalComponent {
     @Override
-    public final void onVitalComponentRegistered() {
+    public final void onRegistered() {
 
     }
 
     @Override
-    public final void onVitalComponentUnregistered() {
+    public final void onUnregistered() {
 
     }
 }

@@ -10,6 +10,7 @@ include(
         "vital-configs",
         "vital-holograms",
         "vital-scoreboards",
-        "vital-minigames"
+        "vital-minigames",
+        "vital-full-sample",
+        "vital-standalone-sample"
 )
-include("vital-samples")

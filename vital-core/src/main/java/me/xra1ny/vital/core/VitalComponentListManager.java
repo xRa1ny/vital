@@ -97,7 +97,8 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
         }
 
         vitalComponentList.add(vitalComponent);
-        vitalComponent.onVitalComponentRegistered();
+        vitalComponent.onRegistered();
+        onVitalComponentRegistered(vitalComponent);
     }
 
     /**
@@ -107,6 +108,21 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      */
     public final void unregisterVitalComponent(@NotNull T vitalComponent) {
         vitalComponentList.remove(vitalComponent);
-        vitalComponent.onVitalComponentUnregistered();
+        vitalComponent.onUnregistered();
+        onVitalComponentUnregistered(vitalComponent);
     }
+
+    /**
+     * Called when the specified VitalComponent is registered.
+     *
+     * @param vitalComponent The VitalComponent registered.
+     */
+    public abstract void onVitalComponentRegistered(@NotNull T vitalComponent);
+
+    /**
+     * Called when the specified VitalComponent is unregistered.
+     *
+     * @param vitalComponent The VitalComponent unregistered.
+     */
+    public abstract void onVitalComponentUnregistered(@NotNull T vitalComponent);
 }

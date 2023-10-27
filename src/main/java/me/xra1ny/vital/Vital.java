@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import me.xra1ny.vital.commands.VitalCommandManager;
 import me.xra1ny.vital.configs.VitalConfigManager;
 import me.xra1ny.vital.core.VitalCore;
+import me.xra1ny.vital.core.VitalListenerManager;
 import me.xra1ny.vital.holograms.VitalHologramManager;
 import me.xra1ny.vital.inventories.VitalInventoryMenuListener;
 import me.xra1ny.vital.items.VitalItemStackCooldownHandler;
@@ -37,17 +38,22 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(vitalConfigManager);
         getVitalComponentManager().registerVitalComponent(defaultVitalConfig);
 
+        // Register VitalListenerManager
+        final VitalListenerManager vitalListenerManager = new VitalListenerManager(getJavaPlugin());
+
+        getVitalComponentManager().registerVitalComponent(vitalListenerManager);
+
         // Register VitalPlayerManagement
         final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(defaultVitalConfig.getVitalPlayerTimeout());
         final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(getJavaPlugin(), defaultVitalPlayerManager);
         final DefaultVitalPlayerTimeoutHandler defaultVitalPlayerTimeoutHandler = new DefaultVitalPlayerTimeoutHandler(getJavaPlugin(), defaultVitalPlayerManager);
 
         getVitalComponentManager().registerVitalComponent(defaultVitalPlayerManager);
-        getVitalComponentManager().registerVitalComponent(defaultVitalPlayerListener);
+        vitalListenerManager.registerVitalComponent(defaultVitalPlayerListener);
         getVitalComponentManager().registerVitalComponent(defaultVitalPlayerTimeoutHandler);
 
         // Register VitalCommandManagement
-        final VitalCommandManager vitalCommandManager = new VitalCommandManager();
+        final VitalCommandManager vitalCommandManager = new VitalCommandManager(getJavaPlugin());
 
         getVitalComponentManager().registerVitalComponent(vitalCommandManager);
 
@@ -58,17 +64,17 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
         // Register VitalItemStackManagement and VitalItemStackCooldownHandler
         final VitalItemStackManager vitalItemStackManager = new VitalItemStackManager(getJavaPlugin());
-        final VitalItemStackListener vitalItemStackListener = new VitalItemStackListener(getJavaPlugin(), vitalItemStackManager);
+        final VitalItemStackListener vitalItemStackListener = new VitalItemStackListener(vitalItemStackManager);
         final VitalItemStackCooldownHandler vitalItemStackCooldownHandler = new VitalItemStackCooldownHandler(getJavaPlugin(), vitalItemStackManager);
 
         getVitalComponentManager().registerVitalComponent(vitalItemStackManager);
-        getVitalComponentManager().registerVitalComponent(vitalItemStackListener);
+        vitalListenerManager.registerVitalComponent(vitalItemStackListener);
         getVitalComponentManager().registerVitalComponent(vitalItemStackCooldownHandler);
 
         // Register VitalInventoryMenuListener
-        final VitalInventoryMenuListener vitalInventoryMenuListener = new VitalInventoryMenuListener(getJavaPlugin());
+        final VitalInventoryMenuListener vitalInventoryMenuListener = new VitalInventoryMenuListener();
 
-        getVitalComponentManager().registerVitalComponent(vitalInventoryMenuListener);
+        vitalListenerManager.registerVitalComponent(vitalInventoryMenuListener);
 
         // Register VitalPerPlayerScoreboardManagement
         final VitalPerPlayerScoreboardManager vitalPerPlayerScoreboardManager = new VitalPerPlayerScoreboardManager();
@@ -108,16 +114,18 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @param <L> VitalPlayerListener
      * @param <TH> VitalPlayerTimeoutHandler
      */
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @SneakyThrows
     public <P extends VitalPlayer, M extends VitalPlayerManager<P>, L extends VitalPlayerListener<P>, TH extends VitalPlayerTimeoutHandler<P>> void registerSimpleCustomPlayerManagement(@NotNull Class<P> customVitalPlayerClass, @NotNull Class<M> customVitalPlayerManagerClass, @NotNull Class<L> customVitalPlayerListenerClass, @NotNull Class<TH> customVitalPlayerTimeoutHandlerClass, int customVitalPlayerTimeout) {
         unregisterDefaultVitalPlayerManagement();
 
+        final VitalListenerManager vitalListenerManager = getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
         final M customVitalPlayerManager = customVitalPlayerManagerClass.getDeclaredConstructor().newInstance();
         final L customVitalPlayerListener = customVitalPlayerListenerClass.getDeclaredConstructor(JavaPlugin.class, VitalPlayerManager.class, int.class).newInstance(getJavaPlugin(), customVitalPlayerManager, customVitalPlayerTimeout);
         final TH customVitalPlayerTimeoutHandler = customVitalPlayerTimeoutHandlerClass.getDeclaredConstructor(JavaPlugin.class, VitalPlayerManager.class).newInstance(getJavaPlugin(), customVitalPlayerManager);
 
         getVitalComponentManager().registerVitalComponent(customVitalPlayerManager);
-        getVitalComponentManager().registerVitalComponent(customVitalPlayerListener);
+        vitalListenerManager.registerVitalComponent(customVitalPlayerListener);
         getVitalComponentManager().registerVitalComponent(customVitalPlayerTimeoutHandler);
     }
 
@@ -128,15 +136,17 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @param customVitalPlayerTimeout The custom VitalPlayerTimeout.
      * @param <P> VitalPlayer
      */
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public <P extends VitalPlayer> void registerSimpleCustomPlayerManagement(@NotNull Class<P> customVitalPlayerClass, int customVitalPlayerTimeout) {
         unregisterDefaultVitalPlayerManagement();
 
+        final VitalListenerManager vitalListenerManager = getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
         final CustomVitalPlayerManager<P> customVitalPlayerManager = new CustomVitalPlayerManager<>(customVitalPlayerTimeout);
         final CustomVitalPlayerListener<P> customVitalPlayerListener = new CustomVitalPlayerListener<>(getJavaPlugin(), customVitalPlayerManager, customVitalPlayerClass);
         final CustomVitalPlayerTimeoutHandler<P> customVitalPlayerTimeoutHandler = new CustomVitalPlayerTimeoutHandler<>(getJavaPlugin(), customVitalPlayerManager);
 
         getVitalComponentManager().registerVitalComponent(customVitalPlayerManager);
-        getVitalComponentManager().registerVitalComponent(customVitalPlayerListener);
+        vitalListenerManager.registerVitalComponent(customVitalPlayerListener);
         getVitalComponentManager().registerVitalComponent(customVitalPlayerTimeoutHandler);
     }
 }

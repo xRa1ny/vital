@@ -3,7 +3,6 @@ package me.xra1ny.vital.items;
 import me.xra1ny.vital.core.VitalListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -21,11 +20,9 @@ public final class VitalItemStackListener extends VitalListener {
     /**
      * Constructs a new instance of the VitalItemStackListener.
      *
-     * @param javaPlugin             The JavaPlugin instance responsible for managing the plugin.
      * @param vitalItemStackManager The management system for custom item stacks.
      */
-    public VitalItemStackListener(@NotNull JavaPlugin javaPlugin, @NotNull VitalItemStackManager vitalItemStackManager) {
-        super(javaPlugin);
+    public VitalItemStackListener(@NotNull VitalItemStackManager vitalItemStackManager) {
         this.vitalItemStackManager = vitalItemStackManager;
     }
 

@@ -29,8 +29,6 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      */
     @SuppressWarnings("unused")
     public VitalCountdownMinigameState(@NotNull JavaPlugin javaPlugin) {
-        super(javaPlugin);
-
         final VitalCountdownMinigameStateInfo vitalCountdownMinigameStateInfo = getRequiredAnnotation();
 
         this.initialCountdown = getRequiredAnnotation().countdown();
@@ -48,8 +46,6 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      */
     @SuppressWarnings("unused")
     public VitalCountdownMinigameState(@NotNull JavaPlugin javaPlugin, int interval, int countdown) {
-        super(javaPlugin);
-
         this.initialCountdown = countdown;
         this.countdown = this.initialCountdown;
 
@@ -94,12 +90,12 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
             }
 
             @Override
-            public void onVitalComponentRegistered() {
+            public void onRegistered() {
                 onVitalMinigameStateRegistered();
             }
 
             @Override
-            public void onVitalComponentUnregistered() {
+            public void onUnregistered() {
                 onVitalMinigameStateUnregistered();
             }
         };

@@ -2,6 +2,7 @@ package me.xra1ny.vital.configs;
 
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Class responsible for managing Vital configuration files.
@@ -13,13 +14,23 @@ import me.xra1ny.vital.core.VitalComponentListManager;
 public final class VitalConfigManager extends VitalComponentListManager<VitalConfig> {
 
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
         log.info("Successfully registered VitalConfigManagement!");
     }
 
 
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
+
+    }
+
+    @Override
+    public void onVitalComponentRegistered(@NotNull VitalConfig vitalConfig) {
+
+    }
+
+    @Override
+    public void onVitalComponentUnregistered(@NotNull VitalConfig vitalConfig) {
 
     }
 }

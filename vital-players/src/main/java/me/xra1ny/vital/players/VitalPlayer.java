@@ -62,7 +62,7 @@ public class VitalPlayer implements VitalComponent {
      * Called when this VitalComponent is registered.
      */
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
 
     }
 
@@ -70,7 +70,7 @@ public class VitalPlayer implements VitalComponent {
      * Called when this VitalComponent is unregistered.
      */
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
 
     }
 }

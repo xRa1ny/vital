@@ -1,5 +1,7 @@
 package me.xra1ny.vital.core;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Final class for managing a list of Vital components.
  * Extends the abstract VitalComponentListManagement class.
@@ -7,21 +9,23 @@ package me.xra1ny.vital.core;
  * @author xRa1ny
  */
 public final class VitalComponentManager extends VitalComponentListManager<VitalComponent> {
-    /**
-     * Called when a Vital component is registered with this management.
-     * Override this method to perform custom actions when a component is registered.
-     */
     @Override
-    public void onVitalComponentRegistered() {
+    public void onRegistered() {
 
     }
 
-    /**
-     * Called when a Vital component is unregistered from this management.
-     * Override this method to perform custom actions when a component is unregistered.
-     */
     @Override
-    public void onVitalComponentUnregistered() {
+    public void onUnregistered() {
+
+    }
+
+    @Override
+    public void onVitalComponentRegistered(@NotNull VitalComponent vitalComponent) {
+
+    }
+
+    @Override
+    public void onVitalComponentUnregistered(@NotNull VitalComponent vitalComponent) {
 
     }
 }

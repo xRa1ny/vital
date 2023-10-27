@@ -1,8 +1,6 @@
 package me.xra1ny.vital.minigames;
 
 import me.xra1ny.vital.core.VitalListener;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Abstract base class for minigame states within the Vital framework.
@@ -10,25 +8,14 @@ import org.jetbrains.annotations.NotNull;
  * Extend this class to create custom minigame states.
  */
 public abstract class VitalMinigameState extends VitalListener {
-
-    /**
-     * Constructor for BaseVitalMinigameState.
-     *
-     * @param javaPlugin The JavaPlugin instance associated with the minigame state.
-     */
-    public VitalMinigameState(@NotNull JavaPlugin javaPlugin) {
-        super(javaPlugin);
-    }
-
     @Override
-    public final void onVitalComponentRegistered() {
-        super.onVitalComponentRegistered();
+    public final void onRegistered() {
         onVitalMinigameStateRegistered();
     }
 
     @Override
-    public final void onVitalComponentUnregistered() {
-        super.onVitalComponentUnregistered();
+    public final void onUnregistered() {
+        super.onUnregistered();
         onVitalMinigameStateUnregistered();
     }
 

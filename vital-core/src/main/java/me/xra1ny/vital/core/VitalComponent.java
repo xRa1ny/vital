@@ -35,11 +35,11 @@ public interface VitalComponent {
      * Called when this VitalComponent is registered.
      * Implement this method to perform any required initialization when the component is registered.
      */
-    void onVitalComponentRegistered();
+    void onRegistered();
 
     /**
      * Called when this VitalComponent is unregistered.
      * Implement this method to perform any cleanup or finalization when the component is unregistered.
      */
-    void onVitalComponentUnregistered();
+    void onUnregistered();
 }

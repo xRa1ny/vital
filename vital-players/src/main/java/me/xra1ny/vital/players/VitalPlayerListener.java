@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -22,11 +21,9 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
     /**
      * Creates a new instance of VitalPlayerListener.
      *
-     * @param javaPlugin         The JavaPlugin instance associated with the listener.
      * @param vitalPlayerManager The VitalUserManagement instance to manage VitalPlayer components.
      */
-    public VitalPlayerListener(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<T> vitalPlayerManager) {
-        super(javaPlugin);
+    public VitalPlayerListener(@NotNull VitalPlayerManager<T> vitalPlayerManager) {
         this.vitalPlayerManager = vitalPlayerManager;
     }
 
