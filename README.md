@@ -17,6 +17,7 @@ Vital is thoughtfully organized into a series of submodules, each dedicated to a
 - 📋**vital-inventories**: Manage custom inventories efficiently.
 - 📊**vital-scoreboards**: Customize and create scoreboards effortlessly.
 - 🎮**vital-minigames**: Level up your server with complex minigames while keeping code clean and organized.
+- 💾**vital-databases**: Implemented with the Hibernate Framework, this module provides an OOP-Driven JPA Entity System like the Spring Framework, organize your DB-Entities with Repositories and Services!
 
 ## 📦Flexible Integration
 Vital's modular approach empowers developers to pick and choose the specific modules that align with their project requirements.    

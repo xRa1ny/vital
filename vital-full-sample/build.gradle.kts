@@ -13,4 +13,13 @@ dependencies {
     implementation(project(":vital-scoreboards"))
     implementation(project(":vital-players"))
     implementation(project(":vital-minigames"))
+    implementation(project(":vital-databases"))
+
+    rootProject.property("hibernate-vendor")?.let {
+        implementation(it)
+    }
+
+//    rootProject.property("jaxb-runtime-vendor")?.let {
+//        implementation(it)
+//    }
 }
