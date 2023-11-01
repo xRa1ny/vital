@@ -2,10 +2,12 @@ package me.xra1ny.vital.samples.full;
 
 import me.xra1ny.vital.Vital;
 import me.xra1ny.vital.commands.VitalCommandManager;
+import me.xra1ny.vital.configs.VitalConfigManager;
 import me.xra1ny.vital.core.VitalListenerManager;
 import me.xra1ny.vital.holograms.VitalHologramManager;
 import me.xra1ny.vital.items.VitalItemStackManager;
 import me.xra1ny.vital.samples.full.command.SampleVitalCommand;
+import me.xra1ny.vital.samples.full.config.SampleVitalConfig;
 import me.xra1ny.vital.samples.full.listener.SampleVitalListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,6 +26,11 @@ public final class SampleVitalPlugin extends JavaPlugin {
         // Here we enable Vital
         vital.enable();
 
+        final VitalConfigManager vitalConfigManager = vital.getVitalComponentManager().getVitalComponent(VitalConfigManager.class).get();
+        final SampleVitalConfig sampleVitalConfig = new SampleVitalConfig(this);
+
+        vitalConfigManager.registerVitalComponent(sampleVitalConfig);
+
         // Here we register our Command.
         final VitalCommandManager vitalCommandManager = vital.getVitalComponentManager().getVitalComponent(VitalCommandManager.class).get();
         final SampleVitalCommand sampleVitalCommand = new SampleVitalCommand();
@@ -34,7 +41,7 @@ public final class SampleVitalPlugin extends JavaPlugin {
         final VitalListenerManager vitalListenerManager = vital.getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
         final VitalItemStackManager vitalItemStackManager = vital.getVitalComponentManager().getVitalComponent(VitalItemStackManager.class).get();
         final VitalHologramManager vitalHologramManager = vital.getVitalComponentManager().getVitalComponent(VitalHologramManager.class).get();
-        final SampleVitalListener sampleVitalListener = new SampleVitalListener(vitalItemStackManager, vitalHologramManager);
+        final SampleVitalListener sampleVitalListener = new SampleVitalListener(vitalItemStackManager, vitalHologramManager, sampleVitalConfig);
 
         vitalListenerManager.registerVitalComponent(sampleVitalListener);
 
