@@ -33,7 +33,7 @@ public interface VitalConfigSerializable {
 
             Object fieldValue = field.get(this);
 
-            // If the object we are trying to add to our serialized object is of type Material
+            // If the object we are trying to add to our serialized object is of type Enum
             // we want to convert it to a String, so we can safely read it from config later.
             if(fieldValue instanceof Enum<?>) {
                 fieldValue = fieldValue.toString();
