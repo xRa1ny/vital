@@ -1,9 +1,11 @@
 package me.xra1ny.vital.sample.standalone;
 
 import me.xra1ny.vital.commands.VitalCommandManager;
+import me.xra1ny.vital.configs.VitalConfigManager;
 import me.xra1ny.vital.core.VitalCore;
 import me.xra1ny.vital.core.VitalListenerManager;
 import me.xra1ny.vital.databases.VitalDatabaseManager;
+import me.xra1ny.vital.holograms.VitalHologramConfig;
 import me.xra1ny.vital.holograms.VitalHologramManager;
 import me.xra1ny.vital.items.VitalItemStackManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,7 +33,9 @@ public class SampleVitalPlugin extends JavaPlugin {
             getVitalComponentManager().registerVitalComponent(vitalItemStackManager);
 
             // Here we register Vital's HologramManager
-            final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin());
+            final VitalConfigManager vitalConfigManager = new VitalConfigManager();
+            final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig("holograms.yml", getJavaPlugin());
+            final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
             getVitalComponentManager().registerVitalComponent(vitalHologramManager);
 

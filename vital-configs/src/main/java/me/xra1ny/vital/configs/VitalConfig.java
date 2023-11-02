@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,7 +13,11 @@ import org.jetbrains.annotations.Nullable;
 import org.reflections.ReflectionUtils;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract base class for managing configuration files in the Vital framework.
@@ -120,12 +125,27 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
             Object fieldValue = field.get(this);
 
-            if(fieldValue instanceof String stringFieldValue) {
+            if (fieldValue instanceof String stringFieldValue) {
                 //noinspection UnnecessaryUnicodeEscape
                 fieldValue = ChatColor.translateAlternateColorCodes('\u00A7', stringFieldValue);
             }
 
-            this.config.set(path.value(), fieldValue);
+            if (fieldValue instanceof List<?> fieldValueList) {
+                try {
+                    // Attempt to serialize every element in List.
+                    final List<Map<String, Object>> serializedContentMap = ((List<? extends VitalConfigSerializable>) fieldValueList).stream()
+                            .map(VitalConfigSerializable::serialize)
+                            .toList();
+
+                    config.set(path.value(), serializedContentMap);
+                } catch (ClassCastException ignored) {
+                    // If elements in List, are not of Type VitalConfigSerializable, attempt to use Spigot's default Config Mapping.
+                    this.config.set(path.value(), fieldValue);
+                }
+            }else if(fieldValue instanceof VitalConfigSerializable vitalConfigSerializable) {
+                // Attempt to serialize the Object we are trying to save.
+                config.set(path.value(), vitalConfigSerializable.serialize());
+            }
         }
 
         this.config.save(this.configFile);
@@ -146,16 +166,94 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
             Object configValue = this.config.get(path.value());
 
-            if(configValue == null) {
+            if (configValue == null) {
                 continue;
             }
 
-            if(configValue instanceof String stringConfigValue) {
+            field.setAccessible(true);
+
+            if (configValue instanceof String stringConfigValue) {
                 configValue = ChatColor.translateAlternateColorCodes('&', stringConfigValue);
+                field.set(this, configValue);
+            }else if(configValue instanceof Map<?, ?> configValueMap) {
+                final Map<String, Object> stringObjectMap = (Map<String, Object>) configValueMap;
+
+                field.set(this, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
+            }else if(configValue instanceof MemorySection memorySection) {
+                final Map<String, Object> stringObjectMap = new HashMap<>();
+
+                for(String key : memorySection.getKeys(false)) {
+                    stringObjectMap.put(key, memorySection.get(key));
+                }
+
+                field.set(this, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
+            }
+        }
+    }
+
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SneakyThrows
+    public final <T extends VitalConfigSerializable> T deserialize(@NotNull Class<T> clazz, @NotNull Map<String, Object> serialized) {
+        final Map<Field, Object> fieldObjectMap = new HashMap<>();
+
+        for (Field field : ReflectionUtils.getAllFields(clazz)) {
+            final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
+
+            if (path == null) {
+                continue;
             }
 
             field.setAccessible(true);
-            field.set(this, configValue);
+
+            if (!serialized.containsKey(path.value())) {
+                // Could not deserialize, since ConfigPath value was not found on serialized content Map!
+
+                continue;
+            }
+
+            for (Map.Entry<String, Object> stringObjectEntry : serialized.entrySet()) {
+                if (!stringObjectEntry.getKey().equals(path.value())) {
+                    continue;
+                }
+
+                fieldObjectMap.put(field, stringObjectEntry.getValue());
+            }
+
+            final VitalConfigEnum vitalConfigEnum = field.getDeclaredAnnotation(VitalConfigEnum.class);
+
+            if(vitalConfigEnum != null) {
+                fieldObjectMap.replace(field, Enum.valueOf((Class<Enum>) field.getType(), fieldObjectMap.get(field).toString()));
+            }
+        }
+
+        Constructor<T> constructor;
+
+        try {
+            final Class<?>[] constructorTypes = fieldObjectMap.keySet().stream()
+                    .map(Field::getClass)
+                    .toArray(Class[]::new);
+
+            // Attempt to get Constructor matching ALL mapped Fields.
+            constructor = clazz.getDeclaredConstructor(constructorTypes);
+
+            final Object[] constructorValues = fieldObjectMap.values().toArray(new Object[0]);
+
+            // Constructor found, Continue with Object creation...
+            return constructor.newInstance(constructorValues);
+        } catch (NoSuchMethodException e) {
+            // If no such Constructor was found, attempt getting default POJO Constructor.
+            // No Constructor found, Cannot continue, as Object Class is incorrectly configured / mapped.
+            constructor = clazz.getDeclaredConstructor();
+
+            // Default Constructor found, Continue with Object creation...
+            final T instance = constructor.newInstance();
+
+            for (Map.Entry<Field, Object> fieldObjectEntry : fieldObjectMap.entrySet()) {
+                fieldObjectEntry.getKey().set(instance, fieldObjectEntry.getValue());
+            }
+
+            return instance;
         }
     }
 

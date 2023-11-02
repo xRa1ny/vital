@@ -3,6 +3,9 @@ package me.xra1ny.vital.holograms;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import me.xra1ny.vital.configs.VitalConfigEnum;
+import me.xra1ny.vital.configs.VitalConfigPath;
+import me.xra1ny.vital.configs.VitalConfigSerializable;
 import me.xra1ny.vital.core.VitalComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,13 +27,14 @@ import java.util.List;
  *
  * @author xRa1ny
  */
-public final class VitalHologram implements VitalComponent {
+public final class VitalHologram implements VitalComponent, VitalConfigSerializable {
 
     /**
      * The name of this hologram.
      */
     @Getter(onMethod = @__(@NotNull))
     @Setter(onParam = @__(@NotNull))
+    @VitalConfigPath("name")
     private String name;
 
     /**
@@ -51,6 +55,7 @@ public final class VitalHologram implements VitalComponent {
      */
     @Getter(onMethod = @__({@NotNull, @Unmodifiable}))
     @Setter(onParam = @__(@NotNull))
+    @VitalConfigPath("lines")
     private List<String> lines = new ArrayList<>();
 
     /**
@@ -58,6 +63,7 @@ public final class VitalHologram implements VitalComponent {
      */
     @Getter(onMethod = @__(@NotNull))
     @Setter(onParam = @__(@NotNull))
+    @VitalConfigPath("location")
     private Location location;
 
     /**
@@ -65,7 +71,16 @@ public final class VitalHologram implements VitalComponent {
      */
     @Getter(onMethod = @__(@NotNull))
     @Setter(onParam = @__(@NotNull))
+    @VitalConfigPath("display-type")
+    @VitalConfigEnum
     private Material displayType;
+
+    /**
+     * Constructor for config deserialization.
+     */
+    public VitalHologram() {
+
+    }
 
     /**
      * Constructs a new VitalHologram instance.
