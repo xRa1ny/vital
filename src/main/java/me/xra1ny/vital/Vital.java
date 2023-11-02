@@ -5,6 +5,7 @@ import me.xra1ny.vital.commands.VitalCommandManager;
 import me.xra1ny.vital.configs.VitalConfigManager;
 import me.xra1ny.vital.core.VitalCore;
 import me.xra1ny.vital.core.VitalListenerManager;
+import me.xra1ny.vital.databases.VitalDatabaseManager;
 import me.xra1ny.vital.holograms.VitalHologramManager;
 import me.xra1ny.vital.inventories.VitalInventoryMenuListener;
 import me.xra1ny.vital.items.VitalItemStackCooldownHandler;
@@ -85,6 +86,13 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         final VitalGlobalScoreboardManager vitalGlobalScoreboardManager = new VitalGlobalScoreboardManager();
 
         getVitalComponentManager().registerVitalComponent(vitalGlobalScoreboardManager);
+
+        if(defaultVitalConfig.isVitalDatabaseEnabled()) {
+            // Register VitalDatabaseManager
+            final VitalDatabaseManager vitalDatabaseManager = new VitalDatabaseManager();
+
+            getVitalComponentManager().registerVitalComponent(vitalDatabaseManager);
+        }
     }
 
     /**

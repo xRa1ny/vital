@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":vital-scoreboards"))
     implementation(project(":vital-players"))
     implementation(project(":vital-minigames"))
+    implementation(project(":vital-databases"))
 }
 
 publishing {

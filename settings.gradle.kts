@@ -14,3 +14,4 @@ include(
         "vital-full-sample",
         "vital-standalone-sample"
 )
+include("vital-databases")
