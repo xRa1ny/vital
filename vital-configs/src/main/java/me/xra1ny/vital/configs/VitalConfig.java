@@ -138,19 +138,14 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                             .toList();
 
                     config.set(path.value(), serializedContentMap);
-
-                    continue;
                 } catch (ClassCastException ignored) {
                     // If elements in List, are not of Type VitalConfigSerializable, attempt to use Spigot's default Config Mapping.
+                    this.config.set(path.value(), fieldValue);
                 }
             }else if(fieldValue instanceof VitalConfigSerializable vitalConfigSerializable) {
                 // Attempt to serialize the Object we are trying to save.
                 config.set(path.value(), vitalConfigSerializable.serialize());
-
-                continue;
             }
-
-            this.config.set(path.value(), fieldValue);
         }
 
         this.config.save(this.configFile);
@@ -179,12 +174,11 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
             if (configValue instanceof String stringConfigValue) {
                 configValue = ChatColor.translateAlternateColorCodes('&', stringConfigValue);
+                field.set(this, configValue);
             }else if(configValue instanceof Map<?, ?> configValueMap) {
                 final Map<String, Object> stringObjectMap = (Map<String, Object>) configValueMap;
 
                 field.set(this, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
-
-                continue;
             }else if(configValue instanceof MemorySection memorySection) {
                 final Map<String, Object> stringObjectMap = new HashMap<>();
 
@@ -193,11 +187,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 }
 
                 field.set(this, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
-
-                continue;
             }
-
-            field.set(this, configValue);
         }
     }
 
@@ -217,7 +207,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
             field.setAccessible(true);
 
             if (!serialized.containsKey(path.value())) {
-                // Could not deserialize, since ConfigPath value wos not found on serialized content Map!
+                // Could not deserialize, since ConfigPath value was not found on serialized content Map!
 
                 continue;
             }
@@ -249,14 +239,14 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
             final Object[] constructorValues = fieldObjectMap.values().toArray(new Object[0]);
 
-            // Constructor found? Continue with Object creation...
+            // Constructor found, Continue with Object creation...
             return constructor.newInstance(constructorValues);
         } catch (NoSuchMethodException e) {
             // If no such Constructor was found, attempt getting default POJO Constructor.
-            // No Constructor found? Cannot continue, as Object Class is incorrectly configured / mapped.
+            // No Constructor found, Cannot continue, as Object Class is incorrectly configured / mapped.
             constructor = clazz.getDeclaredConstructor();
 
-            // Default Constructor found? Continue with Object creation...
+            // Default Constructor found, Continue with Object creation...
             final T instance = constructor.newInstance();
 
             for (Map.Entry<Field, Object> fieldObjectEntry : fieldObjectMap.entrySet()) {
