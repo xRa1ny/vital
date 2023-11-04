@@ -147,4 +147,14 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
     }
 
     public abstract Class<Entity> managedEntityType();
+
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
+    }
 }

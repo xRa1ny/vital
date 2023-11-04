@@ -65,6 +65,16 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
         this.cooldown = info.cooldown();
     }
 
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
+    }
+
     /**
      * Creates a new VitalItemStack based on an existing ItemStack.
      * @param itemStack The base ItemStack.
@@ -82,50 +92,60 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
         setItemMeta(meta);
     }
 
+    @Override
+    public Class<VitalItemStackInfo> requiredAnnotationType() {
+        return VitalItemStackInfo.class;
+    }
+
     /**
      * Called when this item has been left-clicked.
      * @param e The player interact event.
-     * @param player The player.
      */
-    public abstract void onLeftClick(@NotNull PlayerInteractEvent e, @NotNull Player player);
+    public void onLeftClick(@NotNull PlayerInteractEvent e) {
+
+    }
 
     /**
      * Called when this item has been right-clicked.
      * @param e The player interact event.
-     * @param player The player.
      */
-    public abstract void onRightClick(@NotNull PlayerInteractEvent e, @NotNull Player player);
+    public void onRightClick(@NotNull PlayerInteractEvent e) {
+
+    }
 
     /**
      * Called when this item has been left or right-clicked, but the cooldown has not yet expired.
      * @param e The player interact event.
-     * @param player The player.
      */
-    public abstract void onCooldown(@NotNull PlayerInteractEvent e, @NotNull Player player);
+    public void onCooldown(@NotNull PlayerInteractEvent e) {
+
+    }
 
     /**
      * Called when the cooldown of this item expires for the specified player.
      * @param player The player.
      */
-    public abstract void onCooldownExpire(@NotNull Player player);
+    public void onCooldownExpire(@NotNull Player player) {
+
+    }
 
     /**
      * Handles player interaction with this item, considering cool-downs.
+     *
      * @param e The player interact event.
-     * @param player The player.
      */
-    public final void handleInteraction(@NotNull PlayerInteractEvent e, @NotNull Player player) {
+    public final void handleInteraction(@NotNull PlayerInteractEvent e) {
         if(currentCooldown >= 1) {
-            onCooldown(e, player);
+            onCooldown(e);
             return;
         }
 
         final Action action = e.getAction();
 
         if(action.isLeftClick()) {
-            onLeftClick(e, player);
+            onLeftClick(e);
         } else {
-            onRightClick(e, player);
+            onRightClick(e);
         }
 
         currentCooldown = cooldown;

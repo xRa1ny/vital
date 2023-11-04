@@ -43,7 +43,7 @@ public final class VitalItemStackListener extends VitalListener {
                 .stream()
                 .filter(i -> i.equals(e.getItem()))
                 .findFirst()
-                .ifPresent(itemStack -> itemStack.handleInteraction(e, e.getPlayer()));
+                .ifPresent(itemStack -> itemStack.handleInteraction(e));
     }
 }
 

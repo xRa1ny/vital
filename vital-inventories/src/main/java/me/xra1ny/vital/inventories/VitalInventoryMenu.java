@@ -72,26 +72,47 @@ public abstract class VitalInventoryMenu implements AnnotatedVitalComponent<Vita
         this.previousMenu = previousMenu;
     }
 
+    @Override
+    public Class<VitalInventoryMenuInfo> requiredAnnotationType() {
+        return VitalInventoryMenuInfo.class;
+    }
+
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
+    }
+
     /**
      * Called when this inventory menu opens and asks to be filled with items.
      *
      * @param player The player for whom the menu is opened.
      */
-    public abstract void setItems(@NotNull Player player);
+    public void setItems(@NotNull Player player) {
+
+    }
 
     /**
      * Called when this inventory menu opens.
      *
      * @param e The InventoryOpenEvent.
      */
-    public abstract void onOpen(@NotNull InventoryOpenEvent e);
+    public void onOpen(@NotNull InventoryOpenEvent e) {
+
+    }
 
     /**
      * Called when this inventory menu closes.
      *
      * @param e The InventoryCloseEvent.
      */
-    public abstract void onClose(@NotNull InventoryCloseEvent e);
+    public void onClose(@NotNull InventoryCloseEvent e) {
+
+    }
 
     /**
      * Handles a player's click within this inventory menu.
@@ -114,7 +135,9 @@ public abstract class VitalInventoryMenu implements AnnotatedVitalComponent<Vita
      *
      * @param e The InventoryClickEvent.
      */
-    public abstract void onClick(@NotNull InventoryClickEvent e);
+    public void onClick(@NotNull InventoryClickEvent e) {
+
+    }
 
     /**
      * Sets the background items in the inventory.

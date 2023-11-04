@@ -19,6 +19,16 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
     @Getter(onMethod = @__(@NotNull))
     private final JavaPlugin javaPlugin;
 
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
+    }
+
     /**
      * The interval at which this repeatable task should execute, in milliseconds.
      */
@@ -70,6 +80,11 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
         this.interval = interval;
     }
 
+    @Override
+    public Class<VitalRepeatableTaskInfo> requiredAnnotationType() {
+        return VitalRepeatableTaskInfo.class;
+    }
+
     /**
      * Starts this repeatable task. If it's already running, this method has no effect.
      */
@@ -95,7 +110,9 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
     /**
      * Called when this repeatable task starts.
      */
-    public abstract void onStart();
+    public void onStart() {
+
+    }
 
     /**
      * Stops this repeatable task. If it's not running, this method has no effect.
@@ -115,7 +132,9 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
     /**
      * Called when this repeatable task stops.
      */
-    public abstract void onStop();
+    public void onStop() {
+
+    }
 
     /**
      * Checks if this repeatable task is currently running.
@@ -129,6 +148,8 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
     /**
      * Called whenever the interval of this repeatable task expires.
      */
-    public abstract void onTick();
+    public void onTick() {
+
+    }
 }
 

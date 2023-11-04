@@ -33,7 +33,9 @@ public abstract class VitalPagedInventoryMenu extends VitalInventoryMenu {
      * @param page   The new page.
      * @param player The player viewing the inventory.
      */
-    protected abstract void onPageChange(long page, @NotNull Player player);
+    protected void onPageChange(long page, @NotNull Player player) {
+
+    }
 
     /**
      * Sets the current page of this paged inventory menu.

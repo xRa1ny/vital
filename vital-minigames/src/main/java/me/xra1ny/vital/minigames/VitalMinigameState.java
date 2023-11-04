@@ -20,14 +20,18 @@ public abstract class VitalMinigameState extends VitalListener {
     }
 
     /**
-     * Abstract method to be overridden in the subclass.
+     * Method to be overridden in the subclass.
      * Implement this method to define the specific setup or initialization logic for this minigame state when it's registered.
      */
-    public abstract void onVitalMinigameStateRegistered();
+    public void onVitalMinigameStateRegistered() {
+
+    }
 
     /**
-     * Abstract method to be overridden in the subclass.
+     * Method to be overridden in the subclass.
      * Implement this method to define the specific cleanup or resource release logic for this minigame state when it's unregistered.
      */
-    public abstract void onVitalMinigameStateUnregistered();
+    public void onVitalMinigameStateUnregistered() {
+
+    }
 }

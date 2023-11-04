@@ -64,6 +64,11 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
     public final void onUnregistered() {
     }
 
+    @Override
+    public Class<VitalCommandInfo> requiredAnnotationType() {
+        return VitalCommandInfo.class;
+    }
+
     /**
      * called when this command is executed with only the base command (/commandname)
      *
@@ -71,7 +76,9 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @return the status of this command execution
      */
     @NotNull
-    protected abstract VitalCommandReturnState executeBaseCommand(@NotNull CommandSender sender);
+    protected VitalCommandReturnState executeBaseCommand(@NotNull CommandSender sender) {
+        return VitalCommandReturnState.INVALID_ARGS;
+    }
 
     @Override
     public final boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -231,7 +238,9 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
     }
 
     @NotNull
-    public abstract List<String> onCommandTabComplete(@NotNull CommandSender sender, @NotNull String args);
+    public List<String> onCommandTabComplete(@NotNull CommandSender sender, @NotNull String args) {
+        return List.of();
+    }
 
     @NotNull
     public final List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
@@ -315,33 +324,43 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      *
      * @param sender The CommandSender
      */
-    protected abstract void onCommandInvalidArgs(@NotNull CommandSender sender);
+    protected void onCommandInvalidArgs(@NotNull CommandSender sender) {
+
+    }
 
     /**
      * Called when this VitalCommand has been executed and an internal Error has occurred
      *
      * @param sender The CommandSender
      */
-    protected abstract void onCommandInternalError(@NotNull CommandSender sender);
+    protected void onCommandInternalError(@NotNull CommandSender sender) {
+
+    }
 
     /**
      * Called when this VitalCommand has been executed and an Error has occurred
      *
      * @param sender The CommandSender
      */
-    protected abstract void onCommandError(@NotNull CommandSender sender);
+    protected void onCommandError(@NotNull CommandSender sender) {
+
+    }
 
     /**
      * Called when this VitalCommand has been executed without needed Permissions
      *
      * @param sender The CommandSender
      */
-    protected abstract void onCommandRequiresPermission(@NotNull CommandSender sender);
+    protected void onCommandRequiresPermission(@NotNull CommandSender sender) {
+
+    }
 
     /**
      * Called when this VitalCommand has been executed as a non Player Object while requiring a Player to be executed
      *
      * @param sender The CommandSender
      */
-    protected abstract void onCommandRequiresPlayer(@NotNull CommandSender sender);
+    protected void onCommandRequiresPlayer(@NotNull CommandSender sender) {
+
+    }
 }
