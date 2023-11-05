@@ -187,14 +187,17 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerTimeoutHandler.class);
     }
 
+    @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerManager> getCustomVitalPlayerManager() {
         return getVitalComponentManager().getVitalComponent(CustomVitalPlayerManager.class);
     }
 
+    @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerListener> getCustomVitalPlayerListener() {
         return getVitalComponentManager().getVitalComponent(CustomVitalPlayerListener.class);
     }
 
+    @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerTimeoutHandler> getCustomVitalPlayerTimeoutHandler() {
         return getVitalComponentManager().getVitalComponent(CustomVitalPlayerTimeoutHandler.class);
     }
