@@ -159,4 +159,60 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         vitalListenerManager.registerVitalComponent(customVitalPlayerListener);
         getVitalComponentManager().registerVitalComponent(customVitalPlayerTimeoutHandler);
     }
+
+    public Optional<VitalConfigManager> getVitalConfigManager() {
+        return getVitalComponentManager().getVitalComponent(VitalConfigManager.class);
+    }
+
+    public Optional<VitalListenerManager> getVitalListenerManager() {
+        return getVitalComponentManager().getVitalComponent(VitalListenerManager.class);
+    }
+
+    public Optional<DefaultVitalPlayerManager> getDefaultVitalPlayerManager() {
+        return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerManager.class);
+    }
+
+    public Optional<DefaultVitalPlayerListener> getDefaultVitalPlayerListener() {
+        return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerListener.class);
+    }
+
+    public Optional<DefaultVitalPlayerTimeoutHandler> getDefaultVitalPlayerTimeoutHandler() {
+        return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerTimeoutHandler.class);
+    }
+
+    public Optional<CustomVitalPlayerManager> getCustomVitalPlayerManager() {
+        return getVitalComponentManager().getVitalComponent(CustomVitalPlayerManager.class);
+    }
+
+    public Optional<CustomVitalPlayerListener> getCustomVitalPlayerListener() {
+        return getVitalComponentManager().getVitalComponent(CustomVitalPlayerListener.class);
+    }
+
+    public Optional<CustomVitalPlayerTimeoutHandler> getCustomVitalPlayerTimeoutHandler() {
+        return getVitalComponentManager().getVitalComponent(CustomVitalPlayerTimeoutHandler.class);
+    }
+
+    public Optional<VitalCommandManager> getVitalCommandManager() {
+        return getVitalComponentManager().getVitalComponent(VitalCommandManager.class);
+    }
+
+    public Optional<VitalHologramManager> getVitalHologramManager() {
+        return getVitalComponentManager().getVitalComponent(VitalHologramManager.class);
+    }
+
+    public Optional<VitalItemStackManager> getVitalItemStackManager() {
+        return getVitalComponentManager().getVitalComponent(VitalItemStackManager.class);
+    }
+
+    public Optional<VitalPerPlayerScoreboardManager> getVitalPerPlayerScoreboardManager() {
+        return getVitalComponentManager().getVitalComponent(VitalPerPlayerScoreboardManager.class);
+    }
+
+    public Optional<VitalGlobalScoreboardManager> getVitalGlobalScoreboardManager() {
+        return getVitalComponentManager().getVitalComponent(VitalGlobalScoreboardManager.class);
+    }
+
+    public Optional<VitalDatabaseManager> getVitalDatabaseManager() {
+        return getVitalComponentManager().getVitalComponent(VitalDatabaseManager.class);
+    }
 }
