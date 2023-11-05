@@ -18,6 +18,8 @@ import me.xra1ny.vital.scoreboards.VitalPerPlayerScoreboardManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,8 +29,12 @@ import java.util.Optional;
  * @author xRa1ny
  */
 public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
+    private static final List<Vital<?>> vitalList = new ArrayList<>();
+
     public Vital(@NotNull T javaPlugin) {
         super(javaPlugin);
+
+        vitalList.add(this);
     }
 
     @Override
@@ -214,5 +220,20 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
     public Optional<VitalDatabaseManager> getVitalDatabaseManager() {
         return getVitalComponentManager().getVitalComponent(VitalDatabaseManager.class);
+    }
+
+    /**
+     * Singleton access-point for all `Vital<T>` Instances.
+     *
+     * @param type Your Plugin's Main Class.
+     * @return An Optional holding either the Vital Instance tied to the specified Main Class, or null.
+     * @param <T> The Type of your Plugin's Main Class.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends JavaPlugin> Optional<Vital<T>> getVitalInstance(@NotNull Class<T> type) {
+        return vitalList.stream()
+                .filter(vital -> vital.getJavaPlugin().getClass().equals(type))
+                .map(vital -> (Vital<T>) vital)
+                .findAny();
     }
 }
