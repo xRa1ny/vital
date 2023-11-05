@@ -29,22 +29,8 @@ public final class SampleVitalItemStack extends VitalItemStack {
     }
 
     @Override
-    public Class<VitalItemStackInfo> requiredAnnotationType() {
-        return VitalItemStackInfo.class;
-    }
-
-    @Override
-    public void onRegistered() {
-
-    }
-
-    @Override
-    public void onUnregistered() {
-
-    }
-
-    @Override
-    public void onLeftClick(@NotNull PlayerInteractEvent e, @NotNull Player player) {
+    public void onLeftClick(@NotNull PlayerInteractEvent e) {
+        final Player player = e.getPlayer();
         final VitalHologram vitalHologram = new VitalHologram(player.getName(), player.getLocation(), Material.STICK, "line1", "line2", "line3");
 
         vitalHologramManager.registerVitalComponent(vitalHologram);
@@ -72,7 +58,8 @@ public final class SampleVitalItemStack extends VitalItemStack {
     }
 
     @Override
-    public void onRightClick(@NotNull PlayerInteractEvent e, @NotNull Player player) {
+    public void onRightClick(@NotNull PlayerInteractEvent e) {
+        final Player player = e.getPlayer();
         final SampleVitalInventoryMenu sampleVitalInventoryMenu = new SampleVitalInventoryMenu(null);
 
         sampleVitalInventoryMenu.open(player);
@@ -81,13 +68,10 @@ public final class SampleVitalItemStack extends VitalItemStack {
     }
 
     @Override
-    public void onCooldown(@NotNull PlayerInteractEvent e, @NotNull Player player) {
+    public void onCooldown(@NotNull PlayerInteractEvent e) {
+        final Player player = e.getPlayer();
+
         player.sendMessage("cooling down...");
         player.sendMessage("remaining: " + getCurrentCooldown());
-    }
-
-    @Override
-    public void onCooldownExpire(@NotNull Player player) {
-
     }
 }

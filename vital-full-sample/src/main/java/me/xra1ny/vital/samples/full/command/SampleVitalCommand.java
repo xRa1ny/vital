@@ -108,9 +108,4 @@ public final class SampleVitalCommand extends VitalCommand {
         // Here we specify any logic for when this command is executed by a non player if our command is to be only run by a player.
         sender.sendMessage("This command requires a player!");
     }
-
-    @Override
-    public Class<VitalCommandInfo> requiredAnnotationType() {
-        return VitalCommandInfo.class;
-    }
 }
