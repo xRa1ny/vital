@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 // Here we specify the command meta information.
+@SuppressWarnings("unused")
 @VitalCommandInfo(
         name = "samplevitalcommand",
         permission = "me.xra1ny.command.samplevitalcommand",

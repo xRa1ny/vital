@@ -15,6 +15,7 @@ import java.util.Optional;
  * @param <T> The JavaPlugin instance.
  * @author xRa1ny
  */
+@SuppressWarnings("unused")
 @Log
 public abstract class VitalCore<T extends JavaPlugin> {
     private static final List<VitalCore<?>> vitalCoreList = new ArrayList<>();
