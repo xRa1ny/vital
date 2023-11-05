@@ -19,14 +19,4 @@ public class SampleVitalPlayerRepository extends VitalRepository<SampleVitalPlay
     public Class<SampleVitalPlayerEntity> managedEntityType() {
         return SampleVitalPlayerEntity.class;
     }
-
-    @Override
-    public void onRegistered() {
-
-    }
-
-    @Override
-    public void onUnregistered() {
-
-    }
 }

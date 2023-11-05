@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 // Here we specify the command meta information.
+@SuppressWarnings({"unused", "DefaultAnnotationParam"})
 @VitalCommandInfo(
         name = "samplevitalcommand",
         permission = "me.xra1ny.command.samplevitalcommand",
@@ -107,10 +108,5 @@ public final class SampleVitalCommand extends VitalCommand {
     protected void onCommandRequiresPlayer(@NotNull CommandSender sender) {
         // Here we specify any logic for when this command is executed by a non player if our command is to be only run by a player.
         sender.sendMessage("This command requires a player!");
-    }
-
-    @Override
-    public Class<VitalCommandInfo> requiredAnnotationType() {
-        return VitalCommandInfo.class;
     }
 }

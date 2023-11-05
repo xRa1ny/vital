@@ -87,4 +87,8 @@ allprojects {
     tasks.build {
         dependsOn(tasks.shadowJar)
     }
+
+    tasks.publishToMavenLocal {
+        dependsOn(tasks.shadowJar)
+    }
 }
