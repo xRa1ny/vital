@@ -82,6 +82,19 @@ allprojects {
             compileOnly(it)
             testCompileOnly(it)
         }
+
+        // JUnit
+        rootProject.property("junit-engine-vendor")?.let {
+            testRuntimeOnly(it)
+        }
+
+        rootProject.property("junit-api-vendor")?.let {
+            testImplementation(it)
+        }
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 
     tasks.build {
