@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author xRa1ny
  */
-public abstract class VitalInventoryMenu implements AnnotatedVitalComponent<VitalInventoryMenuInfo>, InventoryHolder {
+public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInventoryInfo>, InventoryHolder {
 
     /**
      * The title of this inventory.
@@ -52,15 +52,13 @@ public abstract class VitalInventoryMenu implements AnnotatedVitalComponent<Vita
      * The previous menu of this inventory menu, if any.
      */
     @Getter(onMethod = @__(@Nullable))
-    private final VitalInventoryMenu previousMenu;
+    private final Inventory previousInventory;
 
     /**
      * Constructs a new VitalInventoryMenu instance.
-     *
-     * @param previousMenu The previous menu to navigate back to, or null if there is none.
      */
-    public VitalInventoryMenu(@Nullable VitalInventoryMenu previousMenu) {
-        final VitalInventoryMenuInfo info = getRequiredAnnotation();
+    public VitalInventory() {
+        final VitalInventoryInfo info = getRequiredAnnotation();
 
         this.title = info.title();
         this.size = info.size();
@@ -69,12 +67,30 @@ public abstract class VitalInventoryMenu implements AnnotatedVitalComponent<Vita
                 .type(info.background())
                 .build()
                 .toItemStack();
-        this.previousMenu = previousMenu;
+        this.previousInventory = null;
+    }
+
+    /**
+     * Constructs a new VitalInventoryMenu instance.
+     *
+     * @param previousInventory The previous menu to navigate back to, or null if there is none.
+     */
+    public VitalInventory(@Nullable Inventory previousInventory) {
+        final VitalInventoryInfo info = getRequiredAnnotation();
+
+        this.title = info.title();
+        this.size = info.size();
+        this.background = ItemBuilder.builder()
+                .name(null)
+                .type(info.background())
+                .build()
+                .toItemStack();
+        this.previousInventory = previousInventory;
     }
 
     @Override
-    public Class<VitalInventoryMenuInfo> requiredAnnotationType() {
-        return VitalInventoryMenuInfo.class;
+    public Class<VitalInventoryInfo> requiredAnnotationType() {
+        return VitalInventoryInfo.class;
     }
 
     @Override
@@ -150,16 +166,9 @@ public abstract class VitalInventoryMenu implements AnnotatedVitalComponent<Vita
         }
     }
 
-    /**
-     * Opens this inventory menu for the specified player.
-     *
-     * @param player The player for whom the menu is opened.
-     */
-    @SuppressWarnings({"deprecation", "DataFlowIssue"})
-    public final void open(@NotNull Player player) {
-        this.inventory = Bukkit.createInventory(this, this.size, this.title);
+    public final Inventory build() {
+        inventory = Bukkit.createInventory(this, size, title);
 
-        // Open the created Inventory for the specified Player
-        player.getPlayer().openInventory(this.inventory);
+        return inventory;
     }
 }
