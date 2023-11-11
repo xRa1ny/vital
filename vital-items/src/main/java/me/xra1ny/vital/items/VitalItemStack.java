@@ -45,14 +45,13 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
     public VitalItemStack() {
         @Nullable
         final VitalItemStackInfo info = getRequiredAnnotation();
-        final ItemStack itemStack = ItemBuilder.builder()
+        final ItemStack itemStack = new VitalItemStackBuilder()
                 .type(info.type())
                 .name(info.name())
                 .amount(info.amount())
                 .lore(List.of(info.lore()))
                 .itemFlags(List.of(info.itemFlags()))
-                .build()
-                .toItemStack();
+                .build();
         final ItemMeta meta = itemStack.getItemMeta();
 
         if(info.enchanted()) {

@@ -2,7 +2,7 @@ package me.xra1ny.vital.inventories;
 
 import lombok.Getter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
-import me.xra1ny.vital.items.ItemBuilder;
+import me.xra1ny.vital.items.VitalItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -62,7 +62,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
 
         this.title = info.title();
         this.size = info.size();
-        this.background = ItemBuilder.builder()
+        this.background = new VitalItemStackBuilder()
                 .name(null)
                 .type(info.background())
                 .build()
