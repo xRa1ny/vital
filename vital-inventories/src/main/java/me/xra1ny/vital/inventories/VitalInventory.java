@@ -65,8 +65,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         this.background = new VitalItemStackBuilder()
                 .name(null)
                 .type(info.background())
-                .build()
-                .toItemStack();
+                .build();
         this.previousInventory = null;
     }
 
@@ -80,11 +79,10 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
 
         this.title = info.title();
         this.size = info.size();
-        this.background = ItemBuilder.builder()
+        this.background = new VitalItemStackBuilder()
                 .name(null)
                 .type(info.background())
-                .build()
-                .toItemStack();
+                .build();
         this.previousInventory = previousInventory;
     }
 
