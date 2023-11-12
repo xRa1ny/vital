@@ -15,6 +15,7 @@ import org.reflections.ReflectionUtils;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +116,11 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     @SneakyThrows
     public final void save() {
         for (Field field : ReflectionUtils.getAllFields(getClass())) {
+            // If our Field is transient, we want to skip this iteration.
+            if(Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
+
             final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
 
             if (path == null) {
@@ -158,6 +164,11 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     @SneakyThrows
     public final void update() {
         for (Field field : ReflectionUtils.getAllFields(getClass())) {
+            // If our Field is transient, we want to skip this iteration.
+            if(Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
+
             final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
 
             if (path == null) {
@@ -198,6 +209,11 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
         final Map<Field, Object> fieldObjectMap = new HashMap<>();
 
         for (Field field : ReflectionUtils.getAllFields(clazz)) {
+            // If our Field is transient, we want to skip it.
+            if(Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
+
             final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
 
             if (path == null) {
