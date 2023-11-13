@@ -41,8 +41,8 @@ public final class SampleVitalListener extends VitalListener {
         e.getPlayer().getInventory().addItem(sampleVitalItemStack);
 
         e.getPlayer().sendMessage(ChatColor.YELLOW + "currently registered holograms: " + ChatColor.RESET + vitalHologramManager.getVitalComponentList());
-        e.getPlayer().sendMessage(ChatColor.YELLOW + "currently in CONFIG saved hologram: " + ChatColor.RESET + sampleVitalConfig.getSampleVitalHologramConfigField());
-        e.getPlayer().sendMessage(ChatColor.YELLOW + "currently in CONFIG saved hologram list: " + ChatColor.RESET + sampleVitalConfig.getSampleVitalHologramListConfigField());
+        e.getPlayer().sendMessage(ChatColor.YELLOW + "currently in CONFIG saved hologram: " + ChatColor.RESET + sampleVitalConfig.sampleVitalHologramConfigField);
+        e.getPlayer().sendMessage(ChatColor.YELLOW + "currently in CONFIG saved hologram list: " + ChatColor.RESET + sampleVitalConfig.sampleVitalHologramListConfigField);
     }
 
     @EventHandler

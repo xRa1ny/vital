@@ -43,7 +43,7 @@ public final class SampleVitalPlugin extends JavaPlugin {
 
         final DefaultVitalConfig defaultVitalConfig = vital.getVitalComponentManager().getVitalComponent(DefaultVitalConfig.class).get();
 
-        if(defaultVitalConfig.isVitalDatabaseEnabled()) {
+        if(defaultVitalConfig.vitalDatabaseEnabled) {
             final VitalDatabaseManager vitalDatabaseManager = vital.getVitalComponentManager().getVitalComponent(VitalDatabaseManager.class).get();
             final SampleVitalDatabase sampleVitalDatabase = new SampleVitalDatabase();
             final SampleVitalPlayerRepository sampleVitalPlayerRepository = new SampleVitalPlayerRepository(sampleVitalDatabase);

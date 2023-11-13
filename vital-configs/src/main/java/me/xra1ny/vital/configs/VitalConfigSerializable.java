@@ -16,6 +16,7 @@ public interface VitalConfigSerializable {
      *
      * @return A map containing the serialized configuration data.
      */
+    @SuppressWarnings("unchecked")
     @SneakyThrows
     default Map<String, Object> serialize() {
         // Create a new HashMap to store serialized key-value pairs.
@@ -29,14 +30,14 @@ public interface VitalConfigSerializable {
                 continue;
             }
 
-            field.setAccessible(true);
-
             Object fieldValue = field.get(this);
 
             // If the object we are trying to add to our serialized object is of type Enum
             // we want to convert it to a String, so we can safely read it from config later.
             if(fieldValue instanceof Enum<?>) {
                 fieldValue = fieldValue.toString();
+            }else if(fieldValue instanceof VitalConfigSerializable vitalConfigSerializable) {
+                fieldValue = vitalConfigSerializable.serialize();
             }
 
             // Add the field's value to the serialized map with the key specified by VitalConfigPath annotation.

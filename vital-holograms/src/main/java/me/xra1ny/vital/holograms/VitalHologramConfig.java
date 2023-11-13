@@ -14,7 +14,7 @@ public final class VitalHologramConfig extends VitalConfig {
     /**
      * The list of currently saved VitalHolograms
      */
-    private List<VitalHologram> vitalHologramList;
+    public List<VitalHologram> vitalHologramList;
 
     public VitalHologramConfig(@NotNull String name, @NotNull JavaPlugin javaPlugin) {
         super(name, javaPlugin);

@@ -121,8 +121,6 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 continue;
             }
 
-            field.setAccessible(true);
-
             Object fieldValue = field.get(this);
 
             if (fieldValue instanceof String stringFieldValue) {
@@ -142,7 +140,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                     // If elements in List, are not of Type VitalConfigSerializable, attempt to use Spigot's default Config Mapping.
                     this.config.set(path.value(), fieldValue);
                 }
-            }else if(fieldValue instanceof VitalConfigSerializable vitalConfigSerializable) {
+            } else if (fieldValue instanceof VitalConfigSerializable vitalConfigSerializable) {
                 // Attempt to serialize the Object we are trying to save.
                 config.set(path.value(), vitalConfigSerializable.serialize());
             }
@@ -170,19 +168,17 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 continue;
             }
 
-            field.setAccessible(true);
-
             if (configValue instanceof String stringConfigValue) {
                 configValue = ChatColor.translateAlternateColorCodes('&', stringConfigValue);
                 field.set(this, configValue);
-            }else if(configValue instanceof Map<?, ?> configValueMap) {
+            } else if (configValue instanceof Map<?, ?> configValueMap) {
                 final Map<String, Object> stringObjectMap = (Map<String, Object>) configValueMap;
 
                 field.set(this, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
-            }else if(configValue instanceof MemorySection memorySection) {
+            } else if (configValue instanceof MemorySection memorySection) {
                 final Map<String, Object> stringObjectMap = new HashMap<>();
 
-                for(String key : memorySection.getKeys(false)) {
+                for (String key : memorySection.getKeys(false)) {
                     stringObjectMap.put(key, memorySection.get(key));
                 }
 
@@ -190,7 +186,6 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
             }
         }
     }
-
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @SneakyThrows
@@ -204,8 +199,6 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 continue;
             }
 
-            field.setAccessible(true);
-
             if (!serialized.containsKey(path.value())) {
                 // Could not deserialize, since ConfigPath value was not found on serialized content Map!
 
@@ -217,12 +210,22 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                     continue;
                 }
 
-                fieldObjectMap.put(field, stringObjectEntry.getValue());
+                if (stringObjectEntry.getValue() instanceof MemorySection memorySection) {
+                    final Map<String, Object> stringObjectMap = new HashMap<>();
+
+                    for (String key : memorySection.getKeys(false)) {
+                        stringObjectMap.put(key, memorySection.get(key));
+                    }
+
+                    fieldObjectMap.put(field, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
+                } else {
+                    fieldObjectMap.put(field, stringObjectEntry.getValue());
+                }
             }
 
             final VitalConfigEnum vitalConfigEnum = field.getDeclaredAnnotation(VitalConfigEnum.class);
 
-            if(vitalConfigEnum != null) {
+            if (vitalConfigEnum != null) {
                 fieldObjectMap.replace(field, Enum.valueOf((Class<Enum>) field.getType(), fieldObjectMap.get(field).toString()));
             }
         }
