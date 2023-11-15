@@ -2,6 +2,7 @@ package me.xra1ny.vital.inventories;
 
 import lombok.Getter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * @author xRa1ny
  */
 @Getter
-public abstract class VitalPagedInventoryMenu extends VitalInventoryMenu {
+public abstract class VitalPagedInventory extends VitalInventory {
     /**
      * The current page of this paged inventory menu.
      */
@@ -21,10 +22,10 @@ public abstract class VitalPagedInventoryMenu extends VitalInventoryMenu {
     /**
      * Creates a new VitalPagedInventoryMenu.
      *
-     * @param previousMenu The previous menu, if any.
+     * @param previousInventory The previous menu, if any.
      */
-    public VitalPagedInventoryMenu(@Nullable VitalInventoryMenu previousMenu) {
-        super(previousMenu);
+    public VitalPagedInventory(@Nullable Inventory previousInventory) {
+        super(previousInventory);
     }
 
     /**

@@ -2,6 +2,7 @@ package me.xra1ny.vital.inventories;
 
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,7 +16,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface VitalInventoryMenuInfo {
+public @interface VitalInventoryInfo {
     /**
      * The title of this inventory menu.
      *
@@ -29,6 +30,7 @@ public @interface VitalInventoryMenuInfo {
      *
      * @return The size of the inventory menu.
      */
+    @Range(from = 9, to = 54)
     int size() default 9;
 
     /**
