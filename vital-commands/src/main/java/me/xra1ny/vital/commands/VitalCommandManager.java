@@ -1,9 +1,11 @@
 package me.xra1ny.vital.commands;
 
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
 
 /**
  * Class responsible for managing Vital commands.
@@ -39,5 +41,19 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
     @Override
     public void onVitalComponentUnregistered(@NotNull VitalCommand vitalComponent) {
         javaPlugin.getCommand(vitalComponent.getName()).setExecutor(null);
+    }
+
+    /**
+     * Attempts to automatically register all `VitalCommands` in the specified package.
+     *
+     * @param packageName The package.
+     */
+    @SneakyThrows
+    public void registerVitalCommands(@NotNull String packageName) {
+        for(Class<? extends VitalCommand> vitalCommandClass : new Reflections(packageName).getSubTypesOf(VitalCommand.class)) {
+            final VitalCommand vitalCommand = vitalCommandClass.getDeclaredConstructor().newInstance();
+
+            registerVitalComponent(vitalCommand);
+        }
     }
 }
