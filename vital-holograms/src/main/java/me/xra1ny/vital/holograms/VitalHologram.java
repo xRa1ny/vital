@@ -6,7 +6,9 @@ import lombok.SneakyThrows;
 import me.xra1ny.vital.configs.VitalConfigEnum;
 import me.xra1ny.vital.configs.VitalConfigPath;
 import me.xra1ny.vital.configs.VitalConfigSerializable;
+import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalComponent;
+import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -14,12 +16,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents a hologram in the Vital framework.
@@ -27,7 +31,7 @@ import java.util.List;
  *
  * @author xRa1ny
  */
-public final class VitalHologram implements VitalComponent, VitalConfigSerializable {
+public final class VitalHologram implements VitalComponent, VitalConfigSerializable, VitalAutoRegisterable {
 
     /**
      * The name of this hologram.
@@ -175,5 +179,16 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Override
     public void onUnregistered() {
         remove();
+    }
+
+    @Override
+    public void autoRegister(@NotNull Class<JavaPlugin> javaPluginType) {
+        final Optional<VitalCore<JavaPlugin>> optionalVitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
+        final VitalCore<JavaPlugin> vitalCore = optionalVitalCore.get();
+
+        final Optional<VitalHologramManager> optionalVitalHologramManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalHologramManager.class);
+        final VitalHologramManager vitalHologramManager = optionalVitalHologramManager.get();
+
+        vitalHologramManager.registerVitalComponent(this);
     }
 }
