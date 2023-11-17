@@ -1,8 +1,11 @@
 package me.xra1ny.vital.configs;
 
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
 
 /**
  * Class responsible for managing Vital configuration files.
@@ -32,5 +35,19 @@ public final class VitalConfigManager extends VitalComponentListManager<VitalCon
     @Override
     public void onVitalComponentUnregistered(@NotNull VitalConfig vitalConfig) {
 
+    }
+
+    /**
+     * Attempts to automatically register all `VitalConfigs` in the specified package.
+     *
+     * @param packageName The package.
+     */
+    @SneakyThrows
+    public void registerVitalConfigs(@NotNull String packageName, @NotNull JavaPlugin javaPlugin) {
+        for(Class<? extends VitalConfig> vitalConfigClass : new Reflections(packageName).getSubTypesOf(VitalConfig.class)) {
+            final VitalConfig vitalConfig = vitalConfigClass.getDeclaredConstructor(JavaPlugin.class).newInstance(javaPlugin);
+
+            registerVitalComponent(vitalConfig);
+        }
     }
 }

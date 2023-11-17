@@ -3,6 +3,8 @@ package me.xra1ny.vital.items;
 import lombok.Getter;
 import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
+import me.xra1ny.vital.core.VitalAutoRegisterable;
+import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -10,10 +12,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -25,7 +29,7 @@ import java.util.UUID;
  */
 @Getter
 @SuppressWarnings("unused")
-public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo> {
+public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo>, VitalAutoRegisterable {
     /**
      * The current Cooldown of this VitalItemStack.
      */
@@ -180,6 +184,17 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      */
     public final boolean isEnchanted() {
         return !getItemMeta().getEnchants().isEmpty();
+    }
+
+    @Override
+    public final void autoRegister(@NotNull Class<? extends JavaPlugin> javaPluginType) {
+        final Optional<? extends VitalCore<? extends JavaPlugin>> optionalVitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
+        final VitalCore<? extends JavaPlugin> vitalCore = optionalVitalCore.get();
+
+        final Optional<VitalItemStackManager> optionalVitalItemStackManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalItemStackManager.class);
+        final VitalItemStackManager vitalItemStackManager = optionalVitalItemStackManager.get();
+
+        vitalItemStackManager.registerVitalComponent(this);
     }
 }
 

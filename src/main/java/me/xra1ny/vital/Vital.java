@@ -13,8 +13,6 @@ import me.xra1ny.vital.items.VitalItemStackCooldownHandler;
 import me.xra1ny.vital.items.VitalItemStackListener;
 import me.xra1ny.vital.items.VitalItemStackManager;
 import me.xra1ny.vital.players.*;
-import me.xra1ny.vital.scoreboards.VitalGlobalScoreboardManager;
-import me.xra1ny.vital.scoreboards.VitalPerPlayerScoreboardManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -85,16 +83,6 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         final VitalInventoryListener vitalInventoryListener = new VitalInventoryListener();
 
         vitalListenerManager.registerVitalComponent(vitalInventoryListener);
-
-        // Register VitalPerPlayerScoreboardManagement
-        final VitalPerPlayerScoreboardManager vitalPerPlayerScoreboardManager = new VitalPerPlayerScoreboardManager();
-
-        getVitalComponentManager().registerVitalComponent(vitalPerPlayerScoreboardManager);
-
-        // Register VitalGlobalScoreboardManagement
-        final VitalGlobalScoreboardManager vitalGlobalScoreboardManager = new VitalGlobalScoreboardManager();
-
-        getVitalComponentManager().registerVitalComponent(vitalGlobalScoreboardManager);
 
         if(defaultVitalConfig.vitalDatabaseEnabled) {
             // Register VitalDatabaseManager
@@ -212,14 +200,6 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
     public Optional<VitalItemStackManager> getVitalItemStackManager() {
         return getVitalComponentManager().getVitalComponent(VitalItemStackManager.class);
-    }
-
-    public Optional<VitalPerPlayerScoreboardManager> getVitalPerPlayerScoreboardManager() {
-        return getVitalComponentManager().getVitalComponent(VitalPerPlayerScoreboardManager.class);
-    }
-
-    public Optional<VitalGlobalScoreboardManager> getVitalGlobalScoreboardManager() {
-        return getVitalComponentManager().getVitalComponent(VitalGlobalScoreboardManager.class);
     }
 
     public Optional<VitalDatabaseManager> getVitalDatabaseManager() {
