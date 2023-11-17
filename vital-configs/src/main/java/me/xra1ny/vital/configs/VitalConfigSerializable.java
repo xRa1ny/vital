@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.reflections.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ public interface VitalConfigSerializable {
      *
      * @return A map containing the serialized configuration data.
      */
+    @SuppressWarnings("unchecked")
     @SneakyThrows
     default Map<String, Object> serialize() {
         // Create a new HashMap to store serialized key-value pairs.
@@ -23,6 +25,11 @@ public interface VitalConfigSerializable {
 
         // Iterate through all fields in the implementing class using ReflectionUtils.
         for (Field field : ReflectionUtils.getAllFields(getClass())) {
+            // If our Field is transient, we want to skip it in this iteration.
+            if(Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
+
             final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
 
             if (path == null) {
