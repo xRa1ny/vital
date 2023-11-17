@@ -38,19 +38,19 @@ public final class SampleVitalItemStack extends VitalItemStack {
 
         vitalHologramManager.registerVitalComponent(vitalHologram);
 
-        if (sampleVitalConfig.getSampleVitalHologramConfigField() == null) {
+        if (sampleVitalConfig.sampleVitalHologramConfigField == null) {
             player.sendMessage("hologram not yet saved to config! saving...");
-            sampleVitalConfig.setSampleVitalHologramConfigField(vitalHologram);
+            sampleVitalConfig.sampleVitalHologramConfigField = vitalHologram;
         }
 
-        List<VitalHologram> vitalHologramList = sampleVitalConfig.getSampleVitalHologramListConfigField();
+        List<VitalHologram> vitalHologramList = sampleVitalConfig.sampleVitalHologramListConfigField;
 
         if(vitalHologramList == null) {
             vitalHologramList = new ArrayList<>();
         }
 
         vitalHologramList.add(vitalHologram);
-        sampleVitalConfig.setSampleVitalHologramListConfigField(vitalHologramList);
+        sampleVitalConfig.sampleVitalHologramListConfigField = vitalHologramList;
 
         player.sendMessage("added new hologram to config saved list!");
 

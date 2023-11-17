@@ -45,13 +45,9 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @return An {@link Optional} containing the entity if found, or an empty {@link Optional} if not found.
      */
     public final Optional<Entity> findById(@NotNull Class<Entity> entityClass, @NotNull Id id) {
-        final List<Entity> entityList = findAll(entityClass);
-
-        if(entityList.isEmpty()) {
-            return Optional.empty();
+        try(Session session = vitalDatabase.getSessionFactory().openSession()) {
+            return Optional.ofNullable(session.get(entityClass, id));
         }
-
-        return Optional.of(entityList.get(0));
     }
 
     /**
