@@ -53,7 +53,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(vitalListenerManager);
 
         // Register VitalPlayerManagement
-        final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(defaultVitalConfig.getVitalPlayerTimeout());
+        final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(defaultVitalConfig.vitalPlayerTimeout);
         final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(getJavaPlugin(), defaultVitalPlayerManager);
         final DefaultVitalPlayerTimeoutHandler defaultVitalPlayerTimeoutHandler = new DefaultVitalPlayerTimeoutHandler(getJavaPlugin(), defaultVitalPlayerManager);
 
@@ -96,7 +96,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
         getVitalComponentManager().registerVitalComponent(vitalGlobalScoreboardManager);
 
-        if(defaultVitalConfig.isVitalDatabaseEnabled()) {
+        if(defaultVitalConfig.vitalDatabaseEnabled) {
             // Register VitalDatabaseManager
             final VitalDatabaseManager vitalDatabaseManager = new VitalDatabaseManager();
 
