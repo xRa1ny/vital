@@ -132,24 +132,23 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
             if (fieldValue instanceof String stringFieldValue) {
                 //noinspection UnnecessaryUnicodeEscape
                 fieldValue = ChatColor.translateAlternateColorCodes('\u00A7', stringFieldValue);
-            }
-
-            if (fieldValue instanceof List<?> fieldValueList) {
+            }else if (fieldValue instanceof List<?> fieldValueList) {
                 try {
                     // Attempt to serialize every element in List.
                     final List<Map<String, Object>> serializedContentMap = ((List<? extends VitalConfigSerializable>) fieldValueList).stream()
                             .map(VitalConfigSerializable::serialize)
                             .toList();
 
-                    config.set(path.value(), serializedContentMap);
+                    fieldValue = serializedContentMap;
                 } catch (ClassCastException ignored) {
                     // If elements in List, are not of Type VitalConfigSerializable, attempt to use Spigot's default Config Mapping.
-                    this.config.set(path.value(), fieldValue);
                 }
             } else if (fieldValue instanceof VitalConfigSerializable vitalConfigSerializable) {
                 // Attempt to serialize the Object we are trying to save.
-                config.set(path.value(), vitalConfigSerializable.serialize());
+                fieldValue = vitalConfigSerializable.serialize();
             }
+
+            this.config.set(path.value(), fieldValue);
         }
 
         this.config.save(this.configFile);
@@ -181,11 +180,10 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
             if (configValue instanceof String stringConfigValue) {
                 configValue = ChatColor.translateAlternateColorCodes('&', stringConfigValue);
-                field.set(this, configValue);
             } else if (configValue instanceof Map<?, ?> configValueMap) {
                 final Map<String, Object> stringObjectMap = (Map<String, Object>) configValueMap;
 
-                field.set(this, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
+                configValue = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
             } else if (configValue instanceof MemorySection memorySection) {
                 final Map<String, Object> stringObjectMap = new HashMap<>();
 
@@ -193,8 +191,10 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                     stringObjectMap.put(key, memorySection.get(key));
                 }
 
-                field.set(this, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
+                configValue = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
             }
+
+            field.set(this, configValue);
         }
     }
 
