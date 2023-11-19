@@ -25,11 +25,11 @@ public final class VitalItemStackBuilder {
 
     private Material type = Material.COBBLESTONE;
 
-    private List<String> lore;
+    private List<String> lore = new ArrayList<>();
 
-    private List<ItemFlag> itemFlagList;
+    private List<ItemFlag> itemFlagList = new ArrayList<>();
 
-    private Map<Enchantment, Integer> enchantmentLevelMap;
+    private Map<Enchantment, Integer> enchantmentLevelMap = new HashMap<>();
 
     private int amount = 1;
 
