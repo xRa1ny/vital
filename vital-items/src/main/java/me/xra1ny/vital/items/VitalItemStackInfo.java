@@ -73,4 +73,11 @@ public @interface VitalItemStackInfo {
      * @return True if the item should appear as if enchanted; false otherwise.
      */
     boolean enchanted() default false;
+
+    /**
+     * Indicates whether the custom item stack should be unbreakable.
+     *
+     * @return True if the item should be unbreakable; false otherwise.
+     */
+    boolean unbreakable() default true;
 }
