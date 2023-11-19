@@ -33,6 +33,8 @@ public final class VitalItemStackBuilder {
 
     private int amount = 1;
 
+    private boolean unbreakable;
+
     public VitalItemStackBuilder name(String name) {
         this.name = name;
 
@@ -99,6 +101,12 @@ public final class VitalItemStackBuilder {
         return this;
     }
 
+    public VitalItemStackBuilder unbreakable(boolean unbreakable) {
+        this.unbreakable = unbreakable;
+
+        return this;
+    }
+
     /**
      * Converts the builder's configuration into an ItemStack.
      *
@@ -144,6 +152,8 @@ public final class VitalItemStackBuilder {
             if (!lore.isEmpty()) {
                 meta.setLore(lore);
             }
+
+            meta.setUnbreakable(unbreakable);
 
             // Set created ItemStack's ItemMeta
             item.setItemMeta(meta);

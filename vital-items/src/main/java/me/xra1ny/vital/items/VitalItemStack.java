@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,9 +44,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      * Creates a new VitalItemStack based on annotation-defined properties.
      * @see VitalItemStackInfo
      */
-    @SuppressWarnings("DataFlowIssue")
     public VitalItemStack() {
-        @Nullable
         final VitalItemStackInfo info = getRequiredAnnotation();
         final ItemStack itemStack = new VitalItemStackBuilder()
                 .type(info.type())
@@ -55,6 +52,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
                 .amount(info.amount())
                 .lore(List.of(info.lore()))
                 .itemFlags(List.of(info.itemFlags()))
+                .unbreakable(info.unbreakable())
                 .build();
         final ItemMeta meta = itemStack.getItemMeta();
 
