@@ -3,10 +3,12 @@ package me.xra1ny.vital.items;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +36,8 @@ public final class VitalItemStackBuilder {
     private int amount = 1;
 
     private boolean unbreakable;
+
+    private Map<NamespacedKey, Map.Entry<PersistentDataType<?, ?>, ?>> namespacedKeyMap = new HashMap<>();
 
     public VitalItemStackBuilder name(String name) {
         this.name = name;
@@ -107,6 +111,20 @@ public final class VitalItemStackBuilder {
         return this;
     }
 
+    public <Z> VitalItemStackBuilder namespacedKey(@NotNull String key, @NotNull PersistentDataType<?, Z> persistentDataType, @NotNull Z value) {
+        final NamespacedKey namespacedKey = new NamespacedKey("vital", key);
+
+        namespacedKeyMap.put(namespacedKey, Map.entry(persistentDataType, value));
+
+        return this;
+    }
+
+    public <Z> VitalItemStackBuilder namespacedKey(@NotNull NamespacedKey namespacedKey, @NotNull PersistentDataType<?, Z> persistentDataType, @NotNull Z value) {
+        namespacedKeyMap.put(namespacedKey, Map.entry(persistentDataType, value));
+
+        return this;
+    }
+
     /**
      * Converts the builder's configuration into an ItemStack.
      *
@@ -114,7 +132,7 @@ public final class VitalItemStackBuilder {
      */
     @SuppressWarnings("deprecation")
     @NotNull
-    public ItemStack build() {
+    public <Z> ItemStack build() {
         // Create ItemStack and ItemMeta
         final ItemStack item = new ItemStack((type != null ? type : Material.COBBLESTONE), amount);
 
@@ -154,6 +172,22 @@ public final class VitalItemStackBuilder {
             }
 
             meta.setUnbreakable(unbreakable);
+
+            if(!namespacedKeyMap.isEmpty()) {
+                final PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
+
+                for(Map.Entry<NamespacedKey, Map.Entry<PersistentDataType<?, ?>, ?>> entry : namespacedKeyMap.entrySet()) {
+                    final NamespacedKey namespacedKey = entry.getKey();
+                    final PersistentDataType<?, Z> persistentDataType = (PersistentDataType<?, Z>) entry.getValue().getKey();
+                    final Z value = (Z) entry.getValue().getValue();
+
+                    if(!persistentDataType.getComplexType().equals(value.getClass())) {
+                        continue;
+                    }
+
+                    persistentDataContainer.set(namespacedKey, persistentDataType, value);
+                }
+            }
 
             // Set created ItemStack's ItemMeta
             item.setItemMeta(meta);
