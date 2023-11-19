@@ -19,11 +19,10 @@ public abstract class VitalPagedInventory extends VitalInventory {
      */
     private long page = 0;
 
-    /**
-     * Creates a new VitalPagedInventoryMenu.
-     *
-     * @param previousInventory The previous menu, if any.
-     */
+    public VitalPagedInventory() {
+        super();
+    }
+
     public VitalPagedInventory(@Nullable Inventory previousInventory) {
         super(previousInventory);
     }
