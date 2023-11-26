@@ -16,7 +16,8 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,7 +118,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     public final void save() {
         for (Field field : ReflectionUtils.getAllFields(getClass())) {
             // If our Field is transient, we want to skip this iteration.
-            if(Modifier.isTransient(field.getModifiers())) {
+            if (Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
 
@@ -132,7 +133,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
             if (fieldValue instanceof String stringFieldValue) {
                 //noinspection UnnecessaryUnicodeEscape
                 fieldValue = ChatColor.translateAlternateColorCodes('\u00A7', stringFieldValue);
-            }else if (fieldValue instanceof List<?> fieldValueList) {
+            } else if (fieldValue instanceof List<?> fieldValueList) {
                 try {
                     // Attempt to serialize every element in List.
                     final List<Map<String, Object>> serializedContentMap = ((List<? extends VitalConfigSerializable>) fieldValueList).stream()
@@ -162,7 +163,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     public final void update() {
         for (Field field : ReflectionUtils.getAllFields(getClass())) {
             // If our Field is transient, we want to skip this iteration.
-            if(Modifier.isTransient(field.getModifiers())) {
+            if (Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
 
@@ -185,13 +186,30 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
                 configValue = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
             } else if (configValue instanceof MemorySection memorySection) {
-                final Map<String, Object> stringObjectMap = new HashMap<>();
+                final Map<String, Object> stringObjectMap = new LinkedHashMap<>();
 
                 for (String key : memorySection.getKeys(false)) {
                     stringObjectMap.put(key, memorySection.get(key));
                 }
 
                 configValue = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
+            } else if (configValue instanceof List<?> list) {
+                final VitalConfigList vitalConfigList = field.getDeclaredAnnotation(VitalConfigList.class);
+
+                // If we specified the list annotation with a complex type, attempt to decipher...
+                if (vitalConfigList != null) {
+                    final Class<? extends VitalConfigSerializable> vitalConfigListType = vitalConfigList.value();
+                    final List<LinkedHashMap<String, Object>> linkedHashMapList = (List<LinkedHashMap<String, Object>>) list;
+                    final List<VitalConfigSerializable> vitalConfigSerializableList = new ArrayList<>();
+
+                    for (LinkedHashMap<String, Object> linkedHashMap : linkedHashMapList) {
+                        final VitalConfigSerializable vitalConfigSerializable = deserialize(vitalConfigListType, linkedHashMap);
+
+                        vitalConfigSerializableList.add(vitalConfigSerializable);
+                    }
+
+                    configValue = vitalConfigSerializableList;
+                }
             }
 
             field.set(this, configValue);
@@ -201,11 +219,11 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     @SuppressWarnings({"unchecked", "rawtypes"})
     @SneakyThrows
     public final <T extends VitalConfigSerializable> T deserialize(@NotNull Class<T> clazz, @NotNull Map<String, Object> serialized) {
-        final Map<Field, Object> fieldObjectMap = new HashMap<>();
+        final Map<Field, Object> fieldObjectMap = new LinkedHashMap<>();
 
         for (Field field : ReflectionUtils.getAllFields(clazz)) {
             // If our Field is transient, we want to skip it.
-            if(Modifier.isTransient(field.getModifiers())) {
+            if (Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
 
@@ -226,17 +244,40 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                     continue;
                 }
 
-                if (stringObjectEntry.getValue() instanceof MemorySection memorySection) {
-                    final Map<String, Object> stringObjectMap = new HashMap<>();
+                Object value = stringObjectEntry.getValue();
+
+                if (value instanceof MemorySection memorySection) {
+                    final Map<String, Object> stringObjectMap = new LinkedHashMap<>();
 
                     for (String key : memorySection.getKeys(false)) {
                         stringObjectMap.put(key, memorySection.get(key));
                     }
 
-                    fieldObjectMap.put(field, deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap));
-                } else {
-                    fieldObjectMap.put(field, stringObjectEntry.getValue());
+                    value = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
+                } else if (value instanceof List<?> list) {
+                    final VitalConfigList vitalConfigList = field.getDeclaredAnnotation(VitalConfigList.class);
+
+                    // decipher, if we have specified a complex type. via annotation..
+                    if (vitalConfigList != null) {
+                        final Class<? extends VitalConfigSerializable> vitalConfigListType = vitalConfigList.value();
+                        final List<LinkedHashMap<String, Object>> linkedHashMapList = (List<LinkedHashMap<String, Object>>) list;
+                        final List<VitalConfigSerializable> vitalConfigSerializableList = new ArrayList<>();
+
+                        for (LinkedHashMap<String, Object> linkedHashMap : linkedHashMapList) {
+                            final VitalConfigSerializable vitalConfigSerializable = deserialize(vitalConfigListType, linkedHashMap);
+
+                            vitalConfigSerializableList.add(vitalConfigSerializable);
+                        }
+
+                        value = vitalConfigSerializableList;
+                    }
+                } else if(value instanceof Map<?, ?> map) {
+                    final Map<String, Object> stringObjectMap = (Map<String, Object>) map;
+
+                    value = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
                 }
+
+                fieldObjectMap.put(field, value);
             }
 
             final VitalConfigEnum vitalConfigEnum = field.getDeclaredAnnotation(VitalConfigEnum.class);
@@ -250,7 +291,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
         try {
             final Class<?>[] constructorTypes = fieldObjectMap.keySet().stream()
-                    .map(Field::getClass)
+                    .map(Field::getType)
                     .toArray(Class[]::new);
 
             // Attempt to get Constructor matching ALL mapped Fields.
