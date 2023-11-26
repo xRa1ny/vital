@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
-import me.xra1ny.vital.tasks.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class VitalCountdownMinigameState extends VitalMinigameState implements AnnotatedVitalComponent<VitalCountdownMinigameStateInfo> {
     private VitalRepeatableTask vitalRepeatableTask;
 
+    @Getter
     private final int initialCountdown;
 
     @Getter
@@ -83,22 +83,12 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
 
                 countdown--;
             }
-
-            @Override
-            public Class<VitalRepeatableTaskInfo> requiredAnnotationType() {
-                return VitalRepeatableTaskInfo.class;
-            }
-
-            @Override
-            public void onRegistered() {
-                onVitalMinigameStateRegistered();
-            }
-
-            @Override
-            public void onUnregistered() {
-                onVitalMinigameStateUnregistered();
-            }
         };
+    }
+
+    @Override
+    public final Class<VitalCountdownMinigameStateInfo> requiredAnnotationType() {
+        return VitalCountdownMinigameStateInfo.class;
     }
 
     /**
@@ -119,20 +109,28 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
     /**
      * Called when the countdown starts.
      */
-    public abstract void onCountdownStart();
+    public void onCountdownStart() {
+
+    }
 
     /**
      * Called on each countdown tick.
      */
-    public abstract void onCountdownTick();
+    public void onCountdownTick() {
+
+    }
 
     /**
      * Called when the countdown stops.
      */
-    public abstract void onCountdownStop();
+    public void onCountdownStop() {
+
+    }
 
     /**
      * Called when the countdown expires.
      */
-    public abstract void onCountdownExpire();
+    public void onCountdownExpire() {
+
+    }
 }

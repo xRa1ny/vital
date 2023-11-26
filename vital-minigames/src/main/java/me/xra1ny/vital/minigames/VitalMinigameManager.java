@@ -2,6 +2,7 @@ package me.xra1ny.vital.minigames;
 
 import lombok.Getter;
 import me.xra1ny.vital.core.VitalComponent;
+import me.xra1ny.vital.core.VitalListenerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,11 +10,17 @@ import org.jetbrains.annotations.Nullable;
  * Manages the current state of a minigame using the Vital framework.
  */
 public final class VitalMinigameManager implements VitalComponent {
+    private final VitalListenerManager vitalListenerManager;
+
     /**
      * The currently active minigame state.
      */
     @Getter(onMethod = @__(@Nullable))
     private VitalMinigameState vitalMinigameState;
+
+    public VitalMinigameManager(@NotNull VitalListenerManager vitalListenerManager) {
+        this.vitalListenerManager = vitalListenerManager;
+    }
 
     /**
      * Checks if the current minigame state matches a specified class.
@@ -40,10 +47,11 @@ public final class VitalMinigameManager implements VitalComponent {
                 vitalCountdownMinigameState.stopCountdown();
             }
 
-            this.vitalMinigameState.onUnregistered();
+
+            vitalListenerManager.unregisterVitalComponent(this.vitalMinigameState);
         }
 
-        vitalMinigameState.onRegistered();
+        vitalListenerManager.registerVitalComponent(vitalMinigameState);
         this.vitalMinigameState = vitalMinigameState;
     }
 
