@@ -66,7 +66,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
 
         final VitalRepeatableTaskInfo vitalRepeatableTaskInfo = getRequiredAnnotation();
 
-        this.interval = vitalRepeatableTaskInfo.interval();
+        this.interval = vitalRepeatableTaskInfo.value();
     }
 
     /**

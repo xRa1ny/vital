@@ -71,7 +71,7 @@ public class VitalPluginInfoAnnotationProcessor extends AbstractProcessor {
         final VitalPluginInfo vitalPluginInfo = classNameVitalPluginInfoEntry.getValue();
 
         // finally generate the `plugin.yml`.
-        generatePluginYml(className, vitalPluginInfo.name(), vitalPluginInfo.apiVersion(), vitalPluginInfo.version());
+        generatePluginYml(className, vitalPluginInfo.value(), vitalPluginInfo.apiVersion(), vitalPluginInfo.version());
 
         ran = true;
 

@@ -23,7 +23,7 @@ public @interface VitalInventoryInfo {
      * @return The title of the inventory menu.
      */
     @NotNull
-    String title();
+    String value();
 
     /**
      * The size in slots of this inventory menu. Default is 9 (one row).

@@ -6,6 +6,6 @@ import me.xra1ny.vital.databases.VitalDatabaseInfo;
 /**
  * This class defines that we have a database with meta information defined in `@VitalDatabaseInfo's hibernate.cfg.xml file`
  */
-@VitalDatabaseInfo(urlToCfgXml = "hibernate.cfg.xml")
+@VitalDatabaseInfo(value = "hibernate.cfg.xml")
 public class SampleVitalDatabase extends VitalDatabase {
 }

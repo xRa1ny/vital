@@ -9,7 +9,7 @@ import java.util.List;
 // Here we specify the command meta information.
 @SuppressWarnings({"unused", "DefaultAnnotationParam"})
 @VitalCommandInfo(
-        name = "samplevitalcommand",
+        value = "samplevitalcommand",
         permission = "me.xra1ny.command.samplevitalcommand",
         requiresPlayer = true,
         args = {

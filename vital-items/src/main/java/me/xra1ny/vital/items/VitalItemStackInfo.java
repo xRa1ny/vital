@@ -23,7 +23,6 @@ public @interface VitalItemStackInfo {
      *
      * @return The name of the item stack.
      */
-    @NotNull
     String name();
 
     /**
@@ -47,7 +46,6 @@ public @interface VitalItemStackInfo {
      *
      * @return The material/type of the item stack, represented by the Material enum.
      */
-    @NotNull
     Material type();
 
     /**
@@ -56,7 +54,6 @@ public @interface VitalItemStackInfo {
      *
      * @return An array of item flags affecting the item's display.
      */
-    @NotNull
     ItemFlag[] itemFlags() default {};
 
     /**

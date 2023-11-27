@@ -18,5 +18,5 @@ public @interface VitalDatabaseInfo {
      *
      * @return The URL to the .cfg.xml file.
      */
-    String urlToCfgXml();
+    String value();
 }

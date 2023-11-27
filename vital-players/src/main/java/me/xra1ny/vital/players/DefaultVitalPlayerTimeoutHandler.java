@@ -4,7 +4,7 @@ import me.xra1ny.vital.tasks.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-@VitalRepeatableTaskInfo(interval = 50)
+@VitalRepeatableTaskInfo(value = 50)
 public final class DefaultVitalPlayerTimeoutHandler extends VitalPlayerTimeoutHandler<VitalPlayer> {
     /**
      * Constructs a VitalPlayerTimeoutHandler instance.

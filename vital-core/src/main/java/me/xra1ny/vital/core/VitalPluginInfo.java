@@ -19,7 +19,7 @@ public @interface VitalPluginInfo {
      *
      * @return The name of this plugin.
      */
-    String name() default "Plugin";
+    String value();
 
     /**
      * Defines the description of this plugin.
