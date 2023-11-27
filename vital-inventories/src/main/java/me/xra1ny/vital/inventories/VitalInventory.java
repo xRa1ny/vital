@@ -60,7 +60,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     public VitalInventory() {
         final VitalInventoryInfo info = getRequiredAnnotation();
 
-        this.title = info.title();
+        this.title = info.value();
         this.size = info.size();
         this.background = new VitalItemStackBuilder()
                 .name(null)
@@ -77,7 +77,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     public VitalInventory(@Nullable Inventory previousInventory) {
         final VitalInventoryInfo info = getRequiredAnnotation();
 
-        this.title = info.title();
+        this.title = info.value();
         this.size = info.size();
         this.background = new VitalItemStackBuilder()
                 .name(null)

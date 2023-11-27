@@ -6,6 +6,6 @@ import me.xra1ny.vital.inventories.VitalInventoryInfo;
 /**
  * Here we define meta information for our Inventory.
  */
-@VitalInventoryInfo(title = "SampleVitalInventory")
+@VitalInventoryInfo(value = "SampleVitalInventory")
 public final class SampleVitalInventory extends VitalInventory {
 }

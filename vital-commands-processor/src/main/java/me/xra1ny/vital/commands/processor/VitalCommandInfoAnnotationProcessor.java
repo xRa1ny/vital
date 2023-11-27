@@ -74,7 +74,7 @@ public class VitalCommandInfoAnnotationProcessor extends AbstractProcessor {
             VitalPluginInfoHolder.PLUGIN_INFO.append("\n");
 
             for(VitalCommandInfo vitalCommandInfo : vitalCommandInfoList) {
-                final String vitalCommandName = vitalCommandInfo.name();
+                final String vitalCommandName = vitalCommandInfo.value();
                 final String vitalCommandDescription = vitalCommandInfo.description();
                 final String vitalCommandPermission = vitalCommandInfo.permission();
                 final String vitalCommandUsage = vitalCommandInfo.usage();

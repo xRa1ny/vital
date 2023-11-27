@@ -19,6 +19,6 @@ public @interface VitalRepeatableTaskInfo {
      *
      * @return The interval for the repeatable task execution.
      */
-    int interval();
+    int value();
 }
 

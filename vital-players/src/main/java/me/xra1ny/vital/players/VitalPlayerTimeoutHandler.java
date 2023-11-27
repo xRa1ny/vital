@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> The type of VitalPlayer to manage.
  * @author xRa1ny
  */
-@VitalRepeatableTaskInfo(interval = 50)
+@VitalRepeatableTaskInfo(value = 50)
 public class VitalPlayerTimeoutHandler<T extends VitalPlayer> extends VitalRepeatableTask {
     private final VitalPlayerManager<T> vitalPlayerManager;
 

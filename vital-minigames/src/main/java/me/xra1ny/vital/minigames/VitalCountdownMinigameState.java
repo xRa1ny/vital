@@ -31,7 +31,7 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
     public VitalCountdownMinigameState(@NotNull JavaPlugin javaPlugin) {
         final VitalCountdownMinigameStateInfo vitalCountdownMinigameStateInfo = getRequiredAnnotation();
 
-        this.initialCountdown = getRequiredAnnotation().countdown();
+        this.initialCountdown = vitalCountdownMinigameStateInfo.value();
         this.countdown = this.initialCountdown;
 
         run(javaPlugin, vitalCountdownMinigameStateInfo.interval());

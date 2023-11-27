@@ -49,7 +49,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
     public VitalCommand() {
         final VitalCommandInfo vitalCommandInfo = getRequiredAnnotation();
 
-        this.name = vitalCommandInfo.name();
+        this.name = vitalCommandInfo.value();
         this.permission = vitalCommandInfo.permission();
         this.requiresPlayer = vitalCommandInfo.requiresPlayer();
         this.vitalCommandArgs = vitalCommandInfo.args();

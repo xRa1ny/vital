@@ -29,7 +29,7 @@ public class VitalDatabase extends VitalComponentListManager<VitalRepository<? e
     public VitalDatabase() {
         final VitalDatabaseInfo vitalDatabaseInfo = getRequiredAnnotation();
 
-        this.configuration = new Configuration().configure(vitalDatabaseInfo.urlToCfgXml());
+        this.configuration = new Configuration().configure(vitalDatabaseInfo.value());
     }
 
     /**

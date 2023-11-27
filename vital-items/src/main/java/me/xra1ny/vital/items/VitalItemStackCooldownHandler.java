@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author xRa1ny
  */
-@VitalRepeatableTaskInfo(interval = 50)
+@VitalRepeatableTaskInfo(value = 50)
 public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
     /**
      * The VitalItemStackManagement instance for managing VitalItemStacks.
