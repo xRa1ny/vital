@@ -3,6 +3,8 @@ package me.xra1ny.vital.configs;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
+import me.xra1ny.vital.core.VitalAutoRegisterable;
+import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,10 +18,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Abstract base class for managing configuration files in the Vital framework.
@@ -27,7 +26,7 @@ import java.util.Map;
  *
  * @author xRa1ny
  */
-public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfigInfo> {
+public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfigInfo>, VitalAutoRegisterable {
     /**
      * The name of the configuration file.
      */
@@ -331,5 +330,15 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     @Override
     public final void onUnregistered() {
         save();
+    }
+
+    @Override
+    public void autoRegister(@NotNull Class<? extends JavaPlugin> javaPluginType) {
+        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
+
+        final Optional<VitalConfigManager> optionalVitalConfigManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalConfigManager.class);
+        final VitalConfigManager vitalConfigManager = optionalVitalConfigManager.get();
+
+        vitalConfigManager.registerVitalComponent(this);
     }
 }
