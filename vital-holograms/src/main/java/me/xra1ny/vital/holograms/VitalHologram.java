@@ -183,8 +183,7 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
 
     @Override
     public void autoRegister(@NotNull Class<? extends JavaPlugin> javaPluginType) {
-        final Optional<? extends VitalCore<? extends JavaPlugin>> optionalVitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
-        final VitalCore<? extends JavaPlugin> vitalCore = optionalVitalCore.get();
+        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
         final Optional<VitalHologramManager> optionalVitalHologramManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalHologramManager.class);
         final VitalHologramManager vitalHologramManager = optionalVitalHologramManager.get();

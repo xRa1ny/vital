@@ -16,8 +16,6 @@ import me.xra1ny.vital.players.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,12 +26,10 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
-    private static final List<Vital<?>> vitalList = new ArrayList<>();
+    private static Vital<?> instance;
 
     public Vital(@NotNull T javaPlugin) {
         super(javaPlugin);
-
-        vitalList.add(this);
     }
 
     @Override
@@ -90,6 +86,9 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
             getVitalComponentManager().registerVitalComponent(vitalDatabaseManager);
         }
+
+        // finally register this instance for singleton access point.
+        instance = this;
     }
 
     /**
@@ -207,17 +206,15 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     }
 
     /**
-     * Singleton access-point for all `Vital<T>` Instances.
+     * Singleton access-point for `Vital<T>` Instance.
      *
      * @param type Your Plugin's Main Class.
-     * @return An Optional holding either the Vital Instance tied to the specified Main Class, or null.
+     * @return The Vital<T> Instance.
      * @param <T> The Type of your Plugin's Main Class.
+     * @throws ClassCastException If the provided Type and `Vital<T>` Instance don't match.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends JavaPlugin> Optional<Vital<T>> getVitalInstance(@NotNull Class<T> type) {
-        return vitalList.stream()
-                .filter(vital -> vital.getJavaPlugin().getClass().equals(type))
-                .map(vital -> (Vital<T>) vital)
-                .findAny();
+    public static <T extends JavaPlugin> Vital<T> getVitalInstance(@NotNull Class<T> type) {
+        return (Vital<T>) instance;
     }
 }

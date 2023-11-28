@@ -2,18 +2,22 @@ package me.xra1ny.vital.commands;
 
 import lombok.Getter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
+import me.xra1ny.vital.core.VitalAutoRegisterable;
+import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Abstract base class for custom Minecraft commands using the Vital framework.
@@ -22,7 +26,7 @@ import java.util.List;
  * @author xRa1ny
  */
 @Getter(onMethod = @__(@NotNull))
-public abstract class VitalCommand implements AnnotatedVitalComponent<VitalCommandInfo>, CommandExecutor, TabExecutor {
+public abstract class VitalCommand implements AnnotatedVitalComponent<VitalCommandInfo>, VitalAutoRegisterable, CommandExecutor, TabExecutor {
     /**
      * The name of the command.
      */
@@ -362,5 +366,15 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      */
     protected void onCommandRequiresPlayer(@NotNull CommandSender sender) {
 
+    }
+
+    @Override
+    public void autoRegister(@NotNull Class<? extends JavaPlugin> javaPluginType) {
+        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
+
+        final Optional<VitalCommandManager> optionalVitalCommandManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalCommandManager.class);
+        final VitalCommandManager vitalCommandManager = optionalVitalCommandManager.get();
+
+        vitalCommandManager.registerVitalComponent(this);
     }
 }
