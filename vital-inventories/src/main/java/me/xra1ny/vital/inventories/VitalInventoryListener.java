@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Listener for handling VitalInventoryMenu related events.
@@ -26,9 +27,10 @@ public final class VitalInventoryListener extends VitalListener {
      */
     @EventHandler
     public void onPlayerOpenInventory(@NotNull InventoryOpenEvent e) {
+        final InventoryHolder inventoryHolder = e.getInventory().getHolder();
         final Player player = (Player) e.getPlayer();
 
-        if (e.getInventory().getHolder() instanceof VitalInventory vitalInventory) {
+        if (inventoryHolder instanceof VitalInventory vitalInventory) {
             vitalInventory.onOpen(e);
 
             vitalInventory.setBackground();
@@ -37,7 +39,7 @@ public final class VitalInventoryListener extends VitalListener {
             if (vitalInventory instanceof VitalPagedInventory vitalPagedInventoryMenu) {
                 vitalPagedInventoryMenu.setPage(1, player);
             }
-        } else if (e.getInventory().getHolder() instanceof VitalInventoryBuilder vitalInventoryBuilder) {
+        } else if (inventoryHolder instanceof VitalInventoryBuilder vitalInventoryBuilder) {
             final VitalInventoryOpenEvent vitalInventoryOpenEvent = vitalInventoryBuilder.getVitalInventoryOpenEvent();
 
             vitalInventoryOpenEvent.onVitalInventoryOpen(player);
@@ -52,17 +54,24 @@ public final class VitalInventoryListener extends VitalListener {
     @EventHandler
     public void onPlayerClickInInventory(@NotNull InventoryClickEvent e) {
         final InventoryHolder inventoryHolder = e.getInventory().getHolder();
+        final Optional<Inventory> optionalClickedInventory = Optional.ofNullable(e.getClickedInventory());
         final Player player = (Player) e.getWhoClicked();
 
         if (inventoryHolder instanceof VitalInventory vitalInventory) {
             // If the User clicks outside of Inventory Window, close it
-            if (e.getClickedInventory() == null && vitalInventory.getPreviousInventory() != null) {
-                player.openInventory(vitalInventory.getPreviousInventory());
+            final Optional<Inventory> optionalPreviousInventory = Optional.ofNullable(vitalInventory.getPreviousInventory());
+
+            if(optionalClickedInventory.isEmpty() && optionalPreviousInventory.isPresent()) {
+                final Inventory previousInventory = optionalPreviousInventory.get();
+
+                player.openInventory(previousInventory);
 
                 return;
             }
 
-            if (e.getCurrentItem() == null) {
+            final Optional<ItemStack> optionalCurrentItem = Optional.ofNullable(e.getCurrentItem());
+
+            if (optionalCurrentItem.isEmpty()) {
                 return;
             }
 
@@ -70,13 +79,19 @@ public final class VitalInventoryListener extends VitalListener {
             e.setCancelled(true);
         } else if (inventoryHolder instanceof VitalInventoryBuilder vitalInventoryBuilder) {
             // If the User clicks outside of Inventory Window, close it
-            if (e.getClickedInventory() == null && vitalInventoryBuilder.getPreviousInventory() != null) {
-                player.openInventory(vitalInventoryBuilder.getPreviousInventory());
+            final Optional<Inventory> optionalPreviousInventory = Optional.ofNullable(vitalInventoryBuilder.getPreviousInventory());
+
+            if(optionalClickedInventory.isEmpty() && optionalPreviousInventory.isPresent()) {
+                final Inventory previousInventory = optionalPreviousInventory.get();
+
+                player.openInventory(previousInventory);
 
                 return;
             }
 
-            if (e.getCurrentItem() == null) {
+            final Optional<ItemStack> optionalCurrentItem = Optional.ofNullable(e.getCurrentItem());
+
+            if (optionalCurrentItem.isEmpty()) {
                 return;
             }
 
@@ -111,10 +126,12 @@ public final class VitalInventoryListener extends VitalListener {
             if (inventoryAction == VitalInventoryClickEvent.Action.CLOSE_INVENTORY) {
                 player.closeInventory();
             }else if(inventoryAction == VitalInventoryClickEvent.Action.OPEN_PREVIOUS_INVENTORY) {
-                final Inventory previousInventory = vitalInventoryBuilder.getPreviousInventory();
+                final Optional<Inventory> optionalPreviousBuilderInventory = Optional.ofNullable(vitalInventoryBuilder.getPreviousInventory());
 
-                if(previousInventory != null) {
-                    player.openInventory(previousInventory);
+                if (optionalPreviousBuilderInventory.isPresent()) {
+                    final Inventory previousBuilderInventory = optionalPreviousBuilderInventory.get();
+
+                    player.openInventory(previousBuilderInventory);
                 }
             }
 

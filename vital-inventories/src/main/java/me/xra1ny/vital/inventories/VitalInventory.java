@@ -16,6 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 /**
  * An abstract class for creating interactive inventories.
  * Extends AnnotatedVitalComponent<VitalInventoryMenuInfo> and implements InventoryHolder.
@@ -63,7 +65,6 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         this.title = info.value();
         this.size = info.size();
         this.background = new VitalItemStackBuilder()
-                .name(null)
                 .type(info.background())
                 .build();
         this.previousInventory = null;
@@ -80,7 +81,6 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         this.title = info.value();
         this.size = info.size();
         this.background = new VitalItemStackBuilder()
-                .name(null)
                 .type(info.background())
                 .build();
         this.previousInventory = previousInventory;
@@ -134,12 +134,22 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      * @param e The InventoryClickEvent.
      */
     public final void handleClick(@NotNull InventoryClickEvent e) {
+        final Optional<ItemStack> optionalItemStack = Optional.ofNullable(e.getCurrentItem());
+
+        if (optionalItemStack.isEmpty()) {
+            return;
+        }
+
+        final ItemStack itemStack = optionalItemStack.get();
+        final Material material = itemStack.getType();
+
+        if (material.equals(Material.AIR) || itemStack.equals(background)) {
+            return;
+        }
+
         final Player player = (Player) e.getWhoClicked();
 
-        if (e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR
-                && !e.getCurrentItem().equals(this.background)) {
-            player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, .3f, 1f);
-        }
+        player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, .3f, 1f);
 
         onClick(e);
     }

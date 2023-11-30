@@ -5,10 +5,7 @@ import org.reflections.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This interface represents an object that can be serialized into a map for configuration purposes.
@@ -32,11 +29,13 @@ public interface VitalConfigSerializable {
                 continue;
             }
 
-            final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
+            final Optional<VitalConfigPath> optionalVitalConfigPath = Optional.ofNullable(field.getAnnotation(VitalConfigPath.class));
 
-            if (path == null) {
+            if (optionalVitalConfigPath.isEmpty()) {
                 continue;
             }
+
+            final VitalConfigPath vitalConfigPath = optionalVitalConfigPath.get();
 
             // force accessibility for `private` field support.
             field.setAccessible(true);
@@ -66,7 +65,7 @@ public interface VitalConfigSerializable {
             }
 
             // Add the field's value to the serialized map with the key specified by VitalConfigPath annotation.
-            stringObjectMap.put(path.value(), fieldValue);
+            stringObjectMap.put(vitalConfigPath.value(), fieldValue);
         }
 
         // Return the map containing the serialized configuration.

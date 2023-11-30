@@ -3,6 +3,7 @@ package me.xra1ny.vital.commands;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
@@ -40,7 +41,10 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
     @SuppressWarnings("DataFlowIssue")
     @Override
     public void onVitalComponentUnregistered(@NotNull VitalCommand vitalComponent) {
-        javaPlugin.getCommand(vitalComponent.getName()).setExecutor(null);
+        final PluginCommand pluginCommand = javaPlugin.getCommand(vitalComponent.getName());
+
+        // Needs to be `null`, since command is unregistered.
+        pluginCommand.setExecutor(null);
     }
 
     /**

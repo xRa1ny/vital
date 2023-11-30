@@ -1,10 +1,6 @@
 package me.xra1ny.vital.core;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A listener component for handling events in the Vital framework.
