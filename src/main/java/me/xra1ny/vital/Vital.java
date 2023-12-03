@@ -41,12 +41,12 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(vitalConfigManager);
         getVitalComponentManager().registerVitalComponent(defaultVitalConfig);
 
-        // Register VitalListenerManager
-        final VitalListenerManager vitalListenerManager = new VitalListenerManager(getJavaPlugin());
+        // Register VitalPlayerManagement if no other player management has yet been registered by implementing programmer.
+        System.out.println();
+        System.out.println("currently registered player managers: " + getVitalComponentManager().getVitalComponentList(VitalPlayerManager.class));
+        System.out.println();
 
-        getVitalComponentManager().registerVitalComponent(vitalListenerManager);
-
-        // Register VitalPlayerManagement
+        final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
         final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(defaultVitalConfig.vitalPlayerTimeout);
         final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(getJavaPlugin(), defaultVitalPlayerManager);
         final DefaultVitalPlayerTimeoutHandler defaultVitalPlayerTimeoutHandler = new DefaultVitalPlayerTimeoutHandler(getJavaPlugin(), defaultVitalPlayerManager);
@@ -55,13 +55,17 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         vitalListenerManager.registerVitalComponent(defaultVitalPlayerListener);
         getVitalComponentManager().registerVitalComponent(defaultVitalPlayerTimeoutHandler);
 
+        System.out.println();
+        System.out.println("after registered player managers: " + getVitalComponentManager().getVitalComponentList(VitalPlayerManager.class));
+        System.out.println();
+
         // Register VitalCommandManagement
         final VitalCommandManager vitalCommandManager = new VitalCommandManager(getJavaPlugin());
 
         getVitalComponentManager().registerVitalComponent(vitalCommandManager);
 
         // Register VitalHologramManagement
-        final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig("holograms.yml", getJavaPlugin());
+        final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig(getJavaPlugin());
         final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
         getVitalComponentManager().registerVitalComponent(vitalHologramManager);

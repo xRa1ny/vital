@@ -34,7 +34,7 @@ public class SampleVitalPlugin extends JavaPlugin {
 
             // Here we register Vital's HologramManager
             final VitalConfigManager vitalConfigManager = new VitalConfigManager();
-            final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig("holograms.yml", getJavaPlugin());
+            final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig(getJavaPlugin());
             final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
             getVitalComponentManager().registerVitalComponent(vitalHologramManager);

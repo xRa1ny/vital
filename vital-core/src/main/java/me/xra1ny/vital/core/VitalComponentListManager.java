@@ -19,6 +19,13 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
     @Getter(onMethod = @__(@NotNull))
     private final List<T> vitalComponentList = new ArrayList<>();
 
+    public final <T> List<T> getVitalComponentList(@NotNull Class<T> clazz) {
+        return vitalComponentList.stream()
+                .filter(vitalComponent -> clazz.isAssignableFrom(vitalComponent.getClass()))
+                .map(clazz::cast)
+                .toList();
+    }
+
     /**
      * Checks if a VitalComponent is registered with the specified UUID.
      *
@@ -125,4 +132,12 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @param vitalComponent The VitalComponent unregistered.
      */
     public abstract void onVitalComponentUnregistered(@NotNull T vitalComponent);
+
+    protected void onEnable() {
+
+    }
+
+    public final void enable() {
+        onEnable();
+    }
 }

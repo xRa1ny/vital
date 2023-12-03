@@ -2,10 +2,14 @@ package me.xra1ny.vital.commands;
 
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import me.xra1ny.vital.core.DIUtils;
 import me.xra1ny.vital.core.VitalComponentListManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
+
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Class responsible for managing Vital commands.
@@ -54,6 +58,19 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
             final VitalCommand vitalCommand = vitalCommandClass.getDeclaredConstructor().newInstance();
 
             registerVitalComponent(vitalCommand);
+        }
+    }
+
+    @Override
+    protected void onEnable() {
+        final Set<Class<? extends VitalCommand>> vitalCommandClassSet = new Reflections().getSubTypesOf(VitalCommand.class);
+
+        for(Class<? extends VitalCommand> vitalCommandClass : vitalCommandClassSet) {
+            final Optional<? extends VitalCommand> optionalVitalCommand = DIUtils.getDependencyInjectedInstance(vitalCommandClass);
+
+            log.info(vitalCommandClass.getSimpleName() + ": " + optionalVitalCommand);
+
+            optionalVitalCommand.ifPresent(this::registerVitalComponent);
         }
     }
 }
