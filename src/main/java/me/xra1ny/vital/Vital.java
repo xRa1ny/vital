@@ -42,10 +42,6 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(defaultVitalConfig);
 
         // Register VitalPlayerManagement if no other player management has yet been registered by implementing programmer.
-        System.out.println();
-        System.out.println("currently registered player managers: " + getVitalComponentManager().getVitalComponentList(VitalPlayerManager.class));
-        System.out.println();
-
         final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
         final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(defaultVitalConfig.vitalPlayerTimeout);
         final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(getJavaPlugin(), defaultVitalPlayerManager);
@@ -54,10 +50,6 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(defaultVitalPlayerManager);
         vitalListenerManager.registerVitalComponent(defaultVitalPlayerListener);
         getVitalComponentManager().registerVitalComponent(defaultVitalPlayerTimeoutHandler);
-
-        System.out.println();
-        System.out.println("after registered player managers: " + getVitalComponentManager().getVitalComponentList(VitalPlayerManager.class));
-        System.out.println();
 
         // Register VitalCommandManagement
         final VitalCommandManager vitalCommandManager = new VitalCommandManager(getJavaPlugin());

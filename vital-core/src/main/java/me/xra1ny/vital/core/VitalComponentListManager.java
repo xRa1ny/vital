@@ -133,6 +133,8 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      */
     public abstract void onVitalComponentUnregistered(@NotNull T vitalComponent);
 
+    public abstract Class<T> managedType();
+
     protected void onEnable() {
 
     }

@@ -28,4 +28,9 @@ public final class VitalComponentManager extends VitalComponentListManager<Vital
     public void onVitalComponentUnregistered(@NotNull VitalComponent vitalComponent) {
 
     }
+
+    @Override
+    public Class<VitalComponent> managedType() {
+        return VitalComponent.class;
+    }
 }

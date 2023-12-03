@@ -101,4 +101,9 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
     public void onVitalComponentUnregistered(@NotNull VitalHologram vitalHologram) {
 
     }
+
+    @Override
+    public Class<VitalHologram> managedType() {
+        return VitalHologram.class;
+    }
 }

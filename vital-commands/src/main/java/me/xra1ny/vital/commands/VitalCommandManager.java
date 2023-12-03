@@ -47,6 +47,11 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
         javaPlugin.getCommand(vitalComponent.getName()).setExecutor(null);
     }
 
+    @Override
+    public Class<VitalCommand> managedType() {
+        return VitalCommand.class;
+    }
+
     /**
      * Attempts to automatically register all `VitalCommands` in the specified package.
      *
@@ -67,8 +72,6 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
 
         for(Class<? extends VitalCommand> vitalCommandClass : vitalCommandClassSet) {
             final Optional<? extends VitalCommand> optionalVitalCommand = DIUtils.getDependencyInjectedInstance(vitalCommandClass);
-
-            log.info(vitalCommandClass.getSimpleName() + ": " + optionalVitalCommand);
 
             optionalVitalCommand.ifPresent(this::registerVitalComponent);
         }

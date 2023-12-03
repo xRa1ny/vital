@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @Log
-public class VitalPlayerManager<T extends VitalPlayer> extends VitalComponentListManager<T> {
+public abstract class VitalPlayerManager<T extends VitalPlayer> extends VitalComponentListManager<T> {
     private final int vitalPlayerTimeout;
 
     public VitalPlayerManager(int vitalPlayerTimeout) {
@@ -37,6 +37,11 @@ public class VitalPlayerManager<T extends VitalPlayer> extends VitalComponentLis
     @Override
     public void onVitalComponentUnregistered(@NotNull T vitalPlayer) {
 
+    }
+
+    @Override
+    public final Class<T> managedType() {
+        return (Class<T>) VitalPlayer.class;
     }
 }
 
