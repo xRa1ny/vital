@@ -7,9 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
-import java.util.Optional;
-import java.util.Set;
-
 public final class VitalListenerManager extends VitalComponentListManager<VitalListener> {
     private final JavaPlugin javaPlugin;
 
@@ -53,17 +50,6 @@ public final class VitalListenerManager extends VitalComponentListManager<VitalL
             final VitalListener vitalListener = vitalListenerClass.getDeclaredConstructor().newInstance();
 
             registerVitalComponent(vitalListener);
-        }
-    }
-
-    @Override
-    protected void onEnable() {
-        final Set<Class<? extends VitalListener>> vitalListenerClassSet = new Reflections().getSubTypesOf(VitalListener.class);
-
-        for(Class<? extends VitalListener> vitalListenerClass : vitalListenerClassSet) {
-            final Optional<? extends VitalListener> optionalVitalListener = DIUtils.getDependencyInjectedInstance(vitalListenerClass);
-
-            optionalVitalListener.ifPresent(this::registerVitalComponent);
         }
     }
 }

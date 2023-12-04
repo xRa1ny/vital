@@ -19,7 +19,7 @@ public final class DefaultVitalConfig extends VitalConfig {
 
     /**
      * Flag indicating whether the database is enabled.
-     * Set to true if the database should be enabled, false otherwise.
+     * Set to true if database support should be enabled, false otherwise.
      * Example: false
      */
     @VitalConfigPath("vital.database-enabled")

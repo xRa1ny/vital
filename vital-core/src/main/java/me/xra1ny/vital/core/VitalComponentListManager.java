@@ -2,11 +2,9 @@ package me.xra1ny.vital.core;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Abstract class for managing a list of Vital components.
@@ -135,11 +133,21 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
 
     public abstract Class<T> managedType();
 
-    protected void onEnable() {
-
-    }
-
+    /**
+     * Fetches all classes viable for automatic dependency injection and registers them on this Manager Instance.
+     * NOTE: for this implementation to work, {@code VitalComponentListManager#managedType()} has to be implemented on correctly configured (overridden).
+     */
     public final void enable() {
-        onEnable();
+        // get a set of all subclasses of the type this manager manages.
+        final Set<Class<? extends T>> vitalComponentClassSet = new Reflections().getSubTypesOf(managedType());
+
+        // iterate over every subclass and attempt to create a dependency injected instance.
+        for(Class<? extends T> vitalComponentClass : vitalComponentClassSet) {
+            // attempt to get the dependency injected instance of the vitalcomponent this manager manages...
+            final Optional<? extends T> optionalVitalComponent = DIUtils.getDependencyInjectedInstance(vitalComponentClass);
+
+            // if that component could be dependency injected and created, register it on our manager.
+            optionalVitalComponent.ifPresent(this::registerVitalComponent);
+        }
     }
 }

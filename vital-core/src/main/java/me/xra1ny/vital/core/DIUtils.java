@@ -48,6 +48,7 @@ public class DIUtils {
 
         final VitalDI vitalDI = type.getDeclaredAnnotation(VitalDI.class);
 
+        // check if component is viable for automatic dependency injection (DI).
         if(vitalDI == null) {
             return Optional.empty();
         }

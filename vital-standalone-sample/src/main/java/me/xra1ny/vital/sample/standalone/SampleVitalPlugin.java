@@ -15,6 +15,8 @@ public class SampleVitalPlugin extends JavaPlugin {
      * Using this Implementation, Vital is initialized with minimal functionality, every module MUST be manually implemented if needed.
      */
     private final VitalCore<SampleVitalPlugin> vitalCore = new VitalCore<>(this) {
+
+        // called when `VitalCore#enable()` is called.
         @Override
         public void onEnable() {
             // Here we register Vital's CommandManager

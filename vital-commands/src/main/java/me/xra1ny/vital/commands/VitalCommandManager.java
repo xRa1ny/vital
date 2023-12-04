@@ -65,15 +65,4 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
             registerVitalComponent(vitalCommand);
         }
     }
-
-    @Override
-    protected void onEnable() {
-        final Set<Class<? extends VitalCommand>> vitalCommandClassSet = new Reflections().getSubTypesOf(VitalCommand.class);
-
-        for(Class<? extends VitalCommand> vitalCommandClass : vitalCommandClassSet) {
-            final Optional<? extends VitalCommand> optionalVitalCommand = DIUtils.getDependencyInjectedInstance(vitalCommandClass);
-
-            optionalVitalCommand.ifPresent(this::registerVitalComponent);
-        }
-    }
 }
