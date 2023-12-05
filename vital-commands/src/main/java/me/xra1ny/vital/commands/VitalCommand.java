@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -330,12 +331,17 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
 
         // Iterate through the methods of the current class.
         for (Method method : getClass().getDeclaredMethods()) {
-            // Retrieve the @VitalCommandArgHandler annotation for the method.
+            // Retrieve the `@VitalCommandArgHandler` annotation for the method.
             final VitalCommandArgHandler commandArgHandler = method.getDeclaredAnnotation(VitalCommandArgHandler.class);
 
             // Check if the method does not have the annotation or the annotation value does not match the commandArg value.
             if (commandArgHandler == null || !List.of(commandArgHandler.value()).contains(commandArg.value())) {
                 continue; // Skip this method if the condition is not met.
+            }
+
+            // If the method's return type does not match `VitalCommandReturnState`, cancel operation.
+            if(!VitalCommandReturnState.class.isAssignableFrom(method.getReturnType())) {
+                continue;
             }
 
             // Set the commandArgHandlerMethod to the matching method.
@@ -349,10 +355,26 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
             return VitalCommandReturnState.INVALID_ARGS; // Return INVALID_ARGS if no handler method is found.
         }
 
-        // Invoke the handler method with the specified arguments and return its result.
-        commandArgHandlerMethod.setAccessible(true);
+        // If the handler method was found, dynamically inject each parameter supported for its implementation...
+        final List<Object> injectedParameters = new ArrayList<>();
 
-        return (VitalCommandReturnState) commandArgHandlerMethod.invoke(this, sender, commandArg, values);
+        for(Parameter parameter : commandArgHandlerMethod.getParameters()) {
+            // If the parameters managed type is of instance of `CommandSender`, inject either `CommandSender` or `Player`
+            if(CommandSender.class.isAssignableFrom(parameter.getType())) {
+                injectedParameters.add(sender);
+            }else if(VitalCommandArg.class.isAssignableFrom(parameter.getType())) {
+                // inject `VitalCommandArg`
+                injectedParameters.add(commandArg);
+            }else if(String[].class.isAssignableFrom(parameter.getType())) {
+                // if parameters managed type is an instance of `String[]` inject the values of this command execution.
+                injectedParameters.add(values);
+            }
+
+            // If the above set conditions are not met, do not inject anything as the type is not supported by Vital.
+        }
+
+        // invoke the handler method with the dynamically fetched args...
+        return (VitalCommandReturnState) commandArgHandlerMethod.invoke(this, injectedParameters.toArray());
     }
 
     @NotNull
