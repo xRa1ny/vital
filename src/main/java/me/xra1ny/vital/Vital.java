@@ -41,12 +41,8 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(vitalConfigManager);
         getVitalComponentManager().registerVitalComponent(defaultVitalConfig);
 
-        // Register VitalListenerManager
-        final VitalListenerManager vitalListenerManager = new VitalListenerManager(getJavaPlugin());
-
-        getVitalComponentManager().registerVitalComponent(vitalListenerManager);
-
-        // Register VitalPlayerManagement
+        // Register VitalPlayerManagement if no other player management has yet been registered by implementing programmer.
+        final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
         final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(defaultVitalConfig.vitalPlayerTimeout);
         final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(getJavaPlugin(), defaultVitalPlayerManager);
         final DefaultVitalPlayerTimeoutHandler defaultVitalPlayerTimeoutHandler = new DefaultVitalPlayerTimeoutHandler(getJavaPlugin(), defaultVitalPlayerManager);
@@ -61,7 +57,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(vitalCommandManager);
 
         // Register VitalHologramManagement
-        final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig("holograms.yml", getJavaPlugin());
+        final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig(getJavaPlugin());
         final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
         getVitalComponentManager().registerVitalComponent(vitalHologramManager);

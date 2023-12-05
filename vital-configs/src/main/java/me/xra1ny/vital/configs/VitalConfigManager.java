@@ -37,6 +37,11 @@ public final class VitalConfigManager extends VitalComponentListManager<VitalCon
 
     }
 
+    @Override
+    public Class<VitalConfig> managedType() {
+        return VitalConfig.class;
+    }
+
     /**
      * Attempts to automatically register all `VitalConfigs` in the specified package.
      *
@@ -44,7 +49,7 @@ public final class VitalConfigManager extends VitalComponentListManager<VitalCon
      */
     @SneakyThrows
     public void registerVitalConfigs(@NotNull String packageName, @NotNull JavaPlugin javaPlugin) {
-        for(Class<? extends VitalConfig> vitalConfigClass : new Reflections(packageName).getSubTypesOf(VitalConfig.class)) {
+        for (Class<? extends VitalConfig> vitalConfigClass : new Reflections(packageName).getSubTypesOf(VitalConfig.class)) {
             final VitalConfig vitalConfig = vitalConfigClass.getDeclaredConstructor(JavaPlugin.class).newInstance(javaPlugin);
 
             registerVitalComponent(vitalConfig);

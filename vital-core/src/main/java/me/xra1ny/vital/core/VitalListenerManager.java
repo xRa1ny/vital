@@ -34,6 +34,11 @@ public final class VitalListenerManager extends VitalComponentListManager<VitalL
         HandlerList.unregisterAll(vitalListener);
     }
 
+    @Override
+    public Class<VitalListener> managedType() {
+        return VitalListener.class;
+    }
+
     /**
      * Attempts to automatically register all `VitalListeners` in the specified package.
      *

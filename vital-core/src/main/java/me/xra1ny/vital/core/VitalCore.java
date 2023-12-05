@@ -28,6 +28,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
     @Getter(onMethod = @__(@NotNull))
     private final VitalComponentManager vitalComponentManager = new VitalComponentManager();
 
+    @Getter
     private boolean enabled;
 
     /**
@@ -37,6 +38,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      */
     public VitalCore(@NotNull T javaPlugin) {
         this.javaPlugin = javaPlugin;
+        vitalComponentManager.registerVitalComponent(new VitalListenerManager(javaPlugin));
     }
 
     public final void enable() {
@@ -44,11 +46,17 @@ public abstract class VitalCore<T extends JavaPlugin> {
             return;
         }
 
-        enabled = true;
+        instance = this;
 
         log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
         onEnable();
-        instance = this;
+
+        // loop over every registered manager and enable them.
+        for(VitalComponentListManager<?> vitalComponentListManager : getVitalComponentManager().getVitalComponentList(VitalComponentListManager.class)) {
+            vitalComponentListManager.enable();
+        }
+
+        enabled = true;
         log.info("VitalCore<" + getJavaPlugin() + "> enabled!");
         log.info("Hello from Vital!");
     }

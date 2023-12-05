@@ -50,5 +50,10 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
     public void onVitalComponentUnregistered(@NotNull VitalItemStack vitalItemStack) {
 
     }
+
+    @Override
+    public Class<VitalItemStack> managedType() {
+        return VitalItemStack.class;
+    }
 }
 

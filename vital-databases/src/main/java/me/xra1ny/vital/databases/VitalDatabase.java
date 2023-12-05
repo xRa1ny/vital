@@ -15,7 +15,7 @@ import org.reflections.Reflections;
  * {@code AnnotatedVitalComponent} interface, which is annotated with the {@code VitalDatabaseInfo} annotation.
  */
 @Getter(onMethod = @__(@NotNull))
-public class VitalDatabase extends VitalComponentListManager<VitalRepository<? extends VitalEntity, ?>> implements AnnotatedVitalComponent<VitalDatabaseInfo> {
+public class VitalDatabase extends VitalComponentListManager<VitalRepository> implements AnnotatedVitalComponent<VitalDatabaseInfo> {
     /**
      * Stores the configuration for the database connection.
      */
@@ -46,14 +46,19 @@ public class VitalDatabase extends VitalComponentListManager<VitalRepository<? e
     }
 
     @Override
-    public final void onVitalComponentRegistered(@NotNull VitalRepository<? extends VitalEntity, ?> vitalRepository) {
+    public final void onVitalComponentRegistered(@NotNull VitalRepository vitalRepository) {
         // Add the annotated class for the managed entity of the VitalRepository to the configuration.
         configuration.addAnnotatedClass(vitalRepository.managedEntityType());
     }
 
     @Override
-    public final void onVitalComponentUnregistered(@NotNull VitalRepository<? extends VitalEntity, ?> vitalRepository) {
+    public final void onVitalComponentUnregistered(@NotNull VitalRepository vitalRepository) {
 
+    }
+
+    @Override
+    public Class<VitalRepository> managedType() {
+        return VitalRepository.class;
     }
 
     @Override

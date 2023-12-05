@@ -29,6 +29,11 @@ public final class VitalDatabaseManager extends VitalComponentListManager<VitalD
 
     }
 
+    @Override
+    public Class<VitalDatabase> managedType() {
+        return VitalDatabase.class;
+    }
+
     /**
      * Attempts to automatically register all `VitalDatabases` in the specified package.
      *

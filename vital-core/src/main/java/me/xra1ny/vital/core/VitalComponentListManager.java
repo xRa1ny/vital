@@ -2,11 +2,9 @@ package me.xra1ny.vital.core;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Abstract class for managing a list of Vital components.
@@ -18,6 +16,13 @@ import java.util.UUID;
 public abstract class VitalComponentListManager<T extends VitalComponent> implements VitalComponent {
     @Getter(onMethod = @__(@NotNull))
     private final List<T> vitalComponentList = new ArrayList<>();
+
+    public final <T> List<T> getVitalComponentList(@NotNull Class<T> clazz) {
+        return vitalComponentList.stream()
+                .filter(vitalComponent -> clazz.isAssignableFrom(vitalComponent.getClass()))
+                .map(clazz::cast)
+                .toList();
+    }
 
     /**
      * Checks if a VitalComponent is registered with the specified UUID.
@@ -125,4 +130,24 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @param vitalComponent The VitalComponent unregistered.
      */
     public abstract void onVitalComponentUnregistered(@NotNull T vitalComponent);
+
+    public abstract Class<T> managedType();
+
+    /**
+     * Fetches all classes viable for automatic dependency injection and registers them on this Manager Instance.
+     * NOTE: for this implementation to work, {@code VitalComponentListManager#managedType()} has to be implemented on correctly configured (overridden).
+     */
+    public final void enable() {
+        // get a set of all subclasses of the type this manager manages.
+        final Set<Class<? extends T>> vitalComponentClassSet = new Reflections().getSubTypesOf(managedType());
+
+        // iterate over every subclass and attempt to create a dependency injected instance.
+        for(Class<? extends T> vitalComponentClass : vitalComponentClassSet) {
+            // attempt to get the dependency injected instance of the vitalcomponent this manager manages...
+            final Optional<? extends T> optionalVitalComponent = DIUtils.getDependencyInjectedInstance(vitalComponentClass);
+
+            // if that component could be dependency injected and created, register it on our manager.
+            optionalVitalComponent.ifPresent(this::registerVitalComponent);
+        }
+    }
 }
