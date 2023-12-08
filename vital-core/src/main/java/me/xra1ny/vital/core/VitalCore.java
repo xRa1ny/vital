@@ -4,6 +4,11 @@ import lombok.Getter;
 import lombok.extern.java.Log;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * The main instance of the Vital framework.
@@ -41,37 +46,12 @@ public abstract class VitalCore<T extends JavaPlugin> {
         vitalComponentManager.registerVitalComponent(new VitalListenerManager(javaPlugin));
     }
 
-    public final void enable() {
-        if(enabled) {
-            return;
-        }
-
-        instance = this;
-
-        log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
-        onEnable();
-
-        // loop over every registered manager and enable them.
-        for(VitalComponentListManager<?> vitalComponentListManager : getVitalComponentManager().getVitalComponentList(VitalComponentListManager.class)) {
-            vitalComponentListManager.enable();
-        }
-
-        enabled = true;
-        log.info("VitalCore<" + getJavaPlugin() + "> enabled!");
-        log.info("Hello from Vital!");
-    }
-
-    /**
-     * Called when this VitalCore is enabled
-     */
-    public abstract void onEnable();
-
     /**
      * Singleton access-point for all `VitalCore<T>` Instances.
      *
      * @param type Your Plugin's Main Class.
+     * @param <T>  The Type of your Plugin's Main Class.
      * @return The VitalCore Instance.
-     * @param <T> The Type of your Plugin's Main Class.
      * @throws ClassCastException If the provided Type and `Vital<T>` Instance don't match.
      */
     @SuppressWarnings("unchecked")
@@ -89,4 +69,49 @@ public abstract class VitalCore<T extends JavaPlugin> {
     public static VitalCore<?> getVitalCoreInstance() {
         return instance;
     }
+
+    public final void enable() {
+        if (enabled) {
+            return;
+        }
+
+        instance = this;
+
+        log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
+        onEnable();
+
+        // hold all scanned and ready for dependency injected classes.
+        final Map<Class<? extends VitalComponent>, Integer> prioritisedDependencyInjectableClasses = new HashMap<>();
+
+        // scan for all classes annotated with `@VitalAutoRegistered` and attempt to register them on the base manager.
+        // NOTE: this configuration is entirely user dependent, if a user wrongly implements their auto registered components,
+        // with components that cannot be dependency injected, this registration will not work!!!
+        for (Class<?> vitalComponentClass : new Reflections().getTypesAnnotatedWith(VitalAutoRegistered.class).stream()
+                .filter(VitalComponent.class::isAssignableFrom)
+                .toList()) {
+            // assume every class is extended from `VitalComponent` since we filtered in our chain above.
+            final Optional<? extends VitalComponent> optionalVitalComponent = (Optional<? extends VitalComponent>) DIUtils.getDependencyInjectedInstance(vitalComponentClass);
+
+            // display error if a dependency injected instance of our marked class could not be created, else register it von the base manager of vital.
+            if (optionalVitalComponent.isEmpty()) {
+                log.severe("Vital attempted to automatically register " + vitalComponentClass + " but failed!");
+            } else {
+                vitalComponentManager.registerVitalComponent(optionalVitalComponent.get());
+            }
+        }
+
+        // loop over every registered manager and enable them.
+        for (VitalComponentListManager<?> vitalComponentListManager : getVitalComponentManager().getVitalComponentList(VitalComponentListManager.class)) {
+            vitalComponentListManager.enable();
+        }
+
+        enabled = true;
+        log.info("VitalCore<" + getJavaPlugin() + "> enabled!");
+        log.info("Hello from Vital!");
+    }
+
+    /**
+     * Called when this VitalCore is enabled
+     */
+    public abstract void onEnable();
 }
