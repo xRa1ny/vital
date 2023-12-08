@@ -51,18 +51,4 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
     public Class<VitalCommand> managedType() {
         return VitalCommand.class;
     }
-
-    /**
-     * Attempts to automatically register all `VitalCommands` in the specified package.
-     *
-     * @param packageName The package.
-     */
-    @SneakyThrows
-    public void registerVitalCommands(@NotNull String packageName) {
-        for(Class<? extends VitalCommand> vitalCommandClass : new Reflections(packageName).getSubTypesOf(VitalCommand.class)) {
-            final VitalCommand vitalCommand = vitalCommandClass.getDeclaredConstructor().newInstance();
-
-            registerVitalComponent(vitalCommand);
-        }
-    }
 }

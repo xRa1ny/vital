@@ -1,13 +1,11 @@
 package me.xra1ny.vital.databases;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalComponentListManager;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
 
 /**
  * The {@code VitalDatabase} class represents a component responsible for managing database connections and
@@ -64,19 +62,5 @@ public class VitalDatabase extends VitalComponentListManager<VitalRepository> im
     @Override
     public final Class<VitalDatabaseInfo> requiredAnnotationType() {
         return VitalDatabaseInfo.class;
-    }
-
-    /**
-     * Attempts to automatically register all `VitalRepositories` in the specified package.
-     *
-     * @param packageName The package.
-     */
-    @SneakyThrows
-    public final void registerVitalRepositories(@NotNull String packageName) {
-        for(Class<? extends VitalRepository> vitalRepositoryClass : new Reflections(packageName).getSubTypesOf(VitalRepository.class)) {
-            final VitalRepository<?, ?> vitalRepository = vitalRepositoryClass.getDeclaredConstructor(VitalDatabase.class).newInstance(this);
-
-            registerVitalComponent(vitalRepository);
-        }
     }
 }

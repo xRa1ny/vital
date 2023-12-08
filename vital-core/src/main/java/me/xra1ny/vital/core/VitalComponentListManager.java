@@ -14,6 +14,11 @@ import java.util.*;
  * @author xRa1ny
  */
 public abstract class VitalComponentListManager<T extends VitalComponent> implements VitalComponent {
+    /**
+     * Cache a set of all subclasses of the type this manager manages.
+     */
+    private Set<Class<? extends T>> vitalComponentClassSet = new LinkedHashSet<>();
+
     @Getter(onMethod = @__(@NotNull))
     private final List<T> vitalComponentList = new ArrayList<>();
 
@@ -134,15 +139,27 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
     public abstract Class<T> managedType();
 
     /**
+     * Returns the class value of all classes this component manager manages,
+     * if not already loaded, loads and caches all classes found within the bounds of the implementing Vital Main Class Package.
+     *
+     *
+     * @return A Set of all Classes of Components this Manager manages.
+     */
+    public Set<Class<? extends T>> getVitalComponentClassSet() {
+        if(vitalComponentClassSet.isEmpty()) {
+            vitalComponentClassSet = new Reflections().getSubTypesOf(managedType());
+        }
+
+        return vitalComponentClassSet;
+    }
+
+    /**
      * Fetches all classes viable for automatic dependency injection and registers them on this Manager Instance.
      * NOTE: for this implementation to work, {@code VitalComponentListManager#managedType()} has to be implemented on correctly configured (overridden).
      */
     public final void enable() {
-        // get a set of all subclasses of the type this manager manages.
-        final Set<Class<? extends T>> vitalComponentClassSet = new Reflections().getSubTypesOf(managedType());
-
         // iterate over every subclass and attempt to create a dependency injected instance.
-        for(Class<? extends T> vitalComponentClass : vitalComponentClassSet) {
+        for(Class<? extends T> vitalComponentClass : getVitalComponentClassSet()) {
             // attempt to get the dependency injected instance of the vitalcomponent this manager manages...
             final Optional<? extends T> optionalVitalComponent = DIUtils.getDependencyInjectedInstance(vitalComponentClass);
 
