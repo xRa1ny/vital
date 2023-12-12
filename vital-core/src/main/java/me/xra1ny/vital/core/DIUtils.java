@@ -1,6 +1,7 @@
 package me.xra1ny.vital.core;
 
 import lombok.extern.java.Log;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 

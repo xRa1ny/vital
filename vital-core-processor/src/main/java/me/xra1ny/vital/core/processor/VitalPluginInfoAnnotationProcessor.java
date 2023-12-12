@@ -1,6 +1,6 @@
 package me.xra1ny.vital.core.processor;
 
-import me.xra1ny.vital.core.VitalPluginInfo;
+import me.xra1ny.vital.core.annotation.VitalPluginInfo;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.processing.AbstractProcessor;
