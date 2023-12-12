@@ -1,14 +1,19 @@
 package me.xra1ny.vital.minigames;
 
 import lombok.Getter;
-import me.xra1ny.vital.core.VitalComponent;
-import me.xra1ny.vital.core.VitalListenerManager;
+import lombok.extern.java.Log;
+import me.xra1ny.vital.core.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * Manages the current state of a minigame using the Vital framework.
  */
+@Log
+@VitalAutoRegistered
+@VitalDI
 public final class VitalMinigameManager implements VitalComponent {
     private final VitalListenerManager vitalListenerManager;
 
@@ -35,6 +40,18 @@ public final class VitalMinigameManager implements VitalComponent {
     }
 
     /**
+     * Sets the current minigame state by Class.
+     * NOTE: this method attempts to construct a dependency injected instance using Vital's DI utils (@link VitalDIUtils)
+     *
+     * @param vitalMinigameStateClass The Class of the minigame state to set to (must be registered).
+     */
+    public void setVitalMinigameState(@NotNull Class<? extends VitalMinigameState> vitalMinigameStateClass) {
+        final Optional<? extends VitalMinigameState> optionalDiVitalMinigameState = VitalDIUtils.getDependencyInjectedInstance(vitalMinigameStateClass);
+
+        optionalDiVitalMinigameState.ifPresent(this::setVitalMinigameState);
+    }
+
+    /**
      * Sets the current minigame state.
      * If a previous state exists, it is unregistered before registering the new state.
      *
@@ -47,17 +64,18 @@ public final class VitalMinigameManager implements VitalComponent {
                 vitalCountdownMinigameState.stopCountdown();
             }
 
-
             vitalListenerManager.unregisterVitalComponent(this.vitalMinigameState);
+            this.vitalMinigameState.onUnregistered();
         }
 
         vitalListenerManager.registerVitalComponent(vitalMinigameState);
+        vitalMinigameState.onRegistered();
         this.vitalMinigameState = vitalMinigameState;
     }
 
     @Override
     public void onRegistered() {
-
+        log.info("Successfully registered VitalMinigameManagement!");
     }
 
     @Override

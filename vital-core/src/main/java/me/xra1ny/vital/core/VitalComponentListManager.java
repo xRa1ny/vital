@@ -161,7 +161,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
         // iterate over every subclass and attempt to create a dependency injected instance.
         for(Class<? extends T> vitalComponentClass : getVitalComponentClassSet()) {
             // attempt to get the dependency injected instance of the vitalcomponent this manager manages...
-            final Optional<? extends T> optionalVitalComponent = DIUtils.getDependencyInjectedInstance(vitalComponentClass);
+            final Optional<? extends T> optionalVitalComponent = VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
 
             // if that component could be dependency injected and created, register it on our manager.
             optionalVitalComponent.ifPresent(this::registerVitalComponent);

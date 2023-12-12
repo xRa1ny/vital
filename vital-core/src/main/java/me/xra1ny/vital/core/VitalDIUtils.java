@@ -18,7 +18,7 @@ import java.util.Optional;
  * @author xRa1ny
  */
 @Log
-public class DIUtils {
+public class VitalDIUtils {
     public static <T> Optional<T> getDependencyInjectedInstance(@NotNull Class<T> type) {
         if(VitalComponent.class.isAssignableFrom(type)) {
             // check if instance is already existent on base vital manager...
@@ -138,6 +138,8 @@ public class DIUtils {
 
                     return Optional.of(instance);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+                    log.severe("Vital could not create a dependency injected instance of " + type);
+                    log.severe("Did you declare a circular dependency?");
                     ex.printStackTrace();
                 }
 

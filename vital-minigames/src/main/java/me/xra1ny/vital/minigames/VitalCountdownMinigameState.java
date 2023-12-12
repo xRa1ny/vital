@@ -52,6 +52,10 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
         run(javaPlugin, interval);
     }
 
+    public JavaPlugin getJavaPlugin() {
+        return vitalRepeatableTask.getJavaPlugin();
+    }
+
     /**
      * Sets up the countdown task using a VitalRepeatableTask.
      *
