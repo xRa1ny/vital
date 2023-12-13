@@ -1,11 +1,11 @@
 package me.xra1ny.vital.samples.full.config;
 
+import lombok.NonNull;
 import me.xra1ny.vital.configs.VitalConfig;
 import me.xra1ny.vital.configs.VitalConfigInfo;
 import me.xra1ny.vital.configs.VitalConfigPath;
 import me.xra1ny.vital.holograms.VitalHologram;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public final class SampleVitalConfig extends VitalConfig {
     @VitalConfigPath("sample-vital-hologram-list-config-field")
     public List<VitalHologram> sampleVitalHologramListConfigField;
 
-    public SampleVitalConfig(@NotNull JavaPlugin javaPlugin) {
+    public SampleVitalConfig(@NonNull JavaPlugin javaPlugin) {
         super(javaPlugin);
     }
 }

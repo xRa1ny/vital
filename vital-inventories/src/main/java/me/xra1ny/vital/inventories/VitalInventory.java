@@ -1,6 +1,7 @@
 package me.xra1ny.vital.inventories;
 
 import lombok.Getter;
+import lombok.NonNull;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.items.VitalItemStackBuilder;
 import org.bukkit.Bukkit;
@@ -13,12 +14,10 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * An abstract class for creating interactive inventories.
- * Extends AnnotatedVitalComponent<VitalInventoryMenuInfo> and implements InventoryHolder.
  *
  * @author xRa1ny
  */
@@ -27,7 +26,8 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     /**
      * The title of this inventory.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final String title;
 
     /**
@@ -39,19 +39,21 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     /**
      * The inventory of this inventory menu.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private Inventory inventory;
 
     /**
      * The background item of this inventory menu.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final ItemStack background;
 
     /**
      * The previous menu of this inventory menu, if any.
      */
-    @Getter(onMethod = @__(@Nullable))
+    @Getter
     private final Inventory previousInventory;
 
     /**
@@ -106,7 +108,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      *
      * @param player The player for whom the menu is opened.
      */
-    public void setItems(@NotNull Player player) {
+    public void setItems(@NonNull Player player) {
 
     }
 
@@ -115,7 +117,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      *
      * @param e The InventoryOpenEvent.
      */
-    public void onOpen(@NotNull InventoryOpenEvent e) {
+    public void onOpen(@NonNull InventoryOpenEvent e) {
 
     }
 
@@ -124,7 +126,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      *
      * @param e The InventoryCloseEvent.
      */
-    public void onClose(@NotNull InventoryCloseEvent e) {
+    public void onClose(@NonNull InventoryCloseEvent e) {
 
     }
 
@@ -133,7 +135,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      *
      * @param e The InventoryClickEvent.
      */
-    public final void handleClick(@NotNull InventoryClickEvent e) {
+    public final void handleClick(@NonNull InventoryClickEvent e) {
         final Player player = (Player) e.getWhoClicked();
 
         if (e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR
@@ -149,7 +151,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      *
      * @param e The InventoryClickEvent.
      */
-    public void onClick(@NotNull InventoryClickEvent e) {
+    public void onClick(@NonNull InventoryClickEvent e) {
 
     }
 
@@ -164,6 +166,12 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         }
     }
 
+    /**
+     * Builds this {@link Inventory} instance with all specified information.
+     *
+     * @return The {@link Inventory} built.
+     * @apiNote Use this method to build an {@link Inventory} and then show it to the player using {@link Player#openInventory(Inventory)}
+     */
     public final Inventory build() {
         inventory = Bukkit.createInventory(this, size, title);
 

@@ -6,7 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This Annotation is used to specify a Field to be an Enumeration Value from Config, it translates the String fetched from Config into the Enumeration Type.
+ * This annotation is used to specify a field to be an enumeration value from {@link VitalConfig}.
+ *
+ * @author xRa1ny
+ * @apiNote The config value is wrapped into the specified enum type by name.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

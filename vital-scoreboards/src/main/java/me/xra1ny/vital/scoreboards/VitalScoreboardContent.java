@@ -1,12 +1,12 @@
 package me.xra1ny.vital.scoreboards;
 
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +21,22 @@ final class VitalScoreboardContent {
     /**
      * The title of this scoreboard content.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private String title;
 
     /**
      * The Bukkit scoreboard instance associated with this content.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final Scoreboard bukkitScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
     /**
      * The scoreboard teams belonging to this content.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final List<VitalScoreboardTeam> teams = new ArrayList<>();
 
     /**
@@ -41,7 +44,7 @@ final class VitalScoreboardContent {
      *
      * @param title The title of the scoreboard content.
      */
-    VitalScoreboardContent(@NotNull String title) {
+    VitalScoreboardContent(@NonNull String title) {
         this.title = title;
     }
 
@@ -75,7 +78,7 @@ final class VitalScoreboardContent {
      *
      * @param title The new title for the scoreboard content.
      */
-    public void setTitle(@NotNull String title) {
+    public void setTitle(@NonNull String title) {
         this.title = title;
         update();
     }
@@ -85,7 +88,7 @@ final class VitalScoreboardContent {
      *
      * @param team The scoreboard team to add.
      */
-    public void addTeam(@NotNull VitalScoreboardTeam team) {
+    public void addTeam(@NonNull VitalScoreboardTeam team) {
         if (this.teams.contains(team)) {
             return;
         }
@@ -99,7 +102,7 @@ final class VitalScoreboardContent {
      *
      * @param team The scoreboard team to remove.
      */
-    public void removeTeam(@NotNull VitalScoreboardTeam team) {
+    public void removeTeam(@NonNull VitalScoreboardTeam team) {
         if (!this.teams.contains(team)) {
             return;
         }

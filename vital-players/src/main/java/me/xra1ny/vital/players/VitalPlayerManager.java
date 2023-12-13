@@ -1,9 +1,9 @@
 package me.xra1ny.vital.players;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A management class responsible for handling and managing VitalPlayer components associated with players.
@@ -15,6 +15,11 @@ import org.jetbrains.annotations.NotNull;
 public abstract class VitalPlayerManager<T extends VitalPlayer> extends VitalComponentListManager<T> {
     private final int vitalPlayerTimeout;
 
+    /**
+     * Constructs a new player manager instance with the specified timeout.
+     *
+     * @param vitalPlayerTimeout The timeout for each {@link VitalPlayer} instance.
+     */
     public VitalPlayerManager(int vitalPlayerTimeout) {
         this.vitalPlayerTimeout = vitalPlayerTimeout;
     }
@@ -30,12 +35,12 @@ public abstract class VitalPlayerManager<T extends VitalPlayer> extends VitalCom
     }
 
     @Override
-    public void onVitalComponentRegistered(@NotNull T vitalPlayer) {
+    public void onVitalComponentRegistered(@NonNull T vitalPlayer) {
 
     }
 
     @Override
-    public void onVitalComponentUnregistered(@NotNull T vitalPlayer) {
+    public void onVitalComponentUnregistered(@NonNull T vitalPlayer) {
 
     }
 
