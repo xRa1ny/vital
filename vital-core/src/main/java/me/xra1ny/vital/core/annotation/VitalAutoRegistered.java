@@ -1,5 +1,8 @@
 package me.xra1ny.vital.core.annotation;
 
+import me.xra1ny.vital.core.VitalComponent;
+import me.xra1ny.vital.core.VitalComponentManager;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

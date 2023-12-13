@@ -1,8 +1,7 @@
 package me.xra1ny.vital.commands.processor;
 
-import me.xra1ny.vital.commands.annotation.VitalCommandInfo;
 import lombok.NonNull;
-import me.xra1ny.vital.commands.VitalCommandInfo;
+import me.xra1ny.vital.commands.annotation.VitalCommandInfo;
 import me.xra1ny.vital.core.processor.VitalPluginInfoAnnotationProcessor;
 import me.xra1ny.vital.core.processor.VitalPluginInfoHolder;
 
