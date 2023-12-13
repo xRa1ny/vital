@@ -2,6 +2,9 @@ package me.xra1ny.vital.samples.full.command;
 
 import lombok.NonNull;
 import me.xra1ny.vital.commands.*;
+import me.xra1ny.vital.commands.annotation.VitalCommandArg;
+import me.xra1ny.vital.commands.annotation.VitalCommandArgHandler;
+import me.xra1ny.vital.commands.annotation.VitalCommandInfo;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;

@@ -1,4 +1,6 @@
-package me.xra1ny.vital.commands;
+package me.xra1ny.vital.commands.annotation;
+
+import me.xra1ny.vital.commands.VitalCommand;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

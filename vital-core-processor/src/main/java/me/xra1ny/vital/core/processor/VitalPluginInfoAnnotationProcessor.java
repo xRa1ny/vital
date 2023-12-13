@@ -1,7 +1,7 @@
 package me.xra1ny.vital.core.processor;
 
 import lombok.NonNull;
-import me.xra1ny.vital.core.VitalPluginInfo;
+import me.xra1ny.vital.core.annotation.VitalPluginInfo;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;

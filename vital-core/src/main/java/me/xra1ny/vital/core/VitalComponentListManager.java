@@ -1,6 +1,8 @@
 package me.xra1ny.vital.core;
 
 import lombok.Getter;
+import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
+import org.jetbrains.annotations.NotNull;
 import lombok.NonNull;
 import org.reflections.Reflections;
 
@@ -174,7 +176,10 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      */
     public final void enable() {
         // iterate over every subclass and attempt to create a dependency injected instance.
-        for (Class<? extends T> vitalComponentClass : getVitalComponentClassSet()) {
+        for (Class<? extends T> vitalComponentClass : getVitalComponentClassSet().stream()
+                // only get classes annotated with `@VitalManagerAutoRegistered`
+                .filter(clazz -> clazz.getDeclaredAnnotation(VitalManagerAutoRegistered.class) != null)
+                .toList()) {
             // attempt to get the dependency injected instance of the vitalcomponent this manager manages...
             final Optional<? extends T> optionalVitalComponent = DIUtils.getDependencyInjectedInstance(vitalComponentClass);
 

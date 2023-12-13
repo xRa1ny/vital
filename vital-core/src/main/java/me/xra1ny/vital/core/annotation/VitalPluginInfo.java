@@ -1,4 +1,4 @@
-package me.xra1ny.vital.core;
+package me.xra1ny.vital.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
