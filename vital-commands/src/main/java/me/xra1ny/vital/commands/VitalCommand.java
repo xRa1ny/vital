@@ -1,6 +1,9 @@
 package me.xra1ny.vital.commands;
 
 import lombok.Getter;
+import me.xra1ny.vital.commands.annotation.VitalCommandArg;
+import me.xra1ny.vital.commands.annotation.VitalCommandArgHandler;
+import me.xra1ny.vital.commands.annotation.VitalCommandInfo;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalCore;
