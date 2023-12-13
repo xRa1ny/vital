@@ -1,13 +1,13 @@
 package me.xra1ny.vital.scoreboards;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Function;
@@ -22,24 +22,33 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
     /**
      * the title of this per player scoreboard
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final String title;
 
     /**
      * the lines of this per player scoreboard
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private List<Function<Player, String>> lineList;
 
     /**
      * the scoreboard contents for each member of this per player scoreboard
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final Map<Player, VitalScoreboardContent> vitalScoreboardContentMap = new HashMap<>();
 
+    /**
+     * Constructs a new per player scoreboard instance with the specified title and lines.
+     *
+     * @param title    The title to display.
+     * @param lineList The {@link Function} that defines the lines each player should see on the scoreboard when it's rendered. (may contain player relevant information and be different for each player).
+     */
     @SneakyThrows
     @SafeVarargs
-    public VitalPerPlayerScoreboard(@NotNull String title, @NotNull Function<Player, String>... lineList) {
+    public VitalPerPlayerScoreboard(@NonNull String title, @NonNull Function<Player, String>... lineList) {
         this.title = title;
         this.lineList = Arrays.asList(lineList);
     }
@@ -50,7 +59,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      * @param lineList the lines
      */
     @SafeVarargs
-    public final void setLineList(@NotNull Function<Player, String>... lineList) {
+    public final void setLineList(@NonNull Function<Player, String>... lineList) {
         this.lineList = List.of(lineList);
     }
 
@@ -60,7 +69,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      * @param player the player
      */
     @SuppressWarnings("DataFlowIssue")
-    public void update(@NotNull Player player) {
+    public void update(@NonNull Player player) {
         if (!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
@@ -74,7 +83,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
     }
 
     @SuppressWarnings({"DataFlowIssue", "deprecation"})
-    private void updateContent(@NotNull Player player) {
+    private void updateContent(@NonNull Player player) {
         if (!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
@@ -98,7 +107,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      *
      * @param player the player
      */
-    public void add(@NotNull Player player) {
+    public void add(@NonNull Player player) {
         if (this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
@@ -113,7 +122,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      * @param player the player
      */
     @SuppressWarnings("DataFlowIssue")
-    public void remove(@NotNull Player player) {
+    public void remove(@NonNull Player player) {
         if (!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
@@ -122,8 +131,8 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
         player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
     }
 
-    @NotNull
-    private List<String> applyLines(@NotNull Player player) {
+    @NonNull
+    private List<String> applyLines(@NonNull Player player) {
         final List<String> lines = new ArrayList<>();
 
         for (Function<Player, String> line : this.lineList) {

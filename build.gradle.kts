@@ -33,12 +33,26 @@ publishing {
     }
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 tasks.build {
     dependsOn(tasks.shadowJar)
 }
 
 tasks.publishToMavenLocal {
     dependsOn(tasks.shadowJar)
+}
+
+tasks.javadoc {
+    (options as StandardJavadocDocletOptions)
+            .tags(
+                    "apiNote:a:API Note:",
+                    "implSpec:a:Implementation Requirements:",
+                    "implNote:a:Implementation Note:"
+            )
 }
 
 allprojects {
@@ -84,11 +98,25 @@ allprojects {
         }
     }
 
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
     tasks.build {
         dependsOn(tasks.shadowJar)
     }
 
     tasks.publishToMavenLocal {
         dependsOn(tasks.shadowJar)
+    }
+
+    tasks.javadoc {
+        (options as StandardJavadocDocletOptions)
+                .tags(
+                        "apiNote:a:API Note:",
+                        "implSpec:a:Implementation Requirements:",
+                        "implNote:a:Implementation Note:"
+                )
     }
 }

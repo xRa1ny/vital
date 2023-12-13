@@ -1,5 +1,6 @@
 package me.xra1ny.vital.samples.full.item;
 
+import lombok.NonNull;
 import me.xra1ny.vital.holograms.VitalHologram;
 import me.xra1ny.vital.holograms.VitalHologramManager;
 import me.xra1ny.vital.inventories.VitalInventoryBuilder;
@@ -12,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +25,14 @@ public final class SampleVitalItemStack extends VitalItemStack {
     private final VitalHologramManager vitalHologramManager;
     private final SampleVitalConfig sampleVitalConfig;
 
-    public SampleVitalItemStack(@NotNull VitalHologramManager vitalHologramManager, @NotNull SampleVitalConfig sampleVitalConfig) {
+    public SampleVitalItemStack(@NonNull VitalHologramManager vitalHologramManager, @NonNull SampleVitalConfig sampleVitalConfig) {
         this.vitalHologramManager = vitalHologramManager;
         this.sampleVitalConfig = sampleVitalConfig;
 
     }
 
     @Override
-    public void onLeftClick(@NotNull PlayerInteractEvent e) {
+    public void onLeftClick(@NonNull PlayerInteractEvent e) {
         final Player player = e.getPlayer();
         final VitalHologram vitalHologram = new VitalHologram(player.getName(), player.getLocation(), Material.STICK, "line1", "line2", "line3");
 
@@ -61,7 +61,7 @@ public final class SampleVitalItemStack extends VitalItemStack {
     }
 
     @Override
-    public void onRightClick(@NotNull PlayerInteractEvent e) {
+    public void onRightClick(@NonNull PlayerInteractEvent e) {
         final Player player = e.getPlayer();
 
         // Here we create a new Instance of our SampleVitalInventory.
@@ -113,7 +113,7 @@ public final class SampleVitalItemStack extends VitalItemStack {
     }
 
     @Override
-    public void onCooldown(@NotNull PlayerInteractEvent e) {
+    public void onCooldown(@NonNull PlayerInteractEvent e) {
         final Player player = e.getPlayer();
 
         player.sendMessage("cooling down...");

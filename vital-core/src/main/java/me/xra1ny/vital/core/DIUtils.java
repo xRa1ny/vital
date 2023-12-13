@@ -1,8 +1,8 @@
 package me.xra1ny.vital.core;
 
+import lombok.NonNull;
 import lombok.extern.java.Log;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +19,14 @@ import java.util.Optional;
  */
 @Log
 public class DIUtils {
-    public static <T> Optional<T> getDependencyInjectedInstance(@NotNull Class<T> type) {
+    /**
+     * Attempts to create a dependency injected instance of the supplied class type.
+     *
+     * @param type The class from which the di instance should be created.
+     * @param <T>  The type of the supplied class object.
+     * @return An {@link Optional} holding either the newly created instance; or empty.
+     */
+    public static <T> Optional<T> getDependencyInjectedInstance(@NonNull Class<T> type) {
         if (VitalComponent.class.isAssignableFrom(type)) {
             // check if instance is already existent on base vital manager...
             final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) type;

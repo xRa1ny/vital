@@ -1,5 +1,6 @@
 package me.xra1ny.vital;
 
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.xra1ny.vital.commands.VitalCommandManager;
 import me.xra1ny.vital.configs.VitalConfigManager;
@@ -14,7 +15,6 @@ import me.xra1ny.vital.items.VitalItemStackListener;
 import me.xra1ny.vital.items.VitalItemStackManager;
 import me.xra1ny.vital.players.*;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -29,7 +29,12 @@ import java.util.Optional;
 public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     private static Vital<?> instance;
 
-    public Vital(@NotNull T javaPlugin) {
+    /**
+     * Constructs a new instance of the Vital-Framework.
+     *
+     * @param javaPlugin The {@link JavaPlugin} this Vital-Framework instance belongs to.
+     */
+    public Vital(@NonNull T javaPlugin) {
         super(javaPlugin);
     }
 
@@ -119,7 +124,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      */
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @SneakyThrows
-    public <P extends VitalPlayer, M extends VitalPlayerManager<P>, L extends VitalPlayerListener<P>, TH extends VitalPlayerTimeoutHandler<P>> void registerSimpleCustomPlayerManagement(@NotNull Class<P> customVitalPlayerClass, @NotNull Class<M> customVitalPlayerManagerClass, @NotNull Class<L> customVitalPlayerListenerClass, @NotNull Class<TH> customVitalPlayerTimeoutHandlerClass, int customVitalPlayerTimeout) {
+    public <P extends VitalPlayer, M extends VitalPlayerManager<P>, L extends VitalPlayerListener<P>, TH extends VitalPlayerTimeoutHandler<P>> void registerSimpleCustomPlayerManagement(@NonNull Class<P> customVitalPlayerClass, @NonNull Class<M> customVitalPlayerManagerClass, @NonNull Class<L> customVitalPlayerListenerClass, @NonNull Class<TH> customVitalPlayerTimeoutHandlerClass, int customVitalPlayerTimeout) {
         unregisterDefaultVitalPlayerManagement();
 
         final VitalListenerManager vitalListenerManager = getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
@@ -140,7 +145,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @param <P>                      {@link VitalPlayer}
      */
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public <P extends VitalPlayer> void registerSimpleCustomPlayerManagement(@NotNull Class<P> customVitalPlayerClass, int customVitalPlayerTimeout) {
+    public <P extends VitalPlayer> void registerSimpleCustomPlayerManagement(@NonNull Class<P> customVitalPlayerClass, int customVitalPlayerTimeout) {
         unregisterDefaultVitalPlayerManagement();
 
         final VitalListenerManager vitalListenerManager = getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
@@ -153,53 +158,113 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         getVitalComponentManager().registerVitalComponent(customVitalPlayerTimeoutHandler);
     }
 
+    /**
+     * Attempts to fetch the {@link VitalConfigManager} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<VitalConfigManager> getVitalConfigManager() {
         return getVitalComponentManager().getVitalComponent(VitalConfigManager.class);
     }
 
+    /**
+     * Attempts to fetch the {@link VitalPlayerListener} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<VitalListenerManager> getVitalListenerManager() {
         return getVitalComponentManager().getVitalComponent(VitalListenerManager.class);
     }
 
+    /**
+     * Attempts to fetch the {@link DefaultVitalPlayerManager} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<DefaultVitalPlayerManager> getDefaultVitalPlayerManager() {
         return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerManager.class);
     }
 
+    /**
+     * Attempts to fetch the {@link DefaultVitalPlayerListener} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<DefaultVitalPlayerListener> getDefaultVitalPlayerListener() {
         return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerListener.class);
     }
 
+    /**
+     * Attempts to fetch the {@link DefaultVitalPlayerTimeoutHandler} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<DefaultVitalPlayerTimeoutHandler> getDefaultVitalPlayerTimeoutHandler() {
         return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerTimeoutHandler.class);
     }
 
+    /**
+     * Attempts to fetch the {@link CustomVitalPlayerManager} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerManager> getCustomVitalPlayerManager() {
         return getVitalComponentManager().getVitalComponent(CustomVitalPlayerManager.class);
     }
 
+    /**
+     * Attempts to fetch the {@link CustomVitalPlayerListener} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerListener> getCustomVitalPlayerListener() {
         return getVitalComponentManager().getVitalComponent(CustomVitalPlayerListener.class);
     }
 
+    /**
+     * Attempts to fetch the {@link CustomVitalPlayerTimeoutHandler} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerTimeoutHandler> getCustomVitalPlayerTimeoutHandler() {
         return getVitalComponentManager().getVitalComponent(CustomVitalPlayerTimeoutHandler.class);
     }
 
+    /**
+     * Attempts to fetch the {@link VitalCommandManager} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<VitalCommandManager> getVitalCommandManager() {
         return getVitalComponentManager().getVitalComponent(VitalCommandManager.class);
     }
 
+    /**
+     * Attempts to fetch the {@link VitalHologramManager} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<VitalHologramManager> getVitalHologramManager() {
         return getVitalComponentManager().getVitalComponent(VitalHologramManager.class);
     }
 
+    /**
+     * Attempts to fetch the {@link VitalItemStackManager} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<VitalItemStackManager> getVitalItemStackManager() {
         return getVitalComponentManager().getVitalComponent(VitalItemStackManager.class);
     }
 
+    /**
+     * Attempts to fetch the {@link VitalDatabaseManager} from Vital.
+     *
+     * @return An {@link Optional} holding either the fetched value; or empty.
+     */
     public Optional<VitalDatabaseManager> getVitalDatabaseManager() {
         return getVitalComponentManager().getVitalComponent(VitalDatabaseManager.class);
     }
@@ -213,7 +278,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @throws ClassCastException If the provided type and {@link Vital} plugin instance don't match.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends JavaPlugin> Vital<T> getVitalInstance(@NotNull Class<T> type) {
+    public static <T extends JavaPlugin> Vital<T> getVitalInstance(@NonNull Class<T> type) {
         return (Vital<T>) instance;
     }
 }

@@ -1,9 +1,9 @@
 package me.xra1ny.vital.commands.processor;
 
+import lombok.NonNull;
 import me.xra1ny.vital.commands.VitalCommandInfo;
 import me.xra1ny.vital.core.processor.VitalPluginInfoAnnotationProcessor;
 import me.xra1ny.vital.core.processor.VitalPluginInfoHolder;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -65,7 +65,7 @@ public class VitalCommandInfoAnnotationProcessor extends AbstractProcessor {
      *
      * @param vitalCommandInfoList The list of {@link VitalCommandInfo} annotations.
      */
-    private void generatePluginYmlCommands(@NotNull List<VitalCommandInfo> vitalCommandInfoList) {
+    private void generatePluginYmlCommands(@NonNull List<VitalCommandInfo> vitalCommandInfoList) {
         try {
             // Create the new `plugin.yml` file resource as the basic processor left it uncreated.
             final FileObject pluginYmlFileObject = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "plugin.yml");

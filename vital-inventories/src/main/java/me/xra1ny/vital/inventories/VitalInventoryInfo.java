@@ -1,7 +1,7 @@
 package me.xra1ny.vital.inventories;
 
+import lombok.NonNull;
 import org.bukkit.Material;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.lang.annotation.ElementType;
@@ -22,7 +22,7 @@ public @interface VitalInventoryInfo {
      *
      * @return The title of the inventory menu.
      */
-    @NotNull
+    @NonNull
     String value();
 
     /**
@@ -38,6 +38,6 @@ public @interface VitalInventoryInfo {
      *
      * @return The background material.
      */
-    @NotNull
+    @NonNull
     Material background() default Material.AIR;
 }

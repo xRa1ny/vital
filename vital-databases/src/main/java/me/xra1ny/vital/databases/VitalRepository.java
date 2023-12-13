@@ -6,23 +6,29 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import lombok.NonNull;
 import me.xra1ny.vital.core.VitalComponent;
 import org.hibernate.Session;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 /**
- * The {@code VitalRepository} class represents a generic repository for managing entities in the Vital Framework.
+ * The {@link VitalRepository} class represents a generic repository for managing entities in the Vital-Framework.
  * It is intended to provide common database operations for entities.
  *
  * @param <Entity> The type of entity to be managed, extending the {@link VitalEntity} interface.
  * @param <Id>     The type of the entity's identifier.
+ * @author xRa1ny
  */
 public abstract class VitalRepository<Entity extends VitalEntity, Id> implements VitalComponent {
     private final VitalDatabase vitalDatabase;
 
-    protected VitalRepository(@NotNull VitalDatabase vitalDatabase) {
+    /**
+     * Constructs a new repository with the specified {@link VitalDatabase}.
+     *
+     * @param vitalDatabase The {@link VitalDatabase} this repository belongs to.
+     */
+    protected VitalRepository(@NonNull VitalDatabase vitalDatabase) {
         this.vitalDatabase = vitalDatabase;
     }
 
@@ -33,7 +39,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @param id          The identifier of the entity.
      * @return {@code true} if an entity with the specified identifier exists, otherwise {@code false}.
      */
-    public final boolean existsById(@NotNull Class<Entity> entityClass, @NotNull Id id) {
+    public final boolean existsById(@NonNull Class<Entity> entityClass, @NonNull Id id) {
         return findById(entityClass, id).isPresent();
     }
 
@@ -44,7 +50,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @param id          The identifier of the entity.
      * @return An {@link Optional} containing the entity if found, or an empty {@link Optional} if not found.
      */
-    public final Optional<Entity> findById(@NotNull Class<Entity> entityClass, @NotNull Id id) {
+    public final Optional<Entity> findById(@NonNull Class<Entity> entityClass, @NonNull Id id) {
         try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             return Optional.ofNullable(session.get(entityClass, id));
         }
@@ -56,7 +62,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @param entityClass The class of the entity.
      * @return A {@link List} of entities matching the specified class.
      */
-    public final List<Entity> findAll(@NotNull Class<Entity> entityClass) {
+    public final List<Entity> findAll(@NonNull Class<Entity> entityClass) {
         try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             final CriteriaQuery<Entity> criteriaQuery = criteriaBuilder.createQuery(entityClass);
@@ -77,7 +83,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @param columnValueEntries An array of column-value pairs to search for.
      * @return {@code true} if entities matching the criteria exist, otherwise {@code false}.
      */
-    public final boolean existsAll(@NotNull Class<Entity> entityClass, @NotNull Map.Entry<String, Object>... columnValueEntries) {
+    public final boolean existsAll(@NonNull Class<Entity> entityClass, @NonNull Map.Entry<String, Object>... columnValueEntries) {
         return !findAll(entityClass, columnValueEntries).isEmpty();
     }
 
@@ -88,7 +94,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @param columnValueEntries An array of column-value pairs to search for.
      * @return A {@link List} of entities matching the specified criteria.
      */
-    public final List<Entity> findAll(@NotNull Class<Entity> entityClass, @NotNull Map.Entry<String, Object>... columnValueEntries) {
+    public final List<Entity> findAll(@NonNull Class<Entity> entityClass, @NonNull Map.Entry<String, Object>... columnValueEntries) {
         try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             final CriteriaQuery<Entity> criteriaQuery = criteriaBuilder.createQuery(entityClass);
@@ -121,7 +127,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      *
      * @param entity The entity to be persisted.
      */
-    public final void persist(@NotNull Entity entity) {
+    public final void persist(@NonNull Entity entity) {
         try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             session.beginTransaction();
             session.merge(entity);
@@ -134,7 +140,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      *
      * @param entity The entity to be removed.
      */
-    public final void remove(@NotNull Entity entity) {
+    public final void remove(@NonNull Entity entity) {
         try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             session.beginTransaction();
             session.remove(entity);
@@ -142,6 +148,11 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
         }
     }
 
+    /**
+     * The type this repository manages.
+     *
+     * @return The type this repository manages.
+     */
     public abstract Class<Entity> managedEntityType();
 
     @Override

@@ -1,7 +1,7 @@
 package me.xra1ny.vital.core.exception;
 
+import lombok.NonNull;
 import me.xra1ny.vital.core.VitalComponent;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -17,7 +17,7 @@ public class VitalException extends RuntimeException {
      * @param source The {@link VitalComponent} associated with the exception.
      * @param text   Additional text describing the exception (can be null).
      */
-    public VitalException(@NotNull VitalComponent source, @Nullable String text) {
+    public VitalException(@NonNull VitalComponent source, @Nullable String text) {
         super(text == null ? "Exception in Vital component " + source : text + source);
     }
 }

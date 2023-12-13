@@ -1,10 +1,10 @@
 package me.xra1ny.vital.items;
 
 import lombok.Getter;
+import lombok.NonNull;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
 import me.xra1ny.vital.tasks.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A class responsible for managing cooldowns of VitalItemStack items.
@@ -17,7 +17,8 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
     /**
      * The VitalItemStackManagement instance for managing VitalItemStacks.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final VitalItemStackManager vitalItemStackManager;
 
     /**
@@ -26,7 +27,7 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
      * @param javaPlugin            The JavaPlugin instance.
      * @param vitalItemStackManager The VitalItemStackManagement instance.
      */
-    public VitalItemStackCooldownHandler(@NotNull JavaPlugin javaPlugin, @NotNull VitalItemStackManager vitalItemStackManager) {
+    public VitalItemStackCooldownHandler(@NonNull JavaPlugin javaPlugin, @NonNull VitalItemStackManager vitalItemStackManager) {
         super(javaPlugin);
 
         this.vitalItemStackManager = vitalItemStackManager;

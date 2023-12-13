@@ -1,8 +1,8 @@
 package me.xra1ny.vital.items;
 
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -30,7 +30,7 @@ public @interface VitalItemStackInfo {
      *
      * @return An array of lore lines.
      */
-    @NotNull
+    @NonNull
     String[] lore() default {};
 
     /**

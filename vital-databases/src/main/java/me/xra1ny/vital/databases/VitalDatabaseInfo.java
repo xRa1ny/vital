@@ -8,7 +8,9 @@ import java.lang.annotation.Target;
 /**
  * Annotation used to specify the URL to the Hibernate configuration XML file
  * that defines the database connection settings and entity mappings for a database component. This annotation
- * should be applied to classes that implement the {@code VitalDatabase} component.
+ * should be applied to classes that implement the {@link VitalDatabase} component.
+ *
+ * @author xRa1ny
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

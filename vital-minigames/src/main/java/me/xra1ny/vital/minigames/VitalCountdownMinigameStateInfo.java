@@ -7,6 +7,8 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for defining countdown minigame state information for implementations of {@link VitalCountdownMinigameState}.
+ *
+ * @author xRa1ny
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

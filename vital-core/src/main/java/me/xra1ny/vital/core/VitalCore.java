@@ -1,9 +1,9 @@
 package me.xra1ny.vital.core;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.java.Log;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
 import java.util.HashMap;
@@ -24,13 +24,15 @@ public abstract class VitalCore<T extends JavaPlugin> {
     /**
      * The JavaPlugin instance associated with this {@link VitalCore}.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final T javaPlugin;
 
     /**
      * The management component for handling {@link VitalComponent}.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final VitalComponentManager vitalComponentManager = new VitalComponentManager();
 
     @Getter
@@ -41,7 +43,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      *
      * @param javaPlugin The {@link JavaPlugin} instance to associate with {@link VitalCore}.
      */
-    public VitalCore(@NotNull T javaPlugin) {
+    public VitalCore(@NonNull T javaPlugin) {
         this.javaPlugin = javaPlugin;
         vitalComponentManager.registerVitalComponent(new VitalListenerManager(javaPlugin));
     }
@@ -55,7 +57,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @throws ClassCastException If the provided type and {@link VitalCore} plugin instance don't match.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends JavaPlugin> VitalCore<T> getVitalCoreInstance(@NotNull Class<T> type) {
+    public static <T extends JavaPlugin> VitalCore<T> getVitalCoreInstance(@NonNull Class<T> type) {
         return (VitalCore<T>) instance;
     }
 
@@ -70,6 +72,9 @@ public abstract class VitalCore<T extends JavaPlugin> {
         return instance;
     }
 
+    /**
+     * Enables the Vital-Framework, initialising needed systems.
+     */
     public final void enable() {
         if (enabled) {
             return;

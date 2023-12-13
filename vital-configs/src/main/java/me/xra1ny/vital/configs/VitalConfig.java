@@ -1,6 +1,7 @@
 package me.xra1ny.vital.configs;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalAutoRegisterable;
@@ -10,7 +11,6 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.reflections.ReflectionUtils;
 
@@ -30,19 +30,22 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     /**
      * The name of the configuration file.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final String name;
 
     /**
      * The {@link File} object representing the configuration file.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private File configFile;
 
     /**
      * The {@link FileConfiguration} object used in Spigot/BukkitAPI.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private FileConfiguration config;
 
     /**
@@ -51,7 +54,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
      * @param name       The name of the configuration file.
      * @param javaPlugin The {@link JavaPlugin} instance of you plugin.
      */
-    public VitalConfig(@NotNull String name, @NotNull JavaPlugin javaPlugin) {
+    public VitalConfig(@NonNull String name, @NonNull JavaPlugin javaPlugin) {
         this.name = name;
 
         initialize(javaPlugin);
@@ -62,7 +65,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
      *
      * @param javaPlugin The {@link JavaPlugin} instance of your plugin.
      */
-    public VitalConfig(@NotNull JavaPlugin javaPlugin) {
+    public VitalConfig(@NonNull JavaPlugin javaPlugin) {
         final VitalConfigInfo vitalConfigInfo = getRequiredAnnotation();
 
         this.name = vitalConfigInfo.value();
@@ -75,7 +78,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @SneakyThrows
-    private void initialize(@NotNull JavaPlugin javaPlugin) {
+    private void initialize(@NonNull JavaPlugin javaPlugin) {
         this.configFile = new File(javaPlugin.getDataFolder(), name);
 
         final File parentConfigFile = configFile.getParentFile();
@@ -96,7 +99,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    public final <T> T get(@NotNull Class<T> type, @NotNull String key) {
+    public final <T> T get(@NonNull Class<T> type, @NonNull String key) {
         final Field field = ReflectionUtils.getAllFields(getClass()).stream()
                 .filter(_field -> _field.getDeclaredAnnotation(VitalConfigPath.class) != null)
                 .filter(_field -> _field.getType().equals(type))
@@ -218,9 +221,17 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
         }
     }
 
+    /**
+     * Attempts to deserialize the specified class from the specified serialized object map.
+     *
+     * @param clazz      The class to deserialize into.
+     * @param serialized The serialized content to deserialize from.
+     * @param <T>        The type of the object for deserialization.
+     * @return The object that is deserialized into.
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
     @SneakyThrows
-    public final <T extends VitalConfigSerializable> T deserialize(@NotNull Class<T> clazz, @NotNull Map<String, Object> serialized) {
+    public final <T extends VitalConfigSerializable> T deserialize(@NonNull Class<T> clazz, @NonNull Map<String, Object> serialized) {
         final Map<Field, Object> fieldObjectMap = new LinkedHashMap<>();
 
         for (Field field : ReflectionUtils.getAllFields(clazz)) {
@@ -336,7 +347,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     }
 
     @Override
-    public void autoRegister(@NotNull Class<? extends JavaPlugin> javaPluginType) {
+    public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
         final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
         final Optional<VitalConfigManager> optionalVitalConfigManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalConfigManager.class);

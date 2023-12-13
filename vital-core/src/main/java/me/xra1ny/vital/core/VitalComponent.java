@@ -1,6 +1,6 @@
 package me.xra1ny.vital.core;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ public interface VitalComponent {
      *
      * @return The {@link UUID} representing this component.
      */
-    @NotNull
+    @NonNull
     default UUID getUniqueId() {
         return UUID.randomUUID();
     }
@@ -27,7 +27,7 @@ public interface VitalComponent {
      *
      * @return The name of the component (usually the class name).
      */
-    @NotNull
+    @NonNull
     default String getName() {
         return getClass().getSimpleName();
     }

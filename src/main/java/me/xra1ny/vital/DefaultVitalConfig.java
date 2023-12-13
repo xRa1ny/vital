@@ -1,14 +1,12 @@
 package me.xra1ny.vital;
 
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import me.xra1ny.vital.configs.VitalConfig;
-import me.xra1ny.vital.configs.VitalConfigEnum;
 import me.xra1ny.vital.configs.VitalConfigInfo;
 import me.xra1ny.vital.configs.VitalConfigPath;
 import me.xra1ny.vital.players.VitalPlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Default config for Vital.
@@ -41,8 +39,7 @@ public final class DefaultVitalConfig extends VitalConfig {
      * Example: "GRAY"
      */
     @VitalConfigPath("vital.chat-color")
-    @VitalConfigEnum
-    public ChatColor vitalChatColor = ChatColor.GRAY;
+    public String vitalChatColorName = "GRAY";
 
     /**
      * Error message to display when a player lacks permission to perform an action.
@@ -100,7 +97,12 @@ public final class DefaultVitalConfig extends VitalConfig {
     @VitalConfigPath("vital.player-timeout")
     public int vitalPlayerTimeout = 0;
 
-    public DefaultVitalConfig(@NotNull JavaPlugin javaPlugin) {
+    /**
+     * Constructs the default vital config using the supplied {@link JavaPlugin}.
+     *
+     * @param javaPlugin The {@link JavaPlugin}.
+     */
+    public DefaultVitalConfig(@NonNull JavaPlugin javaPlugin) {
         super(javaPlugin);
     }
 }

@@ -1,7 +1,7 @@
 package me.xra1ny.vital.core.exception;
 
+import lombok.NonNull;
 import me.xra1ny.vital.core.VitalComponent;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 
@@ -19,8 +19,8 @@ public class VitalComponentNotAnnotatedException extends VitalException {
      * @param annotationClass The class of the expected annotation.
      */
     public VitalComponentNotAnnotatedException(
-            @NotNull VitalComponent source,
-            @NotNull Class<? extends Annotation> annotationClass
+            @NonNull VitalComponent source,
+            @NonNull Class<? extends Annotation> annotationClass
     ) {
         super(source, "Vital component " + source + " must be annotated with " + annotationClass);
     }

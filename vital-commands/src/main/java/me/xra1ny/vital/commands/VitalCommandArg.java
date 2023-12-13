@@ -15,8 +15,19 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface VitalCommandArg {
+    /**
+     * Pattern used by {@link VitalCommandArg} implementations that will be replaced by all player names during tab-completion, automatically.
+     */
     String PLAYER = "%PLAYER%";
+
+    /**
+     * Pattern used by {@link VitalCommandArg} implementations that will be replaced by "true" or "false" during tab-completion, automatically.
+     */
     String BOOLEAN = "%BOOLEAN%";
+
+    /**
+     * Pattern used by {@link VitalCommandArg} implementations that will be replaced by "0" during tab-completion, automatically.
+     */
     String NUMBER = "%NUMBER%";
 
     /**

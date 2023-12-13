@@ -1,8 +1,8 @@
 package me.xra1ny.vital.samples.full.persistence.service;
 
+import lombok.NonNull;
 import me.xra1ny.vital.samples.full.persistence.entity.SampleVitalPlayerEntity;
 import me.xra1ny.vital.samples.full.persistence.repository.SampleVitalPlayerRepository;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -18,15 +18,15 @@ import java.util.UUID;
 public class SampleVitalPlayerService {
     private final SampleVitalPlayerRepository sampleVitalPlayerRepository;
 
-    public SampleVitalPlayerService(@NotNull SampleVitalPlayerRepository sampleVitalPlayerRepository) {
+    public SampleVitalPlayerService(@NonNull SampleVitalPlayerRepository sampleVitalPlayerRepository) {
         this.sampleVitalPlayerRepository = sampleVitalPlayerRepository;
     }
 
-    public boolean vitalPlayerExistsById(@NotNull UUID uuid) {
+    public boolean vitalPlayerExistsById(@NonNull UUID uuid) {
         return sampleVitalPlayerRepository.existsById(SampleVitalPlayerEntity.class, uuid);
     }
 
-    public void createVitalPlayerEntity(@NotNull UUID uuid, @NotNull String name, long coins, long level) {
+    public void createVitalPlayerEntity(@NonNull UUID uuid, @NonNull String name, long coins, long level) {
         final SampleVitalPlayerEntity sampleVitalPlayerEntity = SampleVitalPlayerEntity.builder()
                 .uniqueId(uuid)
                 .name(name)
@@ -37,7 +37,7 @@ public class SampleVitalPlayerService {
         sampleVitalPlayerRepository.persist(sampleVitalPlayerEntity);
     }
 
-    public void removeVitalPlayerEntityById(@NotNull UUID uuid) {
+    public void removeVitalPlayerEntityById(@NonNull UUID uuid) {
         final Optional<SampleVitalPlayerEntity> optionalSampleVitalPlayerEntity = sampleVitalPlayerRepository.findById(SampleVitalPlayerEntity.class, uuid);
 
         if (optionalSampleVitalPlayerEntity.isPresent()) {

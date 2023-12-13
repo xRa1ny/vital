@@ -1,6 +1,7 @@
 package me.xra1ny.vital.items;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalAutoRegisterable;
@@ -13,31 +14,31 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Used to create ItemStacks that can be interacted with.
+ * Used to create {@link ItemStack} that can be interacted with.
  * This class provides a foundation for creating custom items with specific behaviors,
  * cooldowns, and interactions.
  *
  * @author xRa1ny
  */
-@Getter
 @SuppressWarnings("unused")
 public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo>, VitalAutoRegisterable {
     /**
      * The current Cooldown of this VitalItemStack.
      */
+    @Getter
     @Setter
     private int currentCooldown = 0;
 
     /**
      * The Cooldown of this VitalItemStack.
      */
+    @Getter
     private int cooldown = 0;
 
     /**
@@ -83,7 +84,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      * @param itemStack The base ItemStack.
      * @param enchanted Whether to add enchantments.
      */
-    public VitalItemStack(@NotNull ItemStack itemStack, boolean enchanted) {
+    public VitalItemStack(@NonNull ItemStack itemStack, boolean enchanted) {
         final ItemMeta meta = itemStack.getItemMeta();
 
         if (enchanted) {
@@ -105,7 +106,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      *
      * @param e The player interact event.
      */
-    public void onLeftClick(@NotNull PlayerInteractEvent e) {
+    public void onLeftClick(@NonNull PlayerInteractEvent e) {
 
     }
 
@@ -114,7 +115,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      *
      * @param e The player interact event.
      */
-    public void onRightClick(@NotNull PlayerInteractEvent e) {
+    public void onRightClick(@NonNull PlayerInteractEvent e) {
 
     }
 
@@ -123,7 +124,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      *
      * @param e The player interact event.
      */
-    public void onCooldown(@NotNull PlayerInteractEvent e) {
+    public void onCooldown(@NonNull PlayerInteractEvent e) {
 
     }
 
@@ -132,7 +133,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      *
      * @param player The player.
      */
-    public void onCooldownExpire(@NotNull Player player) {
+    public void onCooldownExpire(@NonNull Player player) {
 
     }
 
@@ -141,7 +142,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      *
      * @param e The player interact event.
      */
-    public final void handleInteraction(@NotNull PlayerInteractEvent e) {
+    public final void handleInteraction(@NonNull PlayerInteractEvent e) {
         if (currentCooldown >= 1) {
             onCooldown(e);
             return;
@@ -192,7 +193,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
     }
 
     @Override
-    public final void autoRegister(@NotNull Class<? extends JavaPlugin> javaPluginType) {
+    public final void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
         final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
         final Optional<VitalItemStackManager> optionalVitalItemStackManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalItemStackManager.class);

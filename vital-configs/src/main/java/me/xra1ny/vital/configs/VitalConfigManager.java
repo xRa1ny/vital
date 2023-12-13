@@ -1,8 +1,8 @@
 package me.xra1ny.vital.configs;
 
+import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Class responsible for managing {@link VitalConfig}.
@@ -24,12 +24,12 @@ public final class VitalConfigManager extends VitalComponentListManager<VitalCon
     }
 
     @Override
-    public void onVitalComponentRegistered(@NotNull VitalConfig vitalConfig) {
+    public void onVitalComponentRegistered(@NonNull VitalConfig vitalConfig) {
 
     }
 
     @Override
-    public void onVitalComponentUnregistered(@NotNull VitalConfig vitalConfig) {
+    public void onVitalComponentUnregistered(@NonNull VitalConfig vitalConfig) {
 
     }
 

@@ -1,7 +1,7 @@
 package me.xra1ny.vital.core.processor;
 
+import lombok.NonNull;
 import me.xra1ny.vital.core.VitalPluginInfo;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -86,7 +86,7 @@ public class VitalPluginInfoAnnotationProcessor extends AbstractProcessor {
      * @param apiVersion The api-version this plugin uses.
      * @param version    The version of this plugin.
      */
-    public void generatePluginYml(@NotNull String className, @NotNull String name, @NotNull String apiVersion, @NotNull String version) {
+    public void generatePluginYml(@NonNull String className, @NonNull String name, @NonNull String apiVersion, @NonNull String version) {
         // append basic plugin meta information to plugin info holder.
         VitalPluginInfoHolder.PLUGIN_INFO.append("main: ").append(className);
         VitalPluginInfoHolder.PLUGIN_INFO.append("\n");
