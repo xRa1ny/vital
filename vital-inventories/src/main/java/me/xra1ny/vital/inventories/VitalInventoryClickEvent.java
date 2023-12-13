@@ -1,13 +1,30 @@
 package me.xra1ny.vital.inventories;
 
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Interface defining an event that is called when a player clicks within an {@link VitalInventoryBuilder} inventory.
+ *
+ * @author xRa1ny
+ */
 public interface VitalInventoryClickEvent {
-    Action onVitalInventoryClick(@NotNull Player player, @Nullable ItemStack itemStack);
+    /**
+     * Event method called for every click to the specified {@link ItemStack}.
+     *
+     * @param player    The {@link Player} that clicked the passed {@link ItemStack}.
+     * @param itemStack The {@link ItemStack} clicked.
+     * @return The {@link Action} to perform after the click has been processed.
+     */
+    Action onVitalInventoryClick(@NonNull Player player, @Nullable ItemStack itemStack);
 
+    /**
+     * Defines an action taken on any {@link VitalInventoryBuilder} inventory instance.
+     *
+     * @author xRa1ny
+     */
     enum Action {
         /**
          * Do nothing.

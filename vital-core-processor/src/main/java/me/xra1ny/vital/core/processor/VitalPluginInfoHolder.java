@@ -6,5 +6,8 @@ package me.xra1ny.vital.core.processor;
  * @author xRa1ny
  */
 public interface VitalPluginInfoHolder {
+    /**
+     * Cache variable storing information for later plugin.yml generation during compile-time.
+     */
     StringBuilder PLUGIN_INFO = new StringBuilder();
 }

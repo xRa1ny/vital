@@ -1,36 +1,32 @@
 package me.xra1ny.vital.holograms;
 
-import lombok.Getter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages the creation, configuration, and persistence of VitalHologram instances.
- * Extends VitalComponentListManagement<VitalHologram> and implements VitalComponent.
+ * Manages the creation, configuration, and persistence of {@link VitalHologram} instances.
  *
  * @author xRa1ny
  */
 @SuppressWarnings("unused")
-@Getter(onMethod = @__(@NotNull))
 @Log
 public final class VitalHologramManager extends VitalComponentListManager<VitalHologram> {
-
     private final JavaPlugin javaPlugin;
-
     private final VitalHologramConfig vitalHologramConfig;
 
     /**
      * Constructs a new VitalHologramManagement instance.
      *
-     * @param javaPlugin The JavaPlugin instance associated with this manager.
+     * @param javaPlugin          The JavaPlugin instance associated with this manager.
+     * @param vitalHologramConfig The {@link VitalHologramConfig} that persisted all {@link VitalHologram} instances.
      */
-    public VitalHologramManager(@NotNull JavaPlugin javaPlugin, @NotNull VitalHologramConfig vitalHologramConfig) {
+    public VitalHologramManager(@NonNull JavaPlugin javaPlugin, @NonNull VitalHologramConfig vitalHologramConfig) {
         this.javaPlugin = javaPlugin;
         this.vitalHologramConfig = vitalHologramConfig;
     }
@@ -41,10 +37,10 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      * @param vitalHologram The hologram to save.
      */
     @SneakyThrows
-    public void saveVitalHologramToConfig(@NotNull VitalHologram vitalHologram) {
+    public void saveVitalHologramToConfig(@NonNull VitalHologram vitalHologram) {
         List<VitalHologram> vitalHologramList = vitalHologramConfig.getVitalHologramList();
 
-        if(vitalHologramList == null) {
+        if (vitalHologramList == null) {
             vitalHologramList = new ArrayList<>();
         }
 
@@ -58,10 +54,10 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      * @param vitalHologram The hologram to remove.
      */
     @SneakyThrows
-    public void removeVitalHologramFromConfig(@NotNull VitalHologram vitalHologram) {
+    public void removeVitalHologramFromConfig(@NonNull VitalHologram vitalHologram) {
         final List<VitalHologram> vitalHologramList = vitalHologramConfig.getVitalHologramList();
 
-        if(vitalHologramList == null || vitalHologramList.isEmpty()) {
+        if (vitalHologramList == null || vitalHologramList.isEmpty()) {
             return;
         }
 
@@ -75,8 +71,8 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      */
     @Override
     public void onRegistered() {
-        if(vitalHologramConfig.getVitalHologramList() != null) {
-            for(VitalHologram vitalHologram : vitalHologramConfig.getVitalHologramList()) {
+        if (vitalHologramConfig.getVitalHologramList() != null) {
+            for (VitalHologram vitalHologram : vitalHologramConfig.getVitalHologramList()) {
                 registerVitalComponent(vitalHologram);
             }
         }
@@ -93,12 +89,12 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
     }
 
     @Override
-    public void onVitalComponentRegistered(@NotNull VitalHologram vitalHologram) {
+    public void onVitalComponentRegistered(@NonNull VitalHologram vitalHologram) {
 
     }
 
     @Override
-    public void onVitalComponentUnregistered(@NotNull VitalHologram vitalHologram) {
+    public void onVitalComponentUnregistered(@NonNull VitalHologram vitalHologram) {
 
     }
 

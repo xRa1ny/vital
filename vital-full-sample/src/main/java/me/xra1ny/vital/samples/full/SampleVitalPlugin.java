@@ -20,9 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class SampleVitalPlugin extends JavaPlugin {
     /**
      * Using this implementation, Vital is initialized with maximum functionality, containing all of Vital's content.
-     * <p>
-     * NOTE: When using this approach, you may also unregister certain modules of Vital that you do not need if you like.
-     * NOTE: Let's say, you don't need to use the `vital-commands` Module, you can simply unregister it when your plugin enables if you like...
+     *
+     * @apiNote When using this approach, you may also unregister certain modules of {@link Vital} that you do not need if you like. Let's say, you don't need to use the `vital-commands` Module, you can simply unregister it when your plugin enables if you like...
      */
     private final Vital<SampleVitalPlugin> vital = new Vital<>(this);
 
@@ -43,7 +42,7 @@ public final class SampleVitalPlugin extends JavaPlugin {
 
         final DefaultVitalConfig defaultVitalConfig = vital.getVitalComponentManager().getVitalComponent(DefaultVitalConfig.class).get();
 
-        if(defaultVitalConfig.vitalDatabaseEnabled) {
+        if (defaultVitalConfig.vitalDatabaseEnabled) {
             final VitalDatabaseManager vitalDatabaseManager = vital.getVitalComponentManager().getVitalComponent(VitalDatabaseManager.class).get();
             final SampleVitalDatabase sampleVitalDatabase = new SampleVitalDatabase();
             final SampleVitalPlayerRepository sampleVitalPlayerRepository = new SampleVitalPlayerRepository(sampleVitalDatabase);
