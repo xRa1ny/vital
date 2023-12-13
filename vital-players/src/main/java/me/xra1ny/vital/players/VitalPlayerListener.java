@@ -57,7 +57,7 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
         // Retrieve the VitalPlayer associated with the leaving player.
         final Optional<T> optionalVitalPlayer = vitalPlayerManager.getVitalComponent(e.getPlayer().getUniqueId());
 
-        if(optionalVitalPlayer.isEmpty()) {
+        if (optionalVitalPlayer.isEmpty()) {
             return;
         }
 

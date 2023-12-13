@@ -30,9 +30,10 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class VitalCommandInfoAnnotationProcessor extends AbstractProcessor {
     private boolean ran;
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if(ran) {
+        if (ran) {
             return true;
         }
 
@@ -45,7 +46,7 @@ public class VitalCommandInfoAnnotationProcessor extends AbstractProcessor {
         final List<VitalCommandInfo> vitalCommandInfoList = new ArrayList<>();
 
         // Scan for all commands annotated with `VitalCommandInfo.
-        for(Element element : roundEnv.getElementsAnnotatedWith(VitalCommandInfo.class)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(VitalCommandInfo.class)) {
             final VitalCommandInfo vitalCommandInfo = element.getAnnotation(VitalCommandInfo.class);
 
             vitalCommandInfoList.add(vitalCommandInfo);
@@ -73,7 +74,7 @@ public class VitalCommandInfoAnnotationProcessor extends AbstractProcessor {
             VitalPluginInfoHolder.PLUGIN_INFO.append("commands:");
             VitalPluginInfoHolder.PLUGIN_INFO.append("\n");
 
-            for(VitalCommandInfo vitalCommandInfo : vitalCommandInfoList) {
+            for (VitalCommandInfo vitalCommandInfo : vitalCommandInfoList) {
                 final String vitalCommandName = vitalCommandInfo.value();
                 final String vitalCommandDescription = vitalCommandInfo.description();
                 final String vitalCommandPermission = vitalCommandInfo.permission();
@@ -89,17 +90,17 @@ public class VitalCommandInfoAnnotationProcessor extends AbstractProcessor {
                 VitalPluginInfoHolder.PLUGIN_INFO.append("    usage: ").append(vitalCommandUsage);
                 VitalPluginInfoHolder.PLUGIN_INFO.append("\n");
 
-                if(vitalCommandAliases.length > 0) {
+                if (vitalCommandAliases.length > 0) {
                     VitalPluginInfoHolder.PLUGIN_INFO.append("    aliases: ");
 
-                    for(String alias : vitalCommandAliases) {
+                    for (String alias : vitalCommandAliases) {
                         VitalPluginInfoHolder.PLUGIN_INFO.append("      - ").append(alias);
                     }
                 }
             }
 
             // finally write the builder content to the newly created `plugin.yml` resource.
-            try(Writer writer = pluginYmlFileObject.openWriter()) {
+            try (Writer writer = pluginYmlFileObject.openWriter()) {
                 writer.write(VitalPluginInfoHolder.PLUGIN_INFO.toString());
             }
         } catch (IOException e) {

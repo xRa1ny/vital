@@ -72,7 +72,7 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
 
             @Override
             public void onTick() {
-                if(countdown <= 0) {
+                if (countdown <= 0) {
                     stop();
                     onCountdownExpire();
 

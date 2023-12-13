@@ -173,15 +173,15 @@ public final class VitalItemStackBuilder {
 
             meta.setUnbreakable(unbreakable);
 
-            if(!namespacedKeyMap.isEmpty()) {
+            if (!namespacedKeyMap.isEmpty()) {
                 final PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
 
-                for(Map.Entry<NamespacedKey, Map.Entry<PersistentDataType<?, ?>, ?>> entry : namespacedKeyMap.entrySet()) {
+                for (Map.Entry<NamespacedKey, Map.Entry<PersistentDataType<?, ?>, ?>> entry : namespacedKeyMap.entrySet()) {
                     final NamespacedKey namespacedKey = entry.getKey();
                     final PersistentDataType<?, Z> persistentDataType = (PersistentDataType<?, Z>) entry.getValue().getKey();
                     final Z value = (Z) entry.getValue().getValue();
 
-                    if(!persistentDataType.getComplexType().equals(value.getClass())) {
+                    if (!persistentDataType.getComplexType().equals(value.getClass())) {
                         continue;
                     }
 

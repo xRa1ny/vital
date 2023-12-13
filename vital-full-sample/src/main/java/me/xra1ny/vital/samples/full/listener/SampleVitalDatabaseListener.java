@@ -16,7 +16,7 @@ public class SampleVitalDatabaseListener extends VitalListener {
 
     @EventHandler
     public void onPlayerJoinServer(@NotNull PlayerJoinEvent e) {
-        if(sampleVitalPlayerService.vitalPlayerExistsById(e.getPlayer().getUniqueId())) {
+        if (sampleVitalPlayerService.vitalPlayerExistsById(e.getPlayer().getUniqueId())) {
             e.getPlayer().sendMessage("player already exists in db!");
 
             return;

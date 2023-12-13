@@ -9,7 +9,7 @@ public final class DefaultVitalPlayerTimeoutHandler extends VitalPlayerTimeoutHa
     /**
      * Constructs a VitalPlayerTimeoutHandler instance.
      *
-     * @param javaPlugin            The JavaPlugin instance associated with this handler.
+     * @param javaPlugin         The JavaPlugin instance associated with this handler.
      * @param vitalPlayerManager The management component responsible for VitalPlayers.
      */
     public DefaultVitalPlayerTimeoutHandler(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<VitalPlayer> vitalPlayerManager) {

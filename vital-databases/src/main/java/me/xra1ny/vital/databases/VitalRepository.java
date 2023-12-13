@@ -45,7 +45,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @return An {@link Optional} containing the entity if found, or an empty {@link Optional} if not found.
      */
     public final Optional<Entity> findById(@NotNull Class<Entity> entityClass, @NotNull Id id) {
-        try(Session session = vitalDatabase.getSessionFactory().openSession()) {
+        try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             return Optional.ofNullable(session.get(entityClass, id));
         }
     }
@@ -57,7 +57,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @return A {@link List} of entities matching the specified class.
      */
     public final List<Entity> findAll(@NotNull Class<Entity> entityClass) {
-        try(Session session = vitalDatabase.getSessionFactory().openSession()) {
+        try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             final CriteriaQuery<Entity> criteriaQuery = criteriaBuilder.createQuery(entityClass);
             final Root<Entity> root = criteriaQuery.from(entityClass);
@@ -73,7 +73,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
     /**
      * Checks if entities with specific criteria exist.
      *
-     * @param entityClass         The class of the entity.
+     * @param entityClass        The class of the entity.
      * @param columnValueEntries An array of column-value pairs to search for.
      * @return {@code true} if entities matching the criteria exist, otherwise {@code false}.
      */
@@ -84,12 +84,12 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
     /**
      * Finds all entities matching specific criteria.
      *
-     * @param entityClass         The class of the entity.
+     * @param entityClass        The class of the entity.
      * @param columnValueEntries An array of column-value pairs to search for.
      * @return A {@link List} of entities matching the specified criteria.
      */
     public final List<Entity> findAll(@NotNull Class<Entity> entityClass, @NotNull Map.Entry<String, Object>... columnValueEntries) {
-        try(Session session = vitalDatabase.getSessionFactory().openSession()) {
+        try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             final CriteriaQuery<Entity> criteriaQuery = criteriaBuilder.createQuery(entityClass);
             final Root<Entity> root = criteriaQuery.from(entityClass);
@@ -98,7 +98,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
 
             final List<Predicate> predicateList = new ArrayList<>();
 
-            for(Map.Entry<String, Object> columValueEntry : columnValueEntries) {
+            for (Map.Entry<String, Object> columValueEntry : columnValueEntries) {
                 final Predicate predicate = criteriaBuilder.equal(root.get(columValueEntry.getKey()), columValueEntry.getValue());
 
                 predicateList.add(predicate);
@@ -110,7 +110,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
 
             try {
                 return typedQuery.getResultList();
-            }catch (NoResultException e) {
+            } catch (NoResultException e) {
                 return Collections.emptyList();
             }
         }
@@ -122,7 +122,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @param entity The entity to be persisted.
      */
     public final void persist(@NotNull Entity entity) {
-        try(Session session = vitalDatabase.getSessionFactory().openSession()) {
+        try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             session.beginTransaction();
             session.merge(entity);
             session.getTransaction().commit();
@@ -135,7 +135,7 @@ public abstract class VitalRepository<Entity extends VitalEntity, Id> implements
      * @param entity The entity to be removed.
      */
     public final void remove(@NotNull Entity entity) {
-        try(Session session = vitalDatabase.getSessionFactory().openSession()) {
+        try (Session session = vitalDatabase.getSessionFactory().openSession()) {
             session.beginTransaction();
             session.remove(entity);
             session.getTransaction().commit();

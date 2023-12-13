@@ -78,7 +78,7 @@ public class VitalInventoryBuilder implements InventoryHolder {
             inventory = Bukkit.createInventory(this, inventoryType, name);
         }
 
-        for(Map.Entry<Integer, ItemStack> entry : slotItemStackMap.entrySet()) {
+        for (Map.Entry<Integer, ItemStack> entry : slotItemStackMap.entrySet()) {
             inventory.setItem(entry.getKey(), entry.getValue());
         }
 

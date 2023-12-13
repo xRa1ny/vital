@@ -97,7 +97,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
         this.runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if(!allowTick) {
+                if (!allowTick) {
                     return;
                 }
 

@@ -44,7 +44,7 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
     public void saveVitalHologramToConfig(@NotNull VitalHologram vitalHologram) {
         List<VitalHologram> vitalHologramList = vitalHologramConfig.getVitalHologramList();
 
-        if(vitalHologramList == null) {
+        if (vitalHologramList == null) {
             vitalHologramList = new ArrayList<>();
         }
 
@@ -61,7 +61,7 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
     public void removeVitalHologramFromConfig(@NotNull VitalHologram vitalHologram) {
         final List<VitalHologram> vitalHologramList = vitalHologramConfig.getVitalHologramList();
 
-        if(vitalHologramList == null || vitalHologramList.isEmpty()) {
+        if (vitalHologramList == null || vitalHologramList.isEmpty()) {
             return;
         }
 
@@ -75,8 +75,8 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      */
     @Override
     public void onRegistered() {
-        if(vitalHologramConfig.getVitalHologramList() != null) {
-            for(VitalHologram vitalHologram : vitalHologramConfig.getVitalHologramList()) {
+        if (vitalHologramConfig.getVitalHologramList() != null) {
+            for (VitalHologram vitalHologram : vitalHologramConfig.getVitalHologramList()) {
                 registerVitalComponent(vitalHologram);
             }
         }

@@ -46,6 +46,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
 
     /**
      * sets the lines of this per player scoreboard
+     *
      * @param lineList the lines
      */
     @SafeVarargs
@@ -55,11 +56,12 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
 
     /**
      * updates the users specified scoreboard
+     *
      * @param player the player
      */
     @SuppressWarnings("DataFlowIssue")
     public void update(@NotNull Player player) {
-        if(!this.vitalScoreboardContentMap.containsKey(player)) {
+        if (!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
 
@@ -73,7 +75,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
 
     @SuppressWarnings({"DataFlowIssue", "deprecation"})
     private void updateContent(@NotNull Player player) {
-        if(!this.vitalScoreboardContentMap.containsKey(player)) {
+        if (!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
 
@@ -84,19 +86,20 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
         final Objective objective = scoreboard.getBukkitScoreboard().getObjective(ChatColor.stripColor(scoreboard.getTitle()));
         final List<String> lines = applyLines(player);
 
-        for(int i = 0; i < lines.size(); i++) {
+        for (int i = 0; i < lines.size(); i++) {
             final Score score = objective.getScore(lines.get(i) + String.valueOf(ChatColor.RESET).repeat(i));
 
-            score.setScore(lines.size()-i);
+            score.setScore(lines.size() - i);
         }
     }
 
     /**
      * adds the player specified to this per player scoreboard
+     *
      * @param player the player
      */
     public void add(@NotNull Player player) {
-        if(this.vitalScoreboardContentMap.containsKey(player)) {
+        if (this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
 
@@ -106,11 +109,12 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
 
     /**
      * removes the player specified from this per player scoreboard
+     *
      * @param player the player
      */
     @SuppressWarnings("DataFlowIssue")
     public void remove(@NotNull Player player) {
-        if(!this.vitalScoreboardContentMap.containsKey(player)) {
+        if (!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
 
@@ -122,7 +126,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
     private List<String> applyLines(@NotNull Player player) {
         final List<String> lines = new ArrayList<>();
 
-        for(Function<Player, String> line : this.lineList) {
+        for (Function<Player, String> line : this.lineList) {
             lines.add(line.apply(player));
         }
 

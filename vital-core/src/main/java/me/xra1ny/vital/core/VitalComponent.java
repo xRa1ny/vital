@@ -8,8 +8,8 @@ import java.util.UUID;
  * Interface representing a component within the Vital-Framework.
  * Defines common methods and lifecycle events for Vital components.
  *
- * @apiNote {@link VitalComponent} may be everything within a plugin, a command, a config, a game state, a player, an item, etc.
  * @author xRa1ny
+ * @apiNote {@link VitalComponent} may be everything within a plugin, a command, a config, a game state, a player, an item, etc.
  */
 public interface VitalComponent {
     /**

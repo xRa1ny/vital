@@ -92,12 +92,12 @@ public final class VitalInventoryListener extends VitalListener {
             final VitalInventoryClickEvent.Action inventoryAction;
 
             // Compute the associated click event with mapped elements.
-            if(slotClickEventMap.containsKey(e.getSlot())) {
+            if (slotClickEventMap.containsKey(e.getSlot())) {
                 // If we mapped a by SLOT element click event, handle it here...
                 final VitalInventoryClickEvent clickEvent = slotClickEventMap.get(e.getSlot());
 
                 inventoryAction = clickEvent.onVitalInventoryClick(player, e.getCurrentItem());
-            } else if(itemStackClickEventMap.containsKey(e.getCurrentItem())) {
+            } else if (itemStackClickEventMap.containsKey(e.getCurrentItem())) {
                 // If we mapped a by ITEMSTACK element click event, handle it here...
                 final VitalInventoryClickEvent clickEvent = itemStackClickEventMap.get(e.getCurrentItem());
 
@@ -110,10 +110,10 @@ public final class VitalInventoryListener extends VitalListener {
             // check the action of our click result, if set to `CLOSE_INVENTORY`, close the inventory accordingly.
             if (inventoryAction == VitalInventoryClickEvent.Action.CLOSE_INVENTORY) {
                 player.closeInventory();
-            }else if(inventoryAction == VitalInventoryClickEvent.Action.OPEN_PREVIOUS_INVENTORY) {
+            } else if (inventoryAction == VitalInventoryClickEvent.Action.OPEN_PREVIOUS_INVENTORY) {
                 final Inventory previousInventory = vitalInventoryBuilder.getPreviousInventory();
 
-                if(previousInventory != null) {
+                if (previousInventory != null) {
                     player.openInventory(previousInventory);
                 }
             }

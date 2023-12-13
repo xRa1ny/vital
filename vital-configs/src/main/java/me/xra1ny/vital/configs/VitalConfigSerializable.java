@@ -30,7 +30,7 @@ public interface VitalConfigSerializable {
         // Iterate through all fields in the implementing class using ReflectionUtils.
         for (Field field : ReflectionUtils.getAllFields(getClass())) {
             // If our Field is transient, we want to skip it in this iteration.
-            if(Modifier.isTransient(field.getModifiers())) {
+            if (Modifier.isTransient(field.getModifiers())) {
                 continue;
             }
 
@@ -47,22 +47,22 @@ public interface VitalConfigSerializable {
 
             // If the object we are trying to add to our serialized object is of type Enum
             // we want to convert it to a String, so we can safely read it from config later.
-            if(fieldValue instanceof Enum<?>) {
+            if (fieldValue instanceof Enum<?>) {
                 fieldValue = fieldValue.toString();
-            }else if(fieldValue instanceof VitalConfigSerializable vitalConfigSerializable) {
+            } else if (fieldValue instanceof VitalConfigSerializable vitalConfigSerializable) {
                 fieldValue = vitalConfigSerializable.serialize();
-            }else if(fieldValue instanceof List<?> list) {
+            } else if (fieldValue instanceof List<?> list) {
                 try {
                     // attempt to use mapping for complex types...
                     final List<VitalConfigSerializable> vitalConfigSerializableList = (List<VitalConfigSerializable>) list;
                     final List<Map<String, Object>> stringObjectMapList = new ArrayList<>();
 
-                    for(VitalConfigSerializable vitalConfigSerializable : vitalConfigSerializableList) {
+                    for (VitalConfigSerializable vitalConfigSerializable : vitalConfigSerializableList) {
                         stringObjectMapList.add(vitalConfigSerializable.serialize());
                     }
 
                     fieldValue = stringObjectMapList;
-                }catch (ClassCastException ignored) {
+                } catch (ClassCastException ignored) {
                     // use default mapping...
                 }
             }

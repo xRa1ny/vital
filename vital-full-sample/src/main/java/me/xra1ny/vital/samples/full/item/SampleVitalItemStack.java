@@ -45,7 +45,7 @@ public final class SampleVitalItemStack extends VitalItemStack {
 
         List<VitalHologram> vitalHologramList = sampleVitalConfig.sampleVitalHologramListConfigField;
 
-        if(vitalHologramList == null) {
+        if (vitalHologramList == null) {
             vitalHologramList = new ArrayList<>();
         }
 

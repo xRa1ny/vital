@@ -71,7 +71,7 @@ public class SampleVitalPlayerService {
         // Modify a SampleVitalPlayerEntity on DB level.
         final SampleVitalPlayerEntity sampleVitalPlayerEntity = optionalSampleVitalPlayerEntity.get();
 
-        sampleVitalPlayerEntity.setCoins(sampleVitalPlayerEntity.getCoins()-100);
+        sampleVitalPlayerEntity.setCoins(sampleVitalPlayerEntity.getCoins() - 100);
 
         sampleVitalPlayerRepository.persist(sampleVitalPlayerEntity);
 

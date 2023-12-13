@@ -42,6 +42,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
     /**
      * Creates a new VitalItemStack based on annotation-defined properties.
+     *
      * @see VitalItemStackInfo
      */
     public VitalItemStack() {
@@ -56,7 +57,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
                 .build();
         final ItemMeta meta = itemStack.getItemMeta();
 
-        if(info.enchanted()) {
+        if (info.enchanted()) {
             meta.addEnchant(Enchantment.LUCK, 1, true);
         }
 
@@ -78,13 +79,14 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
     /**
      * Creates a new VitalItemStack based on an existing ItemStack.
+     *
      * @param itemStack The base ItemStack.
      * @param enchanted Whether to add enchantments.
      */
     public VitalItemStack(@NotNull ItemStack itemStack, boolean enchanted) {
         final ItemMeta meta = itemStack.getItemMeta();
 
-        if(enchanted) {
+        if (enchanted) {
             meta.addEnchant(Enchantment.LUCK, 1, true);
         }
 
@@ -100,6 +102,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
     /**
      * Called when this item has been left-clicked.
+     *
      * @param e The player interact event.
      */
     public void onLeftClick(@NotNull PlayerInteractEvent e) {
@@ -108,6 +111,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
     /**
      * Called when this item has been right-clicked.
+     *
      * @param e The player interact event.
      */
     public void onRightClick(@NotNull PlayerInteractEvent e) {
@@ -116,6 +120,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
     /**
      * Called when this item has been left or right-clicked, but the cooldown has not yet expired.
+     *
      * @param e The player interact event.
      */
     public void onCooldown(@NotNull PlayerInteractEvent e) {
@@ -124,6 +129,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
     /**
      * Called when the cooldown of this item expires for the specified player.
+     *
      * @param player The player.
      */
     public void onCooldownExpire(@NotNull Player player) {
@@ -136,14 +142,14 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      * @param e The player interact event.
      */
     public final void handleInteraction(@NotNull PlayerInteractEvent e) {
-        if(currentCooldown >= 1) {
+        if (currentCooldown >= 1) {
             onCooldown(e);
             return;
         }
 
         final Action action = e.getAction();
 
-        if(action.isLeftClick()) {
+        if (action.isLeftClick()) {
             onLeftClick(e);
         } else {
             onRightClick(e);
@@ -160,11 +166,11 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
     @SuppressWarnings("DataFlowIssue")
     @Override
     public final boolean equals(Object obj) {
-        if(!(obj instanceof ItemStack item)) {
+        if (!(obj instanceof ItemStack item)) {
             return false;
         }
 
-        if(!item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING)) {
+        if (!item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING)) {
             String toString = toString();
 
             return toString.equals(item.toString().replace(item.getType() + " x " + item.getAmount(), item.getType() + " x 1"));
@@ -178,6 +184,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
     /**
      * Checks if this item is enchanted.
+     *
      * @return true if the item is enchanted, false otherwise.
      */
     public final boolean isEnchanted() {

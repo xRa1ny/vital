@@ -340,7 +340,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
             }
 
             // If the method's return type does not match `VitalCommandReturnState`, cancel operation.
-            if(!VitalCommandReturnState.class.isAssignableFrom(method.getReturnType())) {
+            if (!VitalCommandReturnState.class.isAssignableFrom(method.getReturnType())) {
                 continue;
             }
 
@@ -358,14 +358,14 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         // If the handler method was found, dynamically inject each parameter supported for its implementation...
         final List<Object> injectedParameters = new ArrayList<>();
 
-        for(Parameter parameter : commandArgHandlerMethod.getParameters()) {
+        for (Parameter parameter : commandArgHandlerMethod.getParameters()) {
             // If the parameters managed type is of instance of `CommandSender`, inject either `CommandSender` or `Player`
-            if(CommandSender.class.isAssignableFrom(parameter.getType())) {
+            if (CommandSender.class.isAssignableFrom(parameter.getType())) {
                 injectedParameters.add(sender);
-            }else if(VitalCommandArg.class.isAssignableFrom(parameter.getType())) {
+            } else if (VitalCommandArg.class.isAssignableFrom(parameter.getType())) {
                 // inject `VitalCommandArg`
                 injectedParameters.add(commandArg);
-            }else if(String[].class.isAssignableFrom(parameter.getType())) {
+            } else if (String[].class.isAssignableFrom(parameter.getType())) {
                 // if parameters managed type is an instance of `String[]` inject the values of this command execution.
                 injectedParameters.add(values);
             }

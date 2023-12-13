@@ -18,7 +18,7 @@ public class VitalPlayerTimeoutHandler<T extends VitalPlayer> extends VitalRepea
     /**
      * Constructs a VitalPlayerTimeoutHandler instance.
      *
-     * @param javaPlugin The JavaPlugin instance associated with this handler.
+     * @param javaPlugin         The JavaPlugin instance associated with this handler.
      * @param vitalPlayerManager The management component responsible for VitalPlayers.
      */
     public VitalPlayerTimeoutHandler(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<T> vitalPlayerManager) {

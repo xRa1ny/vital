@@ -83,25 +83,25 @@ public final class SampleVitalCommand extends VitalCommand {
     @Override
     protected void onCommandInvalidArgs(@NotNull CommandSender sender) {
         // Here we specify any logic for when this command is executed with invalid args.
-            sender.sendMessage("Invalid arguments!");
+        sender.sendMessage("Invalid arguments!");
     }
 
     @Override
     protected void onCommandInternalError(@NotNull CommandSender sender) {
         // Here we specify any logic for when this command is executed and returned an internal error.
-            sender.sendMessage("Internal error while executing command!");
+        sender.sendMessage("Internal error while executing command!");
     }
 
     @Override
     protected void onCommandError(@NotNull CommandSender sender) {
         // Here we specify any logic for when this command is executed and returned an error.
-            sender.sendMessage("Error while executing command!");
+        sender.sendMessage("Error while executing command!");
     }
 
     @Override
     protected void onCommandRequiresPermission(@NotNull CommandSender sender) {
         // Here we specify any logic for when this command is executed without the needed permissions.
-            sender.sendMessage("You don't have enough permission to execute this command!");
+        sender.sendMessage("You don't have enough permission to execute this command!");
     }
 
     @Override

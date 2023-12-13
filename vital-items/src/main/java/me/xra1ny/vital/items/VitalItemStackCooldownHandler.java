@@ -23,7 +23,7 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
     /**
      * Creates a new VitalItemStackCooldownHandler.
      *
-     * @param javaPlugin The JavaPlugin instance.
+     * @param javaPlugin            The JavaPlugin instance.
      * @param vitalItemStackManager The VitalItemStackManagement instance.
      */
     public VitalItemStackCooldownHandler(@NotNull JavaPlugin javaPlugin, @NotNull VitalItemStackManager vitalItemStackManager) {
@@ -57,7 +57,7 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
         for (VitalItemStack vitalItemStack : vitalItemStackManager.getVitalComponentList()) {
             for (int i = 0; i < 50; i++) {
                 // Reduce Cooldown
-                if(vitalItemStack.getCurrentCooldown() <= 0) {
+                if (vitalItemStack.getCurrentCooldown() <= 0) {
                     continue;
                 }
 
@@ -86,6 +86,7 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
 
     /**
      * Specifies the required annotation type for this component.
+     *
      * @return The annotation type required for this component.
      */
     @Override

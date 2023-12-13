@@ -122,7 +122,7 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
      */
     @SuppressWarnings("deprecation")
     public void update() {
-        if(base == null) {
+        if (base == null) {
             base = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
         }
 
@@ -131,7 +131,7 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
         base.teleport(location);
 
         if (this.displayType != null) {
-            for(Entity entity : base.getPassengers()) {
+            for (Entity entity : base.getPassengers()) {
                 entity.remove();
             }
 
@@ -148,10 +148,10 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
             final Location lineLocation = this.location.clone().add(0, this.lines.size(), 0);
             final ArmorStand armorStand;
 
-            if(i >= initialBaseLineSize) {
-                armorStand = (ArmorStand) this.location.getWorld().spawnEntity(lineLocation.subtract(0, 2 + (.25*i), 0), EntityType.ARMOR_STAND);
+            if (i >= initialBaseLineSize) {
+                armorStand = (ArmorStand) this.location.getWorld().spawnEntity(lineLocation.subtract(0, 2 + (.25 * i), 0), EntityType.ARMOR_STAND);
                 this.baseLines.add(armorStand);
-            }else {
+            } else {
                 armorStand = baseLines.get(i);
                 armorStand.teleport(lineLocation);
             }

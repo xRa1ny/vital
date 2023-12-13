@@ -48,7 +48,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     /**
      * Constructor for {@link VitalConfig} with a specified name.
      *
-     * @param name The name of the configuration file.
+     * @param name       The name of the configuration file.
      * @param javaPlugin The {@link JavaPlugin} instance of you plugin.
      */
     public VitalConfig(@NotNull String name, @NotNull JavaPlugin javaPlugin) {
@@ -273,7 +273,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
                         value = vitalConfigSerializableList;
                     }
-                } else if(value instanceof Map<?, ?> map) {
+                } else if (value instanceof Map<?, ?> map) {
                     final Map<String, Object> stringObjectMap = (Map<String, Object>) map;
 
                     value = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);

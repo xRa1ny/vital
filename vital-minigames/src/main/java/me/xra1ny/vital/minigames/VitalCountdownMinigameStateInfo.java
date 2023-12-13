@@ -17,7 +17,7 @@ public @interface VitalCountdownMinigameStateInfo {
      * @return The initial countdown value.
      */
     int value();
-    
+
     /**
      * Gets the time interval between countdown updates in ticks.
      *
