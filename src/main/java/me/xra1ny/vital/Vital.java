@@ -19,10 +19,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * The Main Instance of Vital
+ * The main class of the Vital-Framework.
  *
- * @param <T> The JavaPlugin Instance
+ * @param <T> Your plugins main class.
  * @author xRa1ny
+ * @apiNote This class is used for a complete package of Vital.
  */
 @SuppressWarnings("unused")
 public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
@@ -76,7 +77,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
         vitalListenerManager.registerVitalComponent(vitalInventoryListener);
 
-        if(defaultVitalConfig.vitalDatabaseEnabled) {
+        if (defaultVitalConfig.vitalDatabaseEnabled) {
             // Register VitalDatabaseManager
             final VitalDatabaseManager vitalDatabaseManager = new VitalDatabaseManager();
 
@@ -88,7 +89,9 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     }
 
     /**
-     * Unregisters Vital's default VitalPlayerManagement System, allowing for custom VitalPlayerManagement.
+     * Unregisters Vital's default player management system.
+     *
+     * @apiNote This method is implemented for convenience for registering custom player management.
      */
     public void unregisterDefaultVitalPlayerManagement() {
         final Optional<DefaultVitalPlayerManager> optionalDefaultVitalPlayerManager = getVitalComponentManager().getVitalComponent(DefaultVitalPlayerManager.class);
@@ -101,18 +104,18 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     }
 
     /**
-     * Registers custom VitalPlayerManagement using the specified Classes, unregistering DefaultVitalPlayerManagement is not already.
-     * NOTE: The specified VitalPlayerManagement Classes MUST contain the DefaultVitalPlayerManagement Constructors.
+     * Registers custom player management, unregistering default player management if not already.
      *
-     * @param customVitalPlayerClass The custom VitalPlayer Class.
-     * @param customVitalPlayerManagerClass The custom VitalPlayerManager Class.
-     * @param customVitalPlayerListenerClass The custom VitalPlayerListener Class.
-     * @param customVitalPlayerTimeoutHandlerClass The custom VitalPlayerTimeoutHandler Class.
-     * @param customVitalPlayerTimeout The custom VitalPlayerTimeout.
-     * @param <P> VitalPlayer
-     * @param <M> VitalPlayerManager
-     * @param <L> VitalPlayerListener
-     * @param <TH> VitalPlayerTimeoutHandler
+     * @param customVitalPlayerClass               The custom {@link VitalPlayer} class.
+     * @param customVitalPlayerManagerClass        The custom {@link VitalPlayerManager} class.
+     * @param customVitalPlayerListenerClass       The custom {@link VitalPlayerListener} class.
+     * @param customVitalPlayerTimeoutHandlerClass The custom {@link VitalPlayerTimeoutHandler} class.
+     * @param customVitalPlayerTimeout             The custom player timeout.
+     * @param <P>                                  {@link VitalPlayer}
+     * @param <M>                                  {@link VitalPlayerManager}
+     * @param <L>                                  {@link VitalPlayerListener}
+     * @param <TH>                                 {@link VitalPlayerTimeoutHandler}
+     * @apiNote The specified VitalPlayerManagement Classes MUST contain the DefaultVitalPlayerManagement Constructors.
      */
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @SneakyThrows
@@ -130,11 +133,11 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     }
 
     /**
-     * Registers custom VitalPlayerManagement using the specified CustomVitalPlayerClass, instantiating every needed Dependency required for VitalPlayerManagement.
+     * Registers custom player management using the specified {@link VitalPlayer} class, instantiating every needed dependency required for player management.
      *
-     * @param customVitalPlayerClass The custom VitalPlayer Class.
-     * @param customVitalPlayerTimeout The custom VitalPlayerTimeout.
-     * @param <P> VitalPlayer
+     * @param customVitalPlayerClass   The custom {@link VitalPlayer} class.
+     * @param customVitalPlayerTimeout The custom player timeout.
+     * @param <P>                      {@link VitalPlayer}
      */
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public <P extends VitalPlayer> void registerSimpleCustomPlayerManagement(@NotNull Class<P> customVitalPlayerClass, int customVitalPlayerTimeout) {
@@ -202,12 +205,12 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     }
 
     /**
-     * Singleton access-point for `Vital<T>` Instance.
+     * Singleton access-point for {@link Vital} instance.
      *
-     * @param type Your Plugin's Main Class.
-     * @return The Vital<T> Instance.
-     * @param <T> The Type of your Plugin's Main Class.
-     * @throws ClassCastException If the provided Type and `Vital<T>` Instance don't match.
+     * @param type Your plugin's main Class.
+     * @param <T>  The type of your plugin's main class.
+     * @return The {@link Vital} instance.
+     * @throws ClassCastException If the provided type and {@link Vital} plugin instance don't match.
      */
     @SuppressWarnings("unchecked")
     public static <T extends JavaPlugin> Vital<T> getVitalInstance(@NotNull Class<T> type) {

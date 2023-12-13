@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to provide information about a VitalInventoryMenu.
+ * Annotation used to provide information about a {@link VitalInventory}.
  *
  * @author xRa1ny
  */

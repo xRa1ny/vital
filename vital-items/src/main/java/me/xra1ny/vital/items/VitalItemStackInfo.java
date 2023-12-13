@@ -10,8 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates a class to provide information about a custom item stack that can be interacted with in the game.
- * This annotation is used to configure various properties of the custom item stack, such as its name, lore, type, and more.
+ * Annotation to provide information about a {@link VitalItemStack} that can be interacted with in the game.
  *
  * @author xRa1ny
  */

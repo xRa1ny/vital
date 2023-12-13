@@ -21,7 +21,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
- * Abstract base class for managing configuration files in the Vital framework.
+ * Abstract base class for managing configuration files in the Vital-Framework.
  * Provides functionality for reading, writing, and updating configuration settings.
  *
  * @author xRa1ny
@@ -34,21 +34,22 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     private final String name;
 
     /**
-     * The File object representing the configuration file.
+     * The {@link File} object representing the configuration file.
      */
     @Getter(onMethod = @__(@NotNull))
     private File configFile;
 
     /**
-     * The FileConfiguration object for working with the configuration settings.
+     * The {@link FileConfiguration} object used in Spigot/BukkitAPI.
      */
     @Getter(onMethod = @__(@NotNull))
     private FileConfiguration config;
 
     /**
-     * Constructor for VitalConfig with a specified name.
+     * Constructor for {@link VitalConfig} with a specified name.
      *
      * @param name The name of the configuration file.
+     * @param javaPlugin The {@link JavaPlugin} instance of you plugin.
      */
     public VitalConfig(@NotNull String name, @NotNull JavaPlugin javaPlugin) {
         this.name = name;
@@ -57,7 +58,9 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     }
 
     /**
-     * Constructor for VitalConfig using the name specified in the annotation.
+     * Constructor for {@link VitalConfig} using the name specified in the annotation.
+     *
+     * @param javaPlugin The {@link JavaPlugin} instance of your plugin.
      */
     public VitalConfig(@NotNull JavaPlugin javaPlugin) {
         final VitalConfigInfo vitalConfigInfo = getRequiredAnnotation();

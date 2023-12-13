@@ -142,11 +142,10 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * Returns the class value of all classes this component manager manages,
      * if not already loaded, loads and caches all classes found within the bounds of the implementing Vital Main Class Package.
      *
-     *
      * @return A Set of all Classes of Components this Manager manages.
      */
     public Set<Class<? extends T>> getVitalComponentClassSet() {
-        if(vitalComponentClassSet.isEmpty()) {
+        if (vitalComponentClassSet.isEmpty()) {
             vitalComponentClassSet = new Reflections().getSubTypesOf(managedType());
         }
 
@@ -155,11 +154,12 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
 
     /**
      * Fetches all classes viable for automatic dependency injection and registers them on this Manager Instance.
-     * NOTE: for this implementation to work, {@code VitalComponentListManager#managedType()} has to be implemented on correctly configured (overridden).
+     *
+     * @apiNote For this implementation to work, {@link VitalComponentListManager#managedType()} has to be implemented and correctly configured.
      */
     public final void enable() {
         // iterate over every subclass and attempt to create a dependency injected instance.
-        for(Class<? extends T> vitalComponentClass : getVitalComponentClassSet()) {
+        for (Class<? extends T> vitalComponentClass : getVitalComponentClassSet()) {
             // attempt to get the dependency injected instance of the vitalcomponent this manager manages...
             final Optional<? extends T> optionalVitalComponent = DIUtils.getDependencyInjectedInstance(vitalComponentClass);
 

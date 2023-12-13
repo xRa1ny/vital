@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Annotation Processor responsible for working with the default `VitalPluginInfoAnnotationProcessor` to extend its content with automatic command name registration in `plugin.yml`.
+ * Annotation processor responsible for working with the default {@link VitalPluginInfoAnnotationProcessor} to extend its content with automatic command name registration in plugin.yml.
  *
  * @author xRa1ny
  */
@@ -60,9 +60,9 @@ public class VitalCommandInfoAnnotationProcessor extends AbstractProcessor {
     }
 
     /**
-     * Generates the `plugin.yml` if non-existent, or adds to the content, the necessary command name information for automatic command registration.
+     * Generates the plugin.yml if non-existent, or adds to the content, the necessary command name information for automatic command registration.
      *
-     * @param vitalCommandInfoList The list of CommandInfo annotations.
+     * @param vitalCommandInfoList The list of {@link VitalCommandInfo} annotations.
      */
     private void generatePluginYmlCommands(@NotNull List<VitalCommandInfo> vitalCommandInfoList) {
         try {

@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to specify methods as handlers for Vital command arguments.
+ * Annotation used to specify methods as handlers for {@link VitalCommandArg}.
  * Handlers are responsible for processing specific command argument values.
  * This annotation helps map methods to their corresponding command argument values.
  *

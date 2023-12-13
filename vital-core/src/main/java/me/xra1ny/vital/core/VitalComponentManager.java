@@ -3,8 +3,7 @@ package me.xra1ny.vital.core;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Final class for managing a list of Vital components.
- * Extends the abstract VitalComponentListManagement class.
+ * Class for managing a list of {@link VitalComponent}.
  *
  * @author xRa1ny
  */

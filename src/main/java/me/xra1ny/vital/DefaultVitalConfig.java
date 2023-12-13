@@ -2,14 +2,17 @@ package me.xra1ny.vital;
 
 import lombok.EqualsAndHashCode;
 import me.xra1ny.vital.configs.VitalConfig;
+import me.xra1ny.vital.configs.VitalConfigEnum;
 import me.xra1ny.vital.configs.VitalConfigInfo;
 import me.xra1ny.vital.configs.VitalConfigPath;
+import me.xra1ny.vital.players.VitalPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Configuration class that maps the configuration values from "config.yml" to Java fields.
- * Extends the VitalConfig class for convenient configuration handling.
+ * Default config for Vital.
+ * Stores configurations many plugins might want / need.
  *
  * @author xRa1ny
  */
@@ -19,8 +22,9 @@ public final class DefaultVitalConfig extends VitalConfig {
 
     /**
      * Flag indicating whether the database is enabled.
-     * Set to true if database support should be enabled, false otherwise.
      * Example: false
+     *
+     * @apiNote Set to true if database support should be enabled, false otherwise.
      */
     @VitalConfigPath("vital.database-enabled")
     public boolean vitalDatabaseEnabled = false;
@@ -37,7 +41,8 @@ public final class DefaultVitalConfig extends VitalConfig {
      * Example: "GRAY"
      */
     @VitalConfigPath("vital.chat-color")
-    public String vitalChatColorName = "GRAY";
+    @VitalConfigEnum
+    public ChatColor vitalChatColor = ChatColor.GRAY;
 
     /**
      * Error message to display when a player lacks permission to perform an action.
@@ -56,9 +61,10 @@ public final class DefaultVitalConfig extends VitalConfig {
     /**
      * Error message displayed when a command can only be executed by a player.
      * Defines the error message shown to a user when they attempt to run a command
-     * that is intended for player use only. This message should inform the user
-     * that the command is exclusive to players.
+     * that is intended for player use only.
      * Example: "§l§cERROR! Command can only be executed by a Player!"
+     *
+     * @apiNote This message should inform the user that the command is exclusive to players.
      */
     @VitalConfigPath("vital.command-only-player-error-message")
     public String vitalCommandOnlyPlayerErrorMessage = "§l§cERROR! Command can only be executed by a Player!";
@@ -86,9 +92,10 @@ public final class DefaultVitalConfig extends VitalConfig {
 
     /**
      * Session timeout duration in seconds for user sessions.
-     * Defines the time, in seconds, after which the VitalPlayer instance is terminated
-     * once a player leaves the server. A value of 0 means no session timeout.
+     * Defines the time, in seconds, after which the {@link VitalPlayer} instance is terminated once a player leaves the server.
      * Example: 0
+     *
+     * @apiNote A value of 0 means no session timeout.
      */
     @VitalConfigPath("vital.player-timeout")
     public int vitalPlayerTimeout = 0;

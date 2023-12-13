@@ -5,16 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 /**
- * Interface representing a component within the Vital framework.
+ * Interface representing a component within the Vital-Framework.
  * Defines common methods and lifecycle events for Vital components.
  *
+ * @apiNote {@link VitalComponent} may be everything within a plugin, a command, a config, a game state, a player, an item, etc.
  * @author xRa1ny
  */
 public interface VitalComponent {
     /**
      * Gets the unique identifier for this component.
      *
-     * @return The UUID representing this component.
+     * @return The {@link UUID} representing this component.
      */
     @NotNull
     default UUID getUniqueId() {
@@ -32,13 +33,13 @@ public interface VitalComponent {
     }
 
     /**
-     * Called when this VitalComponent is registered.
+     * Called when this {@link VitalComponent} is registered.
      * Implement this method to perform any required initialization when the component is registered.
      */
     void onRegistered();
 
     /**
-     * Called when this VitalComponent is unregistered.
+     * Called when this {@link VitalComponent} is unregistered.
      * Implement this method to perform any cleanup or finalization when the component is unregistered.
      */
     void onUnregistered();

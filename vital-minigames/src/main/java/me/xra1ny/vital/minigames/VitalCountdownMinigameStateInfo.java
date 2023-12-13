@@ -6,9 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for defining countdown minigame state information.
- * This annotation is used to specify the time interval between countdown updates
- * and the initial countdown value for a countdown-based minigame state.
+ * Annotation for defining countdown minigame state information for implementations of {@link VitalCountdownMinigameState}.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

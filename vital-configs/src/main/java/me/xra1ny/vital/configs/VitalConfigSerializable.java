@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This interface represents an object that can be serialized into a map for configuration purposes.
+ * This interface represents an object that can be serialized into a map for {@link VitalConfig} purposes.
+ *
+ * @author xRa1ny
  */
 public interface VitalConfigSerializable {
     /**

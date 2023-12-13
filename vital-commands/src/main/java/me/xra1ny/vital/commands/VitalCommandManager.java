@@ -1,19 +1,12 @@
 package me.xra1ny.vital.commands;
 
-import lombok.SneakyThrows;
 import lombok.extern.java.Log;
-import me.xra1ny.vital.core.DIUtils;
 import me.xra1ny.vital.core.VitalComponentListManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
-
-import java.util.Optional;
-import java.util.Set;
 
 /**
- * Class responsible for managing Vital commands.
- * Extends VitalComponentListManagement to handle command registration and unregistration.
+ * Class responsible for managing {@link VitalCommand}.
  *
  * @author xRa1ny
  */
