@@ -1,9 +1,9 @@
 package me.xra1ny.vital.inventories;
 
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -12,17 +12,25 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author xRa1ny
  */
-@Getter
 public abstract class VitalPagedInventory extends VitalInventory {
     /**
      * The current page of this paged inventory menu.
      */
+    @Getter
     private long page = 0;
 
+    /**
+     * Constructs a new paged inventory.
+     */
     public VitalPagedInventory() {
         super();
     }
 
+    /**
+     * Constructs a new paged inventory with the specified previous inventory to open after clicking out of inventory menu bounds.
+     *
+     * @param previousInventory The previous {@link Inventory} to open after clicking out of inventory bounds.
+     */
     public VitalPagedInventory(@Nullable Inventory previousInventory) {
         super(previousInventory);
     }
@@ -33,7 +41,7 @@ public abstract class VitalPagedInventory extends VitalInventory {
      * @param page   The new page.
      * @param player The player viewing the inventory.
      */
-    protected void onPageChange(long page, @NotNull Player player) {
+    protected void onPageChange(long page, @NonNull Player player) {
 
     }
 
@@ -43,7 +51,7 @@ public abstract class VitalPagedInventory extends VitalInventory {
      * @param page   The page.
      * @param player The player viewing the inventory.
      */
-    public final void setPage(long page, @NotNull Player player) {
+    public final void setPage(long page, @NonNull Player player) {
         if (page <= 0) {
             return;
         }

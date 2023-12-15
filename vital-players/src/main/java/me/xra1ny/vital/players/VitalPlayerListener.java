@@ -1,12 +1,12 @@
 package me.xra1ny.vital.players;
 
+import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.xra1ny.vital.core.VitalListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
      *
      * @param vitalPlayerManager The VitalUserManagement instance to manage VitalPlayer components.
      */
-    public VitalPlayerListener(@NotNull VitalPlayerManager<T> vitalPlayerManager) {
+    public VitalPlayerListener(@NonNull VitalPlayerManager<T> vitalPlayerManager) {
         this.vitalPlayerManager = vitalPlayerManager;
     }
 
@@ -34,7 +34,7 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
      */
     @SneakyThrows
     @EventHandler
-    public final void onPlayerJoinServer(@NotNull PlayerJoinEvent e) {
+    public final void onPlayerJoinServer(@NonNull PlayerJoinEvent e) {
         // Retrieve the VitalPlayer associated with the joining player, if it exists.
         final Optional<T> optionalVitalPlayer = vitalPlayerManager.getVitalComponent(e.getPlayer().getUniqueId());
 
@@ -53,11 +53,11 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
      * @param e The PlayerQuitEvent.
      */
     @EventHandler
-    public final void onPlayerLeaveServer(@NotNull PlayerQuitEvent e) {
+    public final void onPlayerLeaveServer(@NonNull PlayerQuitEvent e) {
         // Retrieve the VitalPlayer associated with the leaving player.
         final Optional<T> optionalVitalPlayer = vitalPlayerManager.getVitalComponent(e.getPlayer().getUniqueId());
 
-        if(optionalVitalPlayer.isEmpty()) {
+        if (optionalVitalPlayer.isEmpty()) {
             return;
         }
 
@@ -67,6 +67,11 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
         vitalPlayerManager.unregisterVitalComponent(vitalPlayer);
     }
 
+    /**
+     * Defines the type this {@link VitalPlayerListener} manages.
+     *
+     * @return The type of the managed {@link VitalPlayer}.
+     */
     protected abstract Class<T> vitalPlayerType();
 }
 

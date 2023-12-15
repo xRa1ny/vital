@@ -1,8 +1,9 @@
 package me.xra1ny.vital.core;
 
+import lombok.NonNull;
 import lombok.extern.java.Log;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -19,8 +20,15 @@ import java.util.Optional;
  */
 @Log
 public class VitalDIUtils {
-    public static <T> Optional<T> getDependencyInjectedInstance(@NotNull Class<T> type) {
-        if(VitalComponent.class.isAssignableFrom(type)) {
+    /**
+     * Attempts to create a dependency injected instance of the supplied class type.
+     *
+     * @param type The class from which the di instance should be created.
+     * @param <T>  The type of the supplied class object.
+     * @return An {@link Optional} holding either the newly created instance; or empty.
+     */
+    public static <T> Optional<T> getDependencyInjectedInstance(@NonNull Class<T> type) {
+        if (VitalComponent.class.isAssignableFrom(type)) {
             // check if instance is already existent on base vital manager...
             final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) type;
             final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
@@ -28,19 +36,19 @@ public class VitalDIUtils {
 
             final Optional<? extends VitalComponent> optionalVitalComponent = vitalComponentManager.getVitalComponent(vitalComponentClass);
 
-            if(optionalVitalComponent.isPresent()) {
+            if (optionalVitalComponent.isPresent()) {
                 return (Optional<T>) optionalVitalComponent;
             }
 
             // if not, attempt to get instance from any manager on vital...
-            for(VitalComponentListManager<?> vitalComponentListManager : vitalComponentManager.getVitalComponentList(VitalComponentListManager.class)) {
-                if(!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
+            for (VitalComponentListManager<?> vitalComponentListManager : vitalComponentManager.getVitalComponentList(VitalComponentListManager.class)) {
+                if (!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
                     continue;
                 }
 
                 final Optional<? extends VitalComponent> optionalVitalComponent1 = vitalComponentListManager.getVitalComponent(vitalComponentClass);
 
-                if(optionalVitalComponent1.isPresent()) {
+                if (optionalVitalComponent1.isPresent()) {
                     return (Optional<T>) optionalVitalComponent1;
                 }
             }
@@ -49,14 +57,14 @@ public class VitalDIUtils {
         final VitalDI vitalDI = type.getDeclaredAnnotation(VitalDI.class);
 
         // check if component is viable for automatic dependency injection (DI).
-        if(vitalDI == null) {
+        if (vitalDI == null) {
             return Optional.empty();
         }
 
         log.warning("Vital is attempting to create a dependency injected instance of " + type.getSimpleName());
 
         // if the class we are trying to automatically DI is abstract, cancel operation since no instance can be created without throwing exceptions.
-        if(Modifier.isAbstract(type.getModifiers())) {
+        if (Modifier.isAbstract(type.getModifiers())) {
             log.severe(type.getSimpleName() + " is annotated with `@VitalDI` but abstract and can therefore not be dependency injected by Vital");
 
             return Optional.empty();
@@ -74,22 +82,22 @@ public class VitalDIUtils {
                 e.printStackTrace();
             }
         } catch (NoSuchMethodException e) {
-            for(Constructor<?> constructor : type.getDeclaredConstructors()) {
+            for (Constructor<?> constructor : type.getDeclaredConstructors()) {
                 final List<Object> injectableList = new ArrayList<>();
 
-                for(Parameter parameter : constructor.getParameters()) {
-                    if(!VitalComponent.class.isAssignableFrom(parameter.getType()) && !JavaPlugin.class.isAssignableFrom(parameter.getType())) {
+                for (Parameter parameter : constructor.getParameters()) {
+                    if (!VitalComponent.class.isAssignableFrom(parameter.getType()) && !JavaPlugin.class.isAssignableFrom(parameter.getType())) {
                         // ignore when parameter is not of type `JavaPlugin` or `VitalComponent`.
                         break;
                     }
 
-                    if(JavaPlugin.class.isAssignableFrom(parameter.getType())) {
+                    if (JavaPlugin.class.isAssignableFrom(parameter.getType())) {
                         injectableList.add(VitalCore.getVitalCoreInstance().getJavaPlugin());
 
                         continue;
                     }
 
-                    if(VitalComponentListManager.class.isAssignableFrom(parameter.getType())) {
+                    if (VitalComponentListManager.class.isAssignableFrom(parameter.getType())) {
                         final Class<? extends VitalComponentListManager<?>> managerClass = (Class<? extends VitalComponentListManager<?>>) parameter.getType();
                         final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
                         final VitalComponentManager vitalComponentManager = vitalCore.getVitalComponentManager();
@@ -108,7 +116,7 @@ public class VitalDIUtils {
 
                     final Optional<? extends VitalComponent> optionalVitalComponent = vitalComponentManager.getVitalComponent(vitalComponentClass);
 
-                    if(optionalVitalComponent.isPresent()) {
+                    if (optionalVitalComponent.isPresent()) {
                         injectableList.add(optionalVitalComponent.get());
 
                         continue;
@@ -116,7 +124,7 @@ public class VitalDIUtils {
 
                     // if not present on base.
                     for (VitalComponentListManager<?> vitalComponentListManager : vitalComponentManager.getVitalComponentList(VitalComponentListManager.class)) {
-                        if(!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
+                        if (!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
                             continue;
                         }
 

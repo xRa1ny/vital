@@ -1,14 +1,12 @@
 package me.xra1ny.vital.scoreboards;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
 
@@ -22,39 +20,43 @@ public final class VitalScoreboardTeam {
     /**
      * The name of this scoreboard team.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final String name;
 
     /**
      * The members of this scoreboard team.
      */
-    @Getter(onMethod = @__({@NotNull, @Unmodifiable}))
+    @Getter
+    @NonNull
     private final List<Player> playerList = new ArrayList<>();
 
     /**
      * The team options for this scoreboard team.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final Map<Team.Option, Team.OptionStatus> options = new HashMap<>();
 
     /**
      * The Bukkit team instance representing this scoreboard team.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final Team bukkitTeam;
 
     /**
      * The prefix of this scoreboard team.
      */
-    @Getter(onMethod = @__(@Nullable))
-    @Setter(onParam = @__(@NotNull))
+    @Getter
+    @Setter
     private String prefix;
 
     /**
      * The suffix of this scoreboard team.
      */
-    @Getter(onMethod = @__(@Nullable))
-    @Setter(onParam = @__(@NotNull))
+    @Getter
+    @Setter
     private String suffix;
 
     /**
@@ -77,7 +79,7 @@ public final class VitalScoreboardTeam {
      * @param name The name of the team.
      */
     @SuppressWarnings("deprecation")
-    VitalScoreboardTeam(@NotNull String name, @NotNull Scoreboard scoreboard) {
+    VitalScoreboardTeam(@NonNull String name, @NonNull Scoreboard scoreboard) {
         this.name = name;
         this.bukkitTeam = scoreboard.registerNewTeam(ChatColor.stripColor(name));
     }
@@ -126,7 +128,7 @@ public final class VitalScoreboardTeam {
      * @param option The team option.
      * @param status The team option status.
      */
-    public void setOption(@NotNull Team.Option option, @NotNull Team.OptionStatus status) {
+    public void setOption(@NonNull Team.Option option, @NonNull Team.OptionStatus status) {
         this.options.put(option, status);
     }
 
@@ -135,7 +137,7 @@ public final class VitalScoreboardTeam {
      *
      * @param player The player to add.
      */
-    public void addPlayer(@NotNull Player player) {
+    public void addPlayer(@NonNull Player player) {
         if (this.playerList.contains(player)) {
             return;
         }
@@ -149,7 +151,7 @@ public final class VitalScoreboardTeam {
      *
      * @param player The player to remove.
      */
-    public void removePlayer(@NotNull Player player) {
+    public void removePlayer(@NonNull Player player) {
         if (!this.playerList.contains(player)) {
             return;
         }

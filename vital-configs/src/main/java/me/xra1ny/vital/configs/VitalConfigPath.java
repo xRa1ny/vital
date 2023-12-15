@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to specify the path of a configuration field in a VitalConfig class.
- * Defines the path where the field's value is stored within the configuration file.
+ * Annotation used to specify the path of a configuration field in {@link VitalConfig}.
  *
  * @author xRa1ny
+ * @apiNote Defines the path where the field's value is stored within the configuration file.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

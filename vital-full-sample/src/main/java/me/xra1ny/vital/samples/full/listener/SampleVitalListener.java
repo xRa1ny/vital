@@ -1,5 +1,6 @@
 package me.xra1ny.vital.samples.full.listener;
 
+import lombok.NonNull;
 import me.xra1ny.vital.core.VitalListener;
 import me.xra1ny.vital.holograms.VitalHologramManager;
 import me.xra1ny.vital.items.VitalItemStackManager;
@@ -10,7 +11,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.jetbrains.annotations.NotNull;
 
 public final class SampleVitalListener extends VitalListener {
     /**
@@ -20,7 +20,7 @@ public final class SampleVitalListener extends VitalListener {
     private final VitalHologramManager vitalHologramManager;
     private final SampleVitalConfig sampleVitalConfig;
 
-    public SampleVitalListener(@NotNull VitalItemStackManager vitalItemStackManager, @NotNull VitalHologramManager vitalHologramManager, @NotNull SampleVitalConfig sampleVitalConfig) {
+    public SampleVitalListener(@NonNull VitalItemStackManager vitalItemStackManager, @NonNull VitalHologramManager vitalHologramManager, @NonNull SampleVitalConfig sampleVitalConfig) {
         this.vitalItemStackManager = vitalItemStackManager;
         this.vitalHologramManager = vitalHologramManager;
         this.sampleVitalConfig = sampleVitalConfig;
@@ -28,7 +28,7 @@ public final class SampleVitalListener extends VitalListener {
 
     @SuppressWarnings("deprecation")
     @EventHandler
-    public void onPlayerJoinServer(@NotNull PlayerJoinEvent e) {
+    public void onPlayerJoinServer(@NonNull PlayerJoinEvent e) {
         SampleVitalScoreboard.PER_PLAYER_SCOREBOARD.add(e.getPlayer());
 //        SampleVitalScoreboard.GLOBAL_SCOREBOARD.add(e.getPlayer());
 
@@ -46,7 +46,7 @@ public final class SampleVitalListener extends VitalListener {
     }
 
     @EventHandler
-    public void onPlayerLeaveServer(@NotNull PlayerQuitEvent e) {
+    public void onPlayerLeaveServer(@NonNull PlayerQuitEvent e) {
         SampleVitalScoreboard.PER_PLAYER_SCOREBOARD.remove(e.getPlayer());
 //        SampleVitalScoreboard.GLOBAL_SCOREBOARD.remove(e.getPlayer());
     }

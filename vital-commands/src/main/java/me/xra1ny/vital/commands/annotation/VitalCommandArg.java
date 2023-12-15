@@ -1,4 +1,6 @@
-package me.xra1ny.vital.commands;
+package me.xra1ny.vital.commands.annotation;
+
+import me.xra1ny.vital.commands.VitalCommand;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,24 +8,35 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to define arguments for Vital commands.
- * Command arguments are placeholders that can be used within command handlers.
- * For example, "%PLAYER%" can be replaced with the player's name.
+ * Annotation used to define arguments for {@link VitalCommand}.
+ * Arguments may be placeholders that can be used within methods annotated with {@link VitalCommandArgHandler}.
+ * For example, "%PLAYER%" will be replaced with all player names on the server.
  *
  * @author xRa1ny
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface VitalCommandArg {
+    /**
+     * Pattern used by {@link VitalCommandArg} implementations that will be replaced by all player names during tab-completion, automatically.
+     */
     String PLAYER = "%PLAYER%";
+
+    /**
+     * Pattern used by {@link VitalCommandArg} implementations that will be replaced by "true" or "false" during tab-completion, automatically.
+     */
     String BOOLEAN = "%BOOLEAN%";
+
+    /**
+     * Pattern used by {@link VitalCommandArg} implementations that will be replaced by "0" during tab-completion, automatically.
+     */
     String NUMBER = "%NUMBER%";
 
     /**
      * Placeholder value for the command argument.
      * Examples include "%PLAYER%", "%BOOLEAN%", and "%NUMBER%".
      *
-     * @return The value of the command argument placeholder.
+     * @return The value of the command argument.
      */
     String value();
 
@@ -37,9 +50,9 @@ public @interface VitalCommandArg {
 
     /**
      * Flag indicating if this argument is specific to players.
-     * If set to true, the argument is only applicable to player senders.
      *
      * @return True if the argument is for players only; false otherwise (default is false).
+     * @apiNote If set to true, the argument is only applicable to player senders.
      */
     boolean player() default false;
 }

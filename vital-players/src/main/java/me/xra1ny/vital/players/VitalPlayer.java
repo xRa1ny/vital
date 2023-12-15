@@ -1,10 +1,10 @@
 package me.xra1ny.vital.players;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import me.xra1ny.vital.core.VitalComponent;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -17,7 +17,8 @@ public class VitalPlayer implements VitalComponent {
     /**
      * The Minecraft player associated with this VitalPlayer.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final Player player;
 
     /**
@@ -32,7 +33,7 @@ public class VitalPlayer implements VitalComponent {
      *
      * @param player The Minecraft player to associate with this VitalPlayer.
      */
-    public VitalPlayer(@NotNull Player player) {
+    public VitalPlayer(@NonNull Player player) {
         this.player = player;
     }
 
@@ -42,7 +43,7 @@ public class VitalPlayer implements VitalComponent {
      * @return The unique ID of the player.
      */
     @Override
-    @NotNull
+    @NonNull
     public UUID getUniqueId() {
         return player.getUniqueId();
     }
@@ -53,7 +54,7 @@ public class VitalPlayer implements VitalComponent {
      * @return The name of the player.
      */
     @Override
-    @NotNull
+    @NonNull
     public String getName() {
         return player.getName();
     }

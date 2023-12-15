@@ -6,8 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to provide metadata for Vital configuration classes.
- * Defines the name of the associated configuration file.
+ * Annotation used to provide metadata for {@link VitalConfig}.
  *
  * @author xRa1ny
  */
@@ -15,7 +14,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface VitalConfigInfo {
     /**
-     * Defines the name of the associated configuration file.
+     * Defines the name of the configuration file.
      *
      * @return The name of the configuration file.
      */

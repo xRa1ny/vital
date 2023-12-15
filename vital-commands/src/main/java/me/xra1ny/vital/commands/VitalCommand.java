@@ -1,6 +1,10 @@
 package me.xra1ny.vital.commands;
 
 import lombok.Getter;
+import lombok.NonNull;
+import me.xra1ny.vital.commands.annotation.VitalCommandArg;
+import me.xra1ny.vital.commands.annotation.VitalCommandArgHandler;
+import me.xra1ny.vital.commands.annotation.VitalCommandInfo;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalCore;
@@ -11,7 +15,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,26 +29,32 @@ import java.util.Optional;
  *
  * @author xRa1ny
  */
-@Getter(onMethod = @__(@NotNull))
 public abstract class VitalCommand implements AnnotatedVitalComponent<VitalCommandInfo>, VitalAutoRegisterable, CommandExecutor, TabExecutor {
     /**
      * The name of the command.
      */
+    @Getter
+    @NonNull
     private final String name;
 
     /**
      * The required permission to execute this command.
      */
+    @Getter
+    @NonNull
     private final String permission;
 
     /**
      * Flag indicating if this command requires a player sender.
      */
+    @Getter
     private final boolean requiresPlayer;
 
     /**
      * Array of VitalCommandArgs describing command arguments.
      */
+    @Getter
+    @NonNull
     private final VitalCommandArg[] vitalCommandArgs;
 
     /**
@@ -66,7 +75,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either the Annotation Info you provided, or empty.
      */
-    public static Optional<VitalCommandInfo> getVitalCommandInfo(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<VitalCommandInfo> getVitalCommandInfo(@NonNull Class<? extends VitalCommand> type) {
         return Optional.ofNullable(type.getDeclaredAnnotation(VitalCommandInfo.class));
     }
 
@@ -76,7 +85,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either the Name of this Command, or empty.
      */
-    public static Optional<String> getName(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<String> getName(@NonNull Class<? extends VitalCommand> type) {
         final Optional<VitalCommandInfo> optionalVitalCommandInfo = getVitalCommandInfo(type);
 
         return optionalVitalCommandInfo.map(VitalCommandInfo::value);
@@ -88,7 +97,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either the Description of this Command, or empty.
      */
-    public static Optional<String> getDescription(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<String> getDescription(@NonNull Class<? extends VitalCommand> type) {
         final Optional<VitalCommandInfo> optionalVitalCommandInfo = getVitalCommandInfo(type);
 
         return optionalVitalCommandInfo.map(VitalCommandInfo::description);
@@ -100,7 +109,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either the aliases of this Command, or empty.
      */
-    public static Optional<String[]> getAliases(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<String[]> getAliases(@NonNull Class<? extends VitalCommand> type) {
         final Optional<VitalCommandInfo> optionalVitalCommandInfo = getVitalCommandInfo(type);
 
         return optionalVitalCommandInfo.map(VitalCommandInfo::aliases);
@@ -112,7 +121,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either the Usage of this Command, or empty.
      */
-    public static Optional<String> getUsage(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<String> getUsage(@NonNull Class<? extends VitalCommand> type) {
         final Optional<VitalCommandInfo> optionalVitalCommandInfo = getVitalCommandInfo(type);
 
         return optionalVitalCommandInfo.map(VitalCommandInfo::usage);
@@ -124,7 +133,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either the Permission of this Command, or empty.
      */
-    public static Optional<String> getPermission(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<String> getPermission(@NonNull Class<? extends VitalCommand> type) {
         final Optional<VitalCommandInfo> optionalVitalCommandInfo = getVitalCommandInfo(type);
 
         return optionalVitalCommandInfo.map(VitalCommandInfo::permission);
@@ -136,7 +145,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either if this Command requires a Player, or empty.
      */
-    public static Optional<Boolean> getRequiresPlayer(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<Boolean> getRequiresPlayer(@NonNull Class<? extends VitalCommand> type) {
         final Optional<VitalCommandInfo> optionalVitalCommandInfo = getVitalCommandInfo(type);
 
         return optionalVitalCommandInfo.map(VitalCommandInfo::requiresPlayer);
@@ -148,7 +157,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either the VitalArgs of this Command, or empty.
      */
-    public static Optional<VitalCommandArg[]> getVitalArgs(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<VitalCommandArg[]> getVitalArgs(@NonNull Class<? extends VitalCommand> type) {
         final Optional<VitalCommandInfo> optionalVitalCommandInfo = getVitalCommandInfo(type);
 
         return optionalVitalCommandInfo.map(VitalCommandInfo::args);
@@ -160,7 +169,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param type The Type of your implementing `VitalCommand` Child Class.
      * @return An Optional holding either the Args of this Command, or empty.
      */
-    public static Optional<String[]> getArgs(@NotNull Class<? extends VitalCommand> type) {
+    public static Optional<String[]> getArgs(@NonNull Class<? extends VitalCommand> type) {
         final Optional<VitalCommandInfo> optionalVitalCommandInfo = getVitalCommandInfo(type);
 
         return optionalVitalCommandInfo.map(VitalCommandInfo::args)
@@ -195,13 +204,13 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      * @param sender the sender
      * @return the status of this command execution
      */
-    @NotNull
-    protected VitalCommandReturnState executeBaseCommand(@NotNull CommandSender sender) {
+    @NonNull
+    protected VitalCommandReturnState executeBaseCommand(@NonNull CommandSender sender) {
         return VitalCommandReturnState.INVALID_ARGS;
     }
 
     @Override
-    public final boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public final boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
         // Check if the command requires a player sender.
         if (this.requiresPlayer) {
             // Check if the sender is not a Player.
@@ -324,8 +333,8 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         return true;
     }
 
-    @NotNull
-    private VitalCommandReturnState executeCommandArgHandlerMethod(@NotNull CommandSender sender, @NotNull VitalCommandArg commandArg, @NotNull String @NotNull [] values) throws InvocationTargetException, IllegalAccessException {
+    @NonNull
+    private VitalCommandReturnState executeCommandArgHandlerMethod(@NonNull CommandSender sender, @NonNull VitalCommandArg commandArg, @NonNull String @NonNull [] values) throws InvocationTargetException, IllegalAccessException {
         // Initialize a variable to hold the handler method.
         Method commandArgHandlerMethod = null;
 
@@ -340,7 +349,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
             }
 
             // If the method's return type does not match `VitalCommandReturnState`, cancel operation.
-            if(!VitalCommandReturnState.class.isAssignableFrom(method.getReturnType())) {
+            if (!VitalCommandReturnState.class.isAssignableFrom(method.getReturnType())) {
                 continue;
             }
 
@@ -358,14 +367,14 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         // If the handler method was found, dynamically inject each parameter supported for its implementation...
         final List<Object> injectedParameters = new ArrayList<>();
 
-        for(Parameter parameter : commandArgHandlerMethod.getParameters()) {
+        for (Parameter parameter : commandArgHandlerMethod.getParameters()) {
             // If the parameters managed type is of instance of `CommandSender`, inject either `CommandSender` or `Player`
-            if(CommandSender.class.isAssignableFrom(parameter.getType())) {
+            if (CommandSender.class.isAssignableFrom(parameter.getType())) {
                 injectedParameters.add(sender);
-            }else if(VitalCommandArg.class.isAssignableFrom(parameter.getType())) {
+            } else if (VitalCommandArg.class.isAssignableFrom(parameter.getType())) {
                 // inject `VitalCommandArg`
                 injectedParameters.add(commandArg);
-            }else if(String[].class.isAssignableFrom(parameter.getType())) {
+            } else if (String[].class.isAssignableFrom(parameter.getType())) {
                 // if parameters managed type is an instance of `String[]` inject the values of this command execution.
                 injectedParameters.add(values);
             }
@@ -377,13 +386,20 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         return (VitalCommandReturnState) commandArgHandlerMethod.invoke(this, injectedParameters.toArray());
     }
 
-    @NotNull
-    public List<String> onCommandTabComplete(@NotNull CommandSender sender, @NotNull String args) {
+    /**
+     * Called upon requesting any tab-completion content.
+     *
+     * @param sender The {@link CommandSender} that sent the command.
+     * @param args   The arguments used in chat.
+     * @return A {@link List} of strings to show to the player as tab-completion suggestions.
+     */
+    @NonNull
+    public List<String> onCommandTabComplete(@NonNull CommandSender sender, @NonNull String args) {
         return List.of();
     }
 
-    @NotNull
-    public final List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
+    @NonNull
+    public final List<String> onTabComplete(@NonNull CommandSender sender, @NonNull Command command, @NonNull String alias, @NonNull String @NonNull [] args) {
         // Initialize a list to store tab-completed suggestions.
         final List<String> tabCompleted = new ArrayList<>();
 
@@ -464,7 +480,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      *
      * @param sender The CommandSender
      */
-    protected void onCommandInvalidArgs(@NotNull CommandSender sender) {
+    protected void onCommandInvalidArgs(@NonNull CommandSender sender) {
 
     }
 
@@ -473,7 +489,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      *
      * @param sender The CommandSender
      */
-    protected void onCommandInternalError(@NotNull CommandSender sender) {
+    protected void onCommandInternalError(@NonNull CommandSender sender) {
 
     }
 
@@ -482,7 +498,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      *
      * @param sender The CommandSender
      */
-    protected void onCommandError(@NotNull CommandSender sender) {
+    protected void onCommandError(@NonNull CommandSender sender) {
 
     }
 
@@ -491,7 +507,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      *
      * @param sender The CommandSender
      */
-    protected void onCommandRequiresPermission(@NotNull CommandSender sender) {
+    protected void onCommandRequiresPermission(@NonNull CommandSender sender) {
 
     }
 
@@ -500,12 +516,12 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      *
      * @param sender The CommandSender
      */
-    protected void onCommandRequiresPlayer(@NotNull CommandSender sender) {
+    protected void onCommandRequiresPlayer(@NonNull CommandSender sender) {
 
     }
 
     @Override
-    public void autoRegister(@NotNull Class<? extends JavaPlugin> javaPluginType) {
+    public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
         final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
         final Optional<VitalCommandManager> optionalVitalCommandManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalCommandManager.class);
