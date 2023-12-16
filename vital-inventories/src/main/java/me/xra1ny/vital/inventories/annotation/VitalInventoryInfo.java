@@ -1,6 +1,7 @@
-package me.xra1ny.vital.inventories;
+package me.xra1ny.vital.inventories.annotation;
 
 import lombok.NonNull;
+import me.xra1ny.vital.inventories.VitalInventory;
 import org.bukkit.Material;
 import org.jetbrains.annotations.Range;
 

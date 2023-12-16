@@ -1,4 +1,6 @@
-package me.xra1ny.vital.tasks;
+package me.xra1ny.vital.tasks.annotation;
+
+import me.xra1ny.vital.tasks.VitalRepeatableTask;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

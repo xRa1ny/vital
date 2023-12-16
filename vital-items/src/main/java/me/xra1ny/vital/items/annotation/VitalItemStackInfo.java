@@ -1,6 +1,7 @@
-package me.xra1ny.vital.items;
+package me.xra1ny.vital.items.annotation;
 
 import lombok.NonNull;
+import me.xra1ny.vital.items.VitalItemStack;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 

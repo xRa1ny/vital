@@ -6,6 +6,7 @@ import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalCore;
+import me.xra1ny.vital.items.annotation.VitalItemStackInfo;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;

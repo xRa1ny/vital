@@ -1,6 +1,7 @@
 package me.xra1ny.vital.configs;
 
 import lombok.SneakyThrows;
+import me.xra1ny.vital.configs.annotation.VitalConfigPath;
 import org.reflections.ReflectionUtils;
 
 import java.lang.reflect.Field;

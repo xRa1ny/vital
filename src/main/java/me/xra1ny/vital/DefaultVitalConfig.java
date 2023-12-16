@@ -3,8 +3,8 @@ package me.xra1ny.vital;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import me.xra1ny.vital.configs.VitalConfig;
-import me.xra1ny.vital.configs.VitalConfigInfo;
-import me.xra1ny.vital.configs.VitalConfigPath;
+import me.xra1ny.vital.configs.annotation.VitalConfigInfo;
+import me.xra1ny.vital.configs.annotation.VitalConfigPath;
 import me.xra1ny.vital.players.VitalPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 

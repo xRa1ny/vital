@@ -4,7 +4,7 @@ import lombok.NonNull;
 import me.xra1ny.vital.players.VitalPlayer;
 import me.xra1ny.vital.players.VitalPlayerManager;
 import me.xra1ny.vital.players.VitalPlayerTimeoutHandler;
-import me.xra1ny.vital.tasks.VitalRepeatableTaskInfo;
+import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

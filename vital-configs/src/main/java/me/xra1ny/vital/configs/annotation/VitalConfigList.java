@@ -1,4 +1,7 @@
-package me.xra1ny.vital.configs;
+package me.xra1ny.vital.configs.annotation;
+
+import me.xra1ny.vital.configs.VitalConfig;
+import me.xra1ny.vital.configs.VitalConfigSerializable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
