@@ -2,6 +2,7 @@ package me.xra1ny.vital.core;
 
 import lombok.NonNull;
 import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

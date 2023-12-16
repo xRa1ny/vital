@@ -1,7 +1,7 @@
 package me.xra1ny.vital.players;
 
 import lombok.NonNull;
-import me.xra1ny.vital.tasks.VitalRepeatableTaskInfo;
+import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**

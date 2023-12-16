@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
+import me.xra1ny.vital.minigames.annotation.VitalCountdownMinigameStateInfo;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,6 +51,10 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
         this.countdown = this.initialCountdown;
 
         run(javaPlugin, interval);
+    }
+
+    public JavaPlugin getJavaPlugin() {
+        return vitalRepeatableTask.getJavaPlugin();
     }
 
     /**

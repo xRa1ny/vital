@@ -96,7 +96,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
                 .filter(VitalComponent.class::isAssignableFrom)
                 .toList()) {
             // assume every class is extended from `VitalComponent` since we filtered in our chain above.
-            final Optional<? extends VitalComponent> optionalVitalComponent = (Optional<? extends VitalComponent>) DIUtils.getDependencyInjectedInstance(vitalComponentClass);
+            final Optional<? extends VitalComponent> optionalVitalComponent = (Optional<? extends VitalComponent>) VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
 
             // display error if a dependency injected instance of our marked class could not be created, else register it von the base manager of vital.
             if (optionalVitalComponent.isEmpty()) {

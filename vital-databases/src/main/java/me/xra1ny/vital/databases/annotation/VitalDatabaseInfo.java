@@ -1,4 +1,6 @@
-package me.xra1ny.vital.databases;
+package me.xra1ny.vital.databases.annotation;
+
+import me.xra1ny.vital.databases.VitalDatabase;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

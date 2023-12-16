@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.xra1ny.vital.configs.VitalConfig;
-import me.xra1ny.vital.configs.VitalConfigInfo;
+import me.xra1ny.vital.configs.annotation.VitalConfigInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;

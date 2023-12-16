@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import me.xra1ny.vital.databases.annotation.VitalDatabaseInfo;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
