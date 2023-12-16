@@ -1,16 +1,17 @@
 package me.xra1ny.vital.minigames;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
+import me.xra1ny.vital.minigames.annotation.VitalCountdownMinigameStateInfo;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
- * An abstract class for countdown-based minigame states in the Vital framework.
- * Extends the VitalMinigameState class and implements the AnnotatedVitalComponent interface
- * with the VitalCountdownMinigameStateInfo annotation.
+ * An abstract class for countdown-based {@link VitalMinigameState} in the Vital framework.
+ *
+ * @author xRa1ny
  */
 public abstract class VitalCountdownMinigameState extends VitalMinigameState implements AnnotatedVitalComponent<VitalCountdownMinigameStateInfo> {
     private VitalRepeatableTask vitalRepeatableTask;
@@ -28,7 +29,7 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      * @param javaPlugin The JavaPlugin instance.
      */
     @SuppressWarnings("unused")
-    public VitalCountdownMinigameState(@NotNull JavaPlugin javaPlugin) {
+    public VitalCountdownMinigameState(@NonNull JavaPlugin javaPlugin) {
         final VitalCountdownMinigameStateInfo vitalCountdownMinigameStateInfo = getRequiredAnnotation();
 
         this.initialCountdown = vitalCountdownMinigameStateInfo.value();
@@ -45,11 +46,15 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      * @param countdown  The initial countdown value.
      */
     @SuppressWarnings("unused")
-    public VitalCountdownMinigameState(@NotNull JavaPlugin javaPlugin, int interval, int countdown) {
+    public VitalCountdownMinigameState(@NonNull JavaPlugin javaPlugin, int interval, int countdown) {
         this.initialCountdown = countdown;
         this.countdown = this.initialCountdown;
 
         run(javaPlugin, interval);
+    }
+
+    public JavaPlugin getJavaPlugin() {
+        return vitalRepeatableTask.getJavaPlugin();
     }
 
     /**
@@ -58,7 +63,7 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      * @param javaPlugin The JavaPlugin instance.
      * @param interval   The countdown update interval.
      */
-    private void run(@NotNull JavaPlugin javaPlugin, int interval) {
+    private void run(@NonNull JavaPlugin javaPlugin, int interval) {
         vitalRepeatableTask = new VitalRepeatableTask(javaPlugin, interval) {
             @Override
             public void onStart() {
@@ -72,7 +77,7 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
 
             @Override
             public void onTick() {
-                if(countdown <= 0) {
+                if (countdown <= 0) {
                     stop();
                     onCountdownExpire();
 

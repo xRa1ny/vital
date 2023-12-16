@@ -1,7 +1,7 @@
 package me.xra1ny.vital.commands;
 
 /**
- * Enum representing possible return states for Vital commands.
+ * Enum representing possible return states for {@link VitalCommand}.
  * Defines different states that a command execution can result in.
  *
  * @author xRa1ny

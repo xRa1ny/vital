@@ -1,10 +1,10 @@
 package me.xra1ny.vital.items;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Manages custom item stacks and their associated cooldowns.
@@ -17,7 +17,8 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
     /**
      * The cooldown handler responsible for managing cooldowns of custom item stacks.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final VitalItemStackCooldownHandler cooldownHandler;
 
     /**
@@ -25,7 +26,7 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
      *
      * @param javaPlugin The JavaPlugin instance responsible for managing the plugin.
      */
-    public VitalItemStackManager(@NotNull JavaPlugin javaPlugin) {
+    public VitalItemStackManager(@NonNull JavaPlugin javaPlugin) {
         // Create a cooldown handler and start it to manage item stack cooldowns.
         this.cooldownHandler = new VitalItemStackCooldownHandler(javaPlugin, this);
         this.cooldownHandler.start();
@@ -42,13 +43,18 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
     }
 
     @Override
-    public void onVitalComponentRegistered(@NotNull VitalItemStack vitalItemStack) {
+    public void onVitalComponentRegistered(@NonNull VitalItemStack vitalItemStack) {
 
     }
 
     @Override
-    public void onVitalComponentUnregistered(@NotNull VitalItemStack vitalItemStack) {
+    public void onVitalComponentUnregistered(@NonNull VitalItemStack vitalItemStack) {
 
+    }
+
+    @Override
+    public Class<VitalItemStack> managedType() {
+        return VitalItemStack.class;
     }
 }
 

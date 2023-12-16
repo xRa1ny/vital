@@ -1,4 +1,6 @@
-package me.xra1ny.vital.tasks;
+package me.xra1ny.vital.tasks.annotation;
+
+import me.xra1ny.vital.tasks.VitalRepeatableTask;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,8 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to provide information about the interval of a repeatable task.
- * This annotation is used in conjunction with classes that extend VitalRepeatableTask.
+ * Annotation used to provide information about the interval of a {@link VitalRepeatableTask}.
  *
  * @author xRa1ny
  */

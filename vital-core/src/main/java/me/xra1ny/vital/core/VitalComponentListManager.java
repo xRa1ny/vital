@@ -1,12 +1,12 @@
 package me.xra1ny.vital.core;
 
 import lombok.Getter;
+import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
 import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
+import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Abstract class for managing a list of Vital components.
@@ -16,8 +16,28 @@ import java.util.UUID;
  * @author xRa1ny
  */
 public abstract class VitalComponentListManager<T extends VitalComponent> implements VitalComponent {
-    @Getter(onMethod = @__(@NotNull))
+    /**
+     * Cache a set of all subclasses of the type this manager manages.
+     */
+    private Set<Class<? extends T>> vitalComponentClassSet = new LinkedHashSet<>();
+
+    @Getter
+    @NonNull
     private final List<T> vitalComponentList = new ArrayList<>();
+
+    /**
+     * Gets a {@link List} of all {@link VitalComponent} instance matching the supplied class.
+     *
+     * @param clazz The class to match the registered {@link VitalComponent} of this manager with.
+     * @param <T>   The type of the {@link VitalComponent} to match with.
+     * @return A {@link List} of all {@link VitalComponent} instances matching the supplied class.
+     */
+    public final <T> List<T> getVitalComponentList(@NonNull Class<T> clazz) {
+        return vitalComponentList.stream()
+                .filter(vitalComponent -> clazz.isAssignableFrom(vitalComponent.getClass()))
+                .map(clazz::cast)
+                .toList();
+    }
 
     /**
      * Checks if a VitalComponent is registered with the specified UUID.
@@ -25,7 +45,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @param vitalComponentUniqueId The UUID of the VitalComponent.
      * @return true if a VitalComponent is registered with the specified UUID, false otherwise.
      */
-    public final boolean isVitalComponentRegistered(@NotNull UUID vitalComponentUniqueId) {
+    public final boolean isVitalComponentRegistered(@NonNull UUID vitalComponentUniqueId) {
         return getVitalComponent(vitalComponentUniqueId).isPresent();
     }
 
@@ -35,7 +55,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @param vitalComponentName The name of the VitalComponent.
      * @return true if a VitalComponent is registered with the specified name, false otherwise.
      */
-    public final boolean isVitalComponentRegistered(@NotNull String vitalComponentName) {
+    public final boolean isVitalComponentRegistered(@NonNull String vitalComponentName) {
         return getVitalComponent(vitalComponentName).isPresent();
     }
 
@@ -45,7 +65,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @param vitalComponentClass The class of the VitalComponent.
      * @return true if a VitalComponent is registered with the specified class, false otherwise.
      */
-    public final boolean isVitalComponentRegistered(@NotNull Class<? extends VitalComponent> vitalComponentClass) {
+    public final boolean isVitalComponentRegistered(@NonNull Class<? extends VitalComponent> vitalComponentClass) {
         return getVitalComponent(vitalComponentClass).isPresent();
     }
 
@@ -55,7 +75,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @param vitalComponentUniqueId The uniqueId of the VitalComponent.
      * @return An Optional with the value of the fetched VitalComponent, an empty Optional otherwise.
      */
-    public final Optional<T> getVitalComponent(@NotNull UUID vitalComponentUniqueId) {
+    public final Optional<T> getVitalComponent(@NonNull UUID vitalComponentUniqueId) {
         return vitalComponentList.stream()
                 .filter(vitalComponent -> vitalComponentUniqueId.equals(vitalComponent.getUniqueId()))
                 .findFirst();
@@ -67,7 +87,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @param name The name of the VitalComponent.
      * @return An Optional with the value of the fetched VitalComponent, an empty Optional otherwise.
      */
-    public final Optional<T> getVitalComponent(@NotNull String name) {
+    public final Optional<T> getVitalComponent(@NonNull String name) {
         return vitalComponentList.stream()
                 .filter(vitalComponent -> name.equals(vitalComponent.getName()))
                 .findFirst();
@@ -77,9 +97,10 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * Gets the VitalComponent by the specified class.
      *
      * @param vitalComponentClass The class of the VitalComponent.
+     * @param <X>                 The {@link VitalComponent} type to grab from this manager instance.
      * @return An Optional with the value of the fetched VitalComponent, an empty Optional otherwise.
      */
-    public final <X extends VitalComponent> Optional<X> getVitalComponent(@NotNull Class<X> vitalComponentClass) {
+    public final <X extends VitalComponent> Optional<X> getVitalComponent(@NonNull Class<X> vitalComponentClass) {
         return vitalComponentList.stream()
                 .filter(vitalComponent -> vitalComponentClass.equals(vitalComponent.getClass()))
                 .map(vitalComponentClass::cast)
@@ -91,7 +112,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      *
      * @param vitalComponent The VitalComponent to register.
      */
-    public final void registerVitalComponent(@NotNull T vitalComponent) {
+    public final void registerVitalComponent(@NonNull T vitalComponent) {
         if (isVitalComponentRegistered(vitalComponent.getUniqueId())) {
             return;
         }
@@ -106,7 +127,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      *
      * @param vitalComponent The VitalComponent to unregister.
      */
-    public final void unregisterVitalComponent(@NotNull T vitalComponent) {
+    public final void unregisterVitalComponent(@NonNull T vitalComponent) {
         vitalComponentList.remove(vitalComponent);
         vitalComponent.onUnregistered();
         onVitalComponentUnregistered(vitalComponent);
@@ -117,12 +138,53 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      *
      * @param vitalComponent The VitalComponent registered.
      */
-    public abstract void onVitalComponentRegistered(@NotNull T vitalComponent);
+    public abstract void onVitalComponentRegistered(@NonNull T vitalComponent);
 
     /**
      * Called when the specified VitalComponent is unregistered.
      *
      * @param vitalComponent The VitalComponent unregistered.
      */
-    public abstract void onVitalComponentUnregistered(@NotNull T vitalComponent);
+    public abstract void onVitalComponentUnregistered(@NonNull T vitalComponent);
+
+    /**
+     * Defines the type that is managed by this manager
+     *
+     * @return The type of {@link VitalComponent} this manager manages.
+     * @apiNote Needed for dependency injection pattern.
+     */
+    public abstract Class<T> managedType();
+
+    /**
+     * Returns the class value of all classes this component manager manages,
+     * if not already loaded, loads and caches all classes found within the bounds of the implementing Vital Main Class Package.
+     *
+     * @return A Set of all Classes of Components this Manager manages.
+     */
+    public Set<Class<? extends T>> getVitalComponentClassSet() {
+        if (vitalComponentClassSet.isEmpty()) {
+            vitalComponentClassSet = new Reflections().getSubTypesOf(managedType());
+        }
+
+        return vitalComponentClassSet;
+    }
+
+    /**
+     * Fetches all classes viable for automatic dependency injection and registers them on this Manager Instance.
+     *
+     * @apiNote For this implementation to work, {@link VitalComponentListManager#managedType()} has to be implemented and correctly configured.
+     */
+    public final void enable() {
+        // iterate over every subclass and attempt to create a dependency injected instance.
+        for (Class<? extends T> vitalComponentClass : getVitalComponentClassSet().stream()
+                // only get classes annotated with `@VitalManagerAutoRegistered`
+                .filter(clazz -> clazz.getDeclaredAnnotation(VitalManagerAutoRegistered.class) != null)
+                .toList()) {
+            // attempt to get the dependency injected instance of the vitalcomponent this manager manages...
+            final Optional<? extends T> optionalVitalComponent = VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
+
+            // if that component could be dependency injected and created, register it on our manager.
+            optionalVitalComponent.ifPresent(this::registerVitalComponent);
+        }
+    }
 }

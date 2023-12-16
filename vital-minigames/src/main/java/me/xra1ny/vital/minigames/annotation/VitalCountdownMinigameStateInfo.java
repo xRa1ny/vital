@@ -1,4 +1,6 @@
-package me.xra1ny.vital.minigames;
+package me.xra1ny.vital.minigames.annotation;
+
+import me.xra1ny.vital.minigames.VitalCountdownMinigameState;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,9 +8,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for defining countdown minigame state information.
- * This annotation is used to specify the time interval between countdown updates
- * and the initial countdown value for a countdown-based minigame state.
+ * Annotation for defining countdown minigame state information for implementations of {@link VitalCountdownMinigameState}.
+ *
+ * @author xRa1ny
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -19,7 +21,7 @@ public @interface VitalCountdownMinigameStateInfo {
      * @return The initial countdown value.
      */
     int value();
-    
+
     /**
      * Gets the time interval between countdown updates in ticks.
      *

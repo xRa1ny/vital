@@ -1,9 +1,9 @@
 package me.xra1ny.vital.players;
 
+import lombok.NonNull;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
-import me.xra1ny.vital.tasks.VitalRepeatableTaskInfo;
+import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A repeatable task for managing player timeouts and unregistering them if they remain offline for too long.
@@ -18,10 +18,10 @@ public class VitalPlayerTimeoutHandler<T extends VitalPlayer> extends VitalRepea
     /**
      * Constructs a VitalPlayerTimeoutHandler instance.
      *
-     * @param javaPlugin The JavaPlugin instance associated with this handler.
+     * @param javaPlugin         The JavaPlugin instance associated with this handler.
      * @param vitalPlayerManager The management component responsible for VitalPlayers.
      */
-    public VitalPlayerTimeoutHandler(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<T> vitalPlayerManager) {
+    public VitalPlayerTimeoutHandler(@NonNull JavaPlugin javaPlugin, @NonNull VitalPlayerManager<T> vitalPlayerManager) {
         super(javaPlugin);
         this.vitalPlayerManager = vitalPlayerManager;
     }

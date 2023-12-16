@@ -3,15 +3,13 @@ package me.xra1ny.vital.core;
 import org.bukkit.event.Listener;
 
 /**
- * A listener component for handling events in the Vital framework.
- * Implements both the VitalComponent and Bukkit's Listener interface.
+ * A listener component for handling events in the Vital-Framework.
  *
  * @author xRa1ny
  */
 public class VitalListener implements VitalComponent, Listener {
     /**
-     * Called when this VitalListener is registered.
-     * Registers this listener with the Bukkit plugin manager.
+     * Called when this {@link VitalListener} is registered.
      */
     @Override
     public void onRegistered() {
@@ -19,8 +17,7 @@ public class VitalListener implements VitalComponent, Listener {
     }
 
     /**
-     * Called when this VitalListener is unregistered.
-     * Unregisters this listener from all events using Bukkit's HandlerList.
+     * Called when this {@link VitalListener} is unregistered.
      */
     @Override
     public void onUnregistered() {

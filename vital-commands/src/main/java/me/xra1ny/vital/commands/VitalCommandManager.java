@@ -1,16 +1,12 @@
 package me.xra1ny.vital.commands;
 
-import lombok.SneakyThrows;
+import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.reflections.Reflections;
 
 /**
- * Class responsible for managing Vital commands.
- * Extends VitalComponentListManagement to handle command registration and unregistration.
+ * Class responsible for managing {@link VitalCommand}.
  *
  * @author xRa1ny
  */
@@ -18,7 +14,12 @@ import org.reflections.Reflections;
 public final class VitalCommandManager extends VitalComponentListManager<VitalCommand> {
     private final JavaPlugin javaPlugin;
 
-    public VitalCommandManager(@NotNull JavaPlugin javaPlugin) {
+    /**
+     * Construcs a new command manager instance that manages all {@link VitalCommand} instances.
+     *
+     * @param javaPlugin The {@link JavaPlugin} this manager belongs to.
+     */
+    public VitalCommandManager(@NonNull JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
     }
 
@@ -34,30 +35,18 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
 
     @SuppressWarnings("DataFlowIssue")
     @Override
-    public void onVitalComponentRegistered(@NotNull VitalCommand vitalCommand) {
+    public void onVitalComponentRegistered(@NonNull VitalCommand vitalCommand) {
         javaPlugin.getCommand(vitalCommand.getName()).setExecutor(vitalCommand);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
-    public void onVitalComponentUnregistered(@NotNull VitalCommand vitalComponent) {
-        final PluginCommand pluginCommand = javaPlugin.getCommand(vitalComponent.getName());
-
-        // Needs to be `null`, since command is unregistered.
-        pluginCommand.setExecutor(null);
+    public void onVitalComponentUnregistered(@NonNull VitalCommand vitalComponent) {
+        javaPlugin.getCommand(vitalComponent.getName()).setExecutor(null);
     }
 
-    /**
-     * Attempts to automatically register all `VitalCommands` in the specified package.
-     *
-     * @param packageName The package.
-     */
-    @SneakyThrows
-    public void registerVitalCommands(@NotNull String packageName) {
-        for(Class<? extends VitalCommand> vitalCommandClass : new Reflections(packageName).getSubTypesOf(VitalCommand.class)) {
-            final VitalCommand vitalCommand = vitalCommandClass.getDeclaredConstructor().newInstance();
-
-            registerVitalComponent(vitalCommand);
-        }
+    @Override
+    public Class<VitalCommand> managedType() {
+        return VitalCommand.class;
     }
 }

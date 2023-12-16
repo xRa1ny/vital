@@ -15,6 +15,8 @@ public class SampleVitalPlugin extends JavaPlugin {
      * Using this Implementation, Vital is initialized with minimal functionality, every module MUST be manually implemented if needed.
      */
     private final VitalCore<SampleVitalPlugin> vitalCore = new VitalCore<>(this) {
+
+        // called when `VitalCore#enable()` is called.
         @Override
         public void onEnable() {
             // Here we register Vital's CommandManager
@@ -34,7 +36,7 @@ public class SampleVitalPlugin extends JavaPlugin {
 
             // Here we register Vital's HologramManager
             final VitalConfigManager vitalConfigManager = new VitalConfigManager();
-            final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig("holograms.yml", getJavaPlugin());
+            final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig(getJavaPlugin());
             final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
             getVitalComponentManager().registerVitalComponent(vitalHologramManager);
