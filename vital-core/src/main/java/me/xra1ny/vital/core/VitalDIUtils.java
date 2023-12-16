@@ -61,11 +61,9 @@ public class VitalDIUtils {
             return Optional.empty();
         }
 
-        log.warning("Vital is attempting to create a dependency injected instance of " + type.getSimpleName());
-
         // if the class we are trying to automatically DI is abstract, cancel operation since no instance can be created without throwing exceptions.
         if (Modifier.isAbstract(type.getModifiers())) {
-            log.severe(type.getSimpleName() + " is annotated with `@VitalDI` but abstract and can therefore not be dependency injected by Vital");
+            log.severe(type.getSimpleName() + " is annotated with @VitalDI but abstract and can therefore not be dependency injected by Vital");
 
             return Optional.empty();
         }
@@ -79,7 +77,8 @@ public class VitalDIUtils {
 
                 return Optional.of(instance);
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                log.severe("Vital has encountered an internal error while trying to create a dependency injected instance of type " + type);
+                log.severe("Is the type instantiable? (class, not abstract, public)");
             }
         } catch (NoSuchMethodException e) {
             for (Constructor<?> constructor : type.getDeclaredConstructors()) {
@@ -144,12 +143,13 @@ public class VitalDIUtils {
                     // create dependency injected instance.
                     final T instance = (T) constructor.newInstance(injectableList.toArray());
 
-                    log.info("Vital has successfully created dependency injected instance of " + type.getSimpleName());
-
                     return Optional.of(instance);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
                     log.severe("Vital could not create a dependency injected instance of " + type);
+                    log.severe("Vital has deciphered the following constructor viable for dependency injection: " + constructor);
+                    log.severe("Vital has deciphered the following arguments to inject into said constructor: " + injectableList);
                     log.severe("Did you declare a circular dependency?");
+                    log.severe("Are you sure all constructor arguments are viable for dependeny injection? (@VitalDI, @VitalManagerAutoregistered, @VitalAutoregistered, VitalComponent)");
                     ex.printStackTrace();
                 }
 
