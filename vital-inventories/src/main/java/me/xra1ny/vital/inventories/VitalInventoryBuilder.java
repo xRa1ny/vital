@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Range;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Defines a builder all interactive inventory disobeying the "Component-Class" pattern.
@@ -100,11 +101,11 @@ public class VitalInventoryBuilder implements InventoryHolder {
      * @return The built Inventory to open for entities.
      */
     public final Inventory build() {
-        if (inventoryType == null) {
-            inventory = Bukkit.createInventory(this, size, name);
-        } else {
-            inventory = Bukkit.createInventory(this, inventoryType, name);
-        }
+        final Optional<InventoryType> optionalInventoryType = Optional.ofNullable(inventoryType);
+
+        inventory = optionalInventoryType
+                .map(type -> Bukkit.createInventory(this, type, name))
+                .orElseGet(() -> Bukkit.createInventory(this, size, name));
 
         for (Map.Entry<Integer, ItemStack> entry : slotItemStackMap.entrySet()) {
             inventory.setItem(entry.getKey(), entry.getValue());

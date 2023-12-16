@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Manages the creation, configuration, and persistence of {@link VitalHologram} instances.
@@ -55,11 +56,13 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
      */
     @SneakyThrows
     public void removeVitalHologramFromConfig(@NonNull VitalHologram vitalHologram) {
-        final List<VitalHologram> vitalHologramList = vitalHologramConfig.getVitalHologramList();
+        final Optional<List<VitalHologram>> optionalVitalHologramList = Optional.ofNullable(vitalHologramConfig.getVitalHologramList());
 
-        if (vitalHologramList == null || vitalHologramList.isEmpty()) {
+        if(optionalVitalHologramList.isEmpty()) {
             return;
         }
+
+        final List<VitalHologram> vitalHologramList = optionalVitalHologramList.get();
 
         vitalHologramList.remove(vitalHologram);
         vitalHologramConfig.setVitalHologramList(vitalHologramList);
