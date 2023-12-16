@@ -6,7 +6,7 @@ import me.xra1ny.vital.holograms.VitalHologramManager;
 import me.xra1ny.vital.inventories.VitalInventoryBuilder;
 import me.xra1ny.vital.inventories.VitalInventoryClickEvent;
 import me.xra1ny.vital.items.VitalItemStack;
-import me.xra1ny.vital.items.VitalItemStackInfo;
+import me.xra1ny.vital.items.annotation.VitalItemStackInfo;
 import me.xra1ny.vital.samples.full.config.SampleVitalConfig;
 import me.xra1ny.vital.samples.full.inventory.SampleVitalInventory;
 import org.bukkit.Material;

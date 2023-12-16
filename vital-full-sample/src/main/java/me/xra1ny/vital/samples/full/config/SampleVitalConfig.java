@@ -2,8 +2,8 @@ package me.xra1ny.vital.samples.full.config;
 
 import lombok.NonNull;
 import me.xra1ny.vital.configs.VitalConfig;
-import me.xra1ny.vital.configs.VitalConfigInfo;
-import me.xra1ny.vital.configs.VitalConfigPath;
+import me.xra1ny.vital.configs.annotation.VitalConfigInfo;
+import me.xra1ny.vital.configs.annotation.VitalConfigPath;
 import me.xra1ny.vital.holograms.VitalHologram;
 import org.bukkit.plugin.java.JavaPlugin;
 

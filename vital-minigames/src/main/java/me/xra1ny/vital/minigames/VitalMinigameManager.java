@@ -3,10 +3,11 @@ package me.xra1ny.vital.minigames;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
-import me.xra1ny.vital.core.VitalAutoRegistered;
 import me.xra1ny.vital.core.VitalComponent;
-import me.xra1ny.vital.core.VitalDI;
+import me.xra1ny.vital.core.VitalDIUtils;
 import me.xra1ny.vital.core.VitalListenerManager;
+import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
+import me.xra1ny.vital.core.annotation.VitalDI;
 
 import java.util.Optional;
 
@@ -52,7 +53,7 @@ public final class VitalMinigameManager implements VitalComponent {
      *
      * @param vitalMinigameStateClass The Class of the minigame state to set to (must be registered).
      */
-    public void setVitalMinigameState(@NotNull Class<? extends VitalMinigameState> vitalMinigameStateClass) {
+    public void setVitalMinigameState(@NonNull Class<? extends VitalMinigameState> vitalMinigameStateClass) {
         final Optional<? extends VitalMinigameState> optionalDiVitalMinigameState = VitalDIUtils.getDependencyInjectedInstance(vitalMinigameStateClass);
 
         optionalDiVitalMinigameState.ifPresent(this::setVitalMinigameState);

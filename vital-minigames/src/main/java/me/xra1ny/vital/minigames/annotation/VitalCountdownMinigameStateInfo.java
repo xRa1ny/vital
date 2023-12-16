@@ -1,4 +1,6 @@
-package me.xra1ny.vital.minigames;
+package me.xra1ny.vital.minigames.annotation;
+
+import me.xra1ny.vital.minigames.VitalCountdownMinigameState;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

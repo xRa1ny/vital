@@ -54,10 +54,10 @@ public class VitalDIUtils {
             }
         }
 
-        final VitalDI vitalDI = type.getDeclaredAnnotation(VitalDI.class);
-
         // check if component is viable for automatic dependency injection (DI).
-        if (vitalDI == null) {
+        if (!type.isAnnotationPresent(VitalDI.class)) {
+            log.severe(type + " is not annotated with VitalDI");
+
             return Optional.empty();
         }
 
@@ -104,9 +104,11 @@ public class VitalDIUtils {
 
                         final Optional<? extends VitalComponentListManager<?>> optionalVitalComponentListManager = vitalComponentManager.getVitalComponent(managerClass);
 
-                        optionalVitalComponentListManager.ifPresent(injectableList::add);
+                        if(optionalVitalComponentListManager.isPresent()) {
+                            injectableList.add(optionalVitalComponentListManager.get());
 
-                        continue;
+                            continue;
+                        }
                     }
 
                     // normal vital component. VitalConfig
