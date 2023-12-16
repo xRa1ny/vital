@@ -2,6 +2,8 @@ package me.xra1ny.vital.inventories;
 
 import lombok.Getter;
 import lombok.NonNull;
+import me.xra1ny.vital.core.AnnotatedVitalComponent;
+import me.xra1ny.vital.inventories.annotation.VitalInventoryInfo;
 import me.xra1ny.vital.items.VitalItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
