@@ -3,6 +3,7 @@ package me.xra1ny.vital.core;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
+import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -129,7 +130,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      *
      * @param message The message to broadcast.
      */
-    public static void broadcast(@NonNull String message) {
+    public static void broadcastMessage(@NonNull String message) {
         Bukkit.broadcastMessage(message);
     }
 
@@ -139,7 +140,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @param message         The message to broadcast.
      * @param playerPredicate The Predicate specifying the condition in which the message should be broadcast.
      */
-    public static void broadcast(@NonNull String message, @NonNull Predicate<Player> playerPredicate) {
+    public static void broadcastMessage(@NonNull String message, @NonNull Predicate<Player> playerPredicate) {
         for (Player player : Bukkit.getOnlinePlayers().stream()
                 .filter(playerPredicate)
                 .toList()) {
@@ -153,7 +154,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      *
      * @param sound The sound to broadcast.
      */
-    public static void broadcast(@NonNull Sound sound) {
+    public static void broadcastSound(@NonNull Sound sound) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player, sound, 1f, 1f);
         }
@@ -165,7 +166,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @param sound           The sound to broadcast.
      * @param playerPredicate The Predicate specifying the condition in which the sound should be broadcast.
      */
-    public static void broadcast(@NonNull Sound sound, @NonNull Predicate<Player> playerPredicate) {
+    public static void broadcastSound(@NonNull Sound sound, @NonNull Predicate<Player> playerPredicate) {
         for (Player player : Bukkit.getOnlinePlayers().stream()
                 .filter(playerPredicate)
                 .toList()) {
@@ -180,7 +181,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @param volume The volume of the sound.
      * @param pitch  The pitch of the sound.
      */
-    public static void broadcast(@NonNull Sound sound, float volume, float pitch) {
+    public static void broadcastSound(@NonNull Sound sound, float volume, float pitch) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player, sound, volume, pitch);
         }
@@ -194,7 +195,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @param volume          The volume of the sound.
      * @param pitch           The pitch of the sound.
      */
-    public static void broadcast(@NonNull Sound sound, @NonNull Predicate<Player> playerPredicate, float volume, float pitch) {
+    public static void broadcastSound(@NonNull Sound sound, @NonNull Predicate<Player> playerPredicate, float volume, float pitch) {
         for (Player player : Bukkit.getOnlinePlayers().stream()
                 .filter(playerPredicate)
                 .toList()) {
