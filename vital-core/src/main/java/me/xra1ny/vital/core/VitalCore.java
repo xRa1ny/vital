@@ -1,12 +1,12 @@
 package me.xra1ny.vital.core;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
 import java.util.HashMap;
@@ -15,9 +15,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * The main instance of the Vital framework.
+ * The main instance of the Vital-Framework.
  *
- * @param <T> The JavaPlugin instance.
+ * @param <T> The JavaPlugin type.
  * @author xRa1ny
  */
 @SuppressWarnings("unused")
@@ -26,54 +26,59 @@ public abstract class VitalCore<T extends JavaPlugin> {
     private static VitalCore<?> instance;
 
     /**
-     * The JavaPlugin instance associated with this VitalCore.
+     * The JavaPlugin instance associated with this {@link VitalCore}.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final T javaPlugin;
 
     /**
-     * The management component for handling Vital components.
+     * The management component for handling {@link VitalComponent}.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final VitalComponentManager vitalComponentManager = new VitalComponentManager();
 
     @Getter
     private boolean enabled;
 
     /**
-     * Constructs a new VitalCore instance.
+     * Constructs a new {@link VitalCore} instance.
      *
-     * @param javaPlugin The JavaPlugin instance to associate with VitalCore.
+     * @param javaPlugin The {@link JavaPlugin} instance to associate with {@link VitalCore}.
      */
-    public VitalCore(@NotNull T javaPlugin) {
+    public VitalCore(@NonNull T javaPlugin) {
         this.javaPlugin = javaPlugin;
         vitalComponentManager.registerVitalComponent(new VitalListenerManager(javaPlugin));
     }
 
     /**
-     * Singleton access-point for all `VitalCore<T>` Instances.
+     * Singleton access-point for all {@link VitalCore} instances.
      *
-     * @param type Your Plugin's Main Class.
-     * @param <T>  The Type of your Plugin's Main Class.
-     * @return The VitalCore Instance.
-     * @throws ClassCastException If the provided Type and `Vital<T>` Instance don't match.
+     * @param type Your plugin's main class.
+     * @param <T>  The type of your plugin's main class.
+     * @return The {@link VitalCore} instance.
+     * @throws ClassCastException If the provided type and {@link VitalCore} plugin instance don't match.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends JavaPlugin> VitalCore<T> getVitalCoreInstance(@NotNull Class<T> type) {
+    public static <T extends JavaPlugin> VitalCore<T> getVitalCoreInstance(@NonNull Class<T> type) {
         return (VitalCore<T>) instance;
     }
 
     /**
-     * Singleton access-point for all `VitalCore<T>` Instances.
-     * This Method will return a generically inaccurate Object.
-     * For more accurate VitalCore Types use {@link VitalCore#getVitalCoreInstance(Class)}
+     * Singleton access-point for {@link VitalCore} instance.
+     * This method will return a generically inaccurate Object.
+     * For more accurate {@link VitalCore} types use {@link VitalCore#getVitalCoreInstance(Class)}
      *
-     * @return The VitalCore Instance.
+     * @return The {@link VitalCore} instance.
      */
     public static VitalCore<?> getVitalCoreInstance() {
         return instance;
     }
 
+    /**
+     * Enables the Vital-Framework, initialising needed systems.
+     */
     public final void enable() {
         if (enabled) {
             return;
@@ -92,7 +97,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
         // with components that cannot be dependency injected, this registration will not work!!!
         for (Class<?> vitalComponentClass : new Reflections().getTypesAnnotatedWith(VitalAutoRegistered.class).stream().filter(VitalComponent.class::isAssignableFrom).toList()) {
             // assume every class is extended from `VitalComponent` since we filtered in our chain above.
-            final Optional<? extends VitalComponent> optionalVitalComponent = (Optional<? extends VitalComponent>) DIUtils.getDependencyInjectedInstance(vitalComponentClass);
+            final Optional<? extends VitalComponent> optionalVitalComponent = (Optional<? extends VitalComponent>) VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
 
             // display error if a dependency injected instance of our marked class could not be created, else register it von the base manager of vital.
             if (optionalVitalComponent.isEmpty()) {
@@ -124,7 +129,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      *
      * @param message The message to broadcast.
      */
-    public static void broadcast(@NotNull String message) {
+    public static void broadcast(@NonNull String message) {
         Bukkit.broadcastMessage(message);
     }
 
@@ -134,7 +139,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @param message         The message to broadcast.
      * @param playerPredicate The Predicate specifying the condition in which the message should be broadcast.
      */
-    public static void broadcast(@NotNull String message, @NotNull Predicate<Player> playerPredicate) {
+    public static void broadcast(@NonNull String message, @NonNull Predicate<Player> playerPredicate) {
         for (Player player : Bukkit.getOnlinePlayers().stream()
                 .filter(playerPredicate)
                 .toList()) {
@@ -148,7 +153,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      *
      * @param sound The sound to broadcast.
      */
-    public static void broadcast(@NotNull Sound sound) {
+    public static void broadcast(@NonNull Sound sound) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player, sound, 1f, 1f);
         }
@@ -160,7 +165,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @param sound           The sound to broadcast.
      * @param playerPredicate The Predicate specifying the condition in which the sound should be broadcast.
      */
-    public static void broadcast(@NotNull Sound sound, @NotNull Predicate<Player> playerPredicate) {
+    public static void broadcast(@NonNull Sound sound, @NonNull Predicate<Player> playerPredicate) {
         for (Player player : Bukkit.getOnlinePlayers().stream()
                 .filter(playerPredicate)
                 .toList()) {
@@ -175,7 +180,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @param volume The volume of the sound.
      * @param pitch  The pitch of the sound.
      */
-    public static void broadcast(@NotNull Sound sound, float volume, float pitch) {
+    public static void broadcast(@NonNull Sound sound, float volume, float pitch) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.playSound(player, sound, volume, pitch);
         }
@@ -189,7 +194,7 @@ public abstract class VitalCore<T extends JavaPlugin> {
      * @param volume          The volume of the sound.
      * @param pitch           The pitch of the sound.
      */
-    public static void broadcast(@NotNull Sound sound, @NotNull Predicate<Player> playerPredicate, float volume, float pitch) {
+    public static void broadcast(@NonNull Sound sound, @NonNull Predicate<Player> playerPredicate, float volume, float pitch) {
         for (Player player : Bukkit.getOnlinePlayers().stream()
                 .filter(playerPredicate)
                 .toList()) {

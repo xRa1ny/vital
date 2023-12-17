@@ -1,8 +1,9 @@
-package me.xra1ny.vital.items;
+package me.xra1ny.vital.items.annotation;
 
+import lombok.NonNull;
+import me.xra1ny.vital.items.VitalItemStack;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,8 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates a class to provide information about a custom item stack that can be interacted with in the game.
- * This annotation is used to configure various properties of the custom item stack, such as its name, lore, type, and more.
+ * Annotation to provide information about a {@link VitalItemStack} that can be interacted with in the game.
  *
  * @author xRa1ny
  */
@@ -31,7 +31,7 @@ public @interface VitalItemStackInfo {
      *
      * @return An array of lore lines.
      */
-    @NotNull
+    @NonNull
     String[] lore() default {};
 
     /**

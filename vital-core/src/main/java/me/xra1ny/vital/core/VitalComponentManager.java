@@ -1,10 +1,9 @@
 package me.xra1ny.vital.core;
 
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
 
 /**
- * Final class for managing a list of Vital components.
- * Extends the abstract VitalComponentListManagement class.
+ * Class for managing a list of {@link VitalComponent}.
  *
  * @author xRa1ny
  */
@@ -20,12 +19,12 @@ public final class VitalComponentManager extends VitalComponentListManager<Vital
     }
 
     @Override
-    public void onVitalComponentRegistered(@NotNull VitalComponent vitalComponent) {
+    public void onVitalComponentRegistered(@NonNull VitalComponent vitalComponent) {
 
     }
 
     @Override
-    public void onVitalComponentUnregistered(@NotNull VitalComponent vitalComponent) {
+    public void onVitalComponentUnregistered(@NonNull VitalComponent vitalComponent) {
 
     }
 

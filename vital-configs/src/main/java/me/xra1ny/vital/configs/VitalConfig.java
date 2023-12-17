@@ -1,7 +1,12 @@
 package me.xra1ny.vital.configs;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.SneakyThrows;
+import me.xra1ny.vital.configs.annotation.VitalConfigEnum;
+import me.xra1ny.vital.configs.annotation.VitalConfigInfo;
+import me.xra1ny.vital.configs.annotation.VitalConfigList;
+import me.xra1ny.vital.configs.annotation.VitalConfigPath;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalCore;
@@ -10,8 +15,6 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.reflections.ReflectionUtils;
 
 import java.io.File;
@@ -21,7 +24,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
- * Abstract base class for managing configuration files in the Vital framework.
+ * Abstract base class for managing configuration files in the Vital-Framework.
  * Provides functionality for reading, writing, and updating configuration settings.
  *
  * @author xRa1ny
@@ -30,36 +33,42 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     /**
      * The name of the configuration file.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final String name;
 
     /**
-     * The File object representing the configuration file.
+     * The {@link File} object representing the configuration file.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private File configFile;
 
     /**
-     * The FileConfiguration object for working with the configuration settings.
+     * The {@link FileConfiguration} object used in Spigot/BukkitAPI.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private FileConfiguration config;
 
     /**
-     * Constructor for VitalConfig with a specified name.
+     * Constructor for {@link VitalConfig} with a specified name.
      *
-     * @param name The name of the configuration file.
+     * @param name       The name of the configuration file.
+     * @param javaPlugin The {@link JavaPlugin} instance of you plugin.
      */
-    public VitalConfig(@NotNull String name, @NotNull JavaPlugin javaPlugin) {
+    public VitalConfig(@NonNull String name, @NonNull JavaPlugin javaPlugin) {
         this.name = name;
 
         initialize(javaPlugin);
     }
 
     /**
-     * Constructor for VitalConfig using the name specified in the annotation.
+     * Constructor for {@link VitalConfig} using the name specified in the annotation.
+     *
+     * @param javaPlugin The {@link JavaPlugin} instance of your plugin.
      */
-    public VitalConfig(@NotNull JavaPlugin javaPlugin) {
+    public VitalConfig(@NonNull JavaPlugin javaPlugin) {
         final VitalConfigInfo vitalConfigInfo = getRequiredAnnotation();
 
         this.name = vitalConfigInfo.value();
@@ -72,7 +81,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @SneakyThrows
-    private void initialize(@NotNull JavaPlugin javaPlugin) {
+    private void initialize(@NonNull JavaPlugin javaPlugin) {
         this.configFile = new File(javaPlugin.getDataFolder(), name);
 
         final File parentConfigFile = configFile.getParentFile();
@@ -89,24 +98,25 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
      * @param type The type of the returning value.
      * @param key  The specified configuration key.
      * @param <T>  The type of the returning value.
-     * @return The value of the configuration key, or null if the key does not exist.
+     * @return An Optional holding either the value of the configuration key, or null if the key does not exist.
      */
     @SuppressWarnings("unchecked")
-    @Nullable
-    public final <T> T get(@NotNull Class<T> type, @NotNull String key) {
-        final Field field = ReflectionUtils.getAllFields(getClass()).stream()
-                .filter(_field -> _field.getDeclaredAnnotation(VitalConfigPath.class) != null)
-                .filter(_field -> _field.getType().equals(type))
-                .filter(_field -> _field.getDeclaredAnnotation(VitalConfigPath.class).value().equalsIgnoreCase(key))
-                .findFirst().orElse(null);
+    @NonNull
+    public final <T> Optional<T> get(@NonNull Class<T> type, @NonNull String key) {
+        final Optional<Field> optionalField = ReflectionUtils.getAllFields(getClass()).stream()
+                .filter(field -> field.getDeclaredAnnotation(VitalConfigPath.class) != null)
+                .filter(field -> field.getType().equals(type))
+                .filter(field -> field.getDeclaredAnnotation(VitalConfigPath.class).value().equalsIgnoreCase(key))
+                .findFirst();
 
-        if (field == null) {
-            return null;
+        if (optionalField.isEmpty()) {
+            return Optional.empty();
         }
 
+        final Field field = optionalField.get();
         final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
 
-        return (T) this.config.get(path.value());
+        return Optional.ofNullable((T) this.config.get(path.value()));
     }
 
     /**
@@ -121,12 +131,13 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 continue;
             }
 
-            final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
+            final Optional<VitalConfigPath> optionalVitalConfigPath = Optional.ofNullable(field.getAnnotation(VitalConfigPath.class));
 
-            if (path == null) {
+            if (optionalVitalConfigPath.isEmpty()) {
                 continue;
             }
 
+            final VitalConfigPath vitalConfigPath = optionalVitalConfigPath.get();
             Object fieldValue = field.get(this);
 
             if (fieldValue instanceof String stringFieldValue) {
@@ -148,7 +159,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 fieldValue = vitalConfigSerializable.serialize();
             }
 
-            this.config.set(path.value(), fieldValue);
+            this.config.set(vitalConfigPath.value(), fieldValue);
         }
 
         this.config.save(this.configFile);
@@ -166,17 +177,20 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 continue;
             }
 
-            final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
+            final Optional<VitalConfigPath> optionalVitalConfigPath = Optional.ofNullable(field.getAnnotation(VitalConfigPath.class));
 
-            if (path == null) {
+            if (optionalVitalConfigPath.isEmpty()) {
                 continue;
             }
 
-            Object configValue = this.config.get(path.value());
+            final VitalConfigPath vitalConfigPath = optionalVitalConfigPath.get();
+            final Optional<Object> optionalConfigValue = Optional.ofNullable(this.config.get(vitalConfigPath.value()));
 
-            if (configValue == null) {
+            if (optionalConfigValue.isEmpty()) {
                 continue;
             }
+
+            Object configValue = optionalConfigValue.get();
 
             if (configValue instanceof String stringConfigValue) {
                 configValue = ChatColor.translateAlternateColorCodes('&', stringConfigValue);
@@ -193,10 +207,11 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
                 configValue = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
             } else if (configValue instanceof List<?> list) {
-                final VitalConfigList vitalConfigList = field.getDeclaredAnnotation(VitalConfigList.class);
+                final Optional<VitalConfigList> optionalVitalConfigList = Optional.ofNullable(field.getDeclaredAnnotation(VitalConfigList.class));
 
                 // If we specified the list annotation with a complex type, attempt to decipher...
-                if (vitalConfigList != null) {
+                if (optionalVitalConfigList.isPresent()) {
+                    final VitalConfigList vitalConfigList = optionalVitalConfigList.get();
                     final Class<? extends VitalConfigSerializable> vitalConfigListType = vitalConfigList.value();
                     final List<LinkedHashMap<String, Object>> linkedHashMapList = (List<LinkedHashMap<String, Object>>) list;
                     final List<VitalConfigSerializable> vitalConfigSerializableList = new ArrayList<>();
@@ -215,9 +230,17 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
         }
     }
 
+    /**
+     * Attempts to deserialize the specified class from the specified serialized object map.
+     *
+     * @param clazz      The class to deserialize into.
+     * @param serialized The serialized content to deserialize from.
+     * @param <T>        The type of the object for deserialization.
+     * @return The object that is deserialized into.
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
     @SneakyThrows
-    public final <T extends VitalConfigSerializable> T deserialize(@NotNull Class<T> clazz, @NotNull Map<String, Object> serialized) {
+    public final <T extends VitalConfigSerializable> T deserialize(@NonNull Class<T> clazz, @NonNull Map<String, Object> serialized) {
         final Map<Field, Object> fieldObjectMap = new LinkedHashMap<>();
 
         for (Field field : ReflectionUtils.getAllFields(clazz)) {
@@ -226,20 +249,23 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 continue;
             }
 
-            final VitalConfigPath path = field.getAnnotation(VitalConfigPath.class);
+            final Optional<VitalConfigPath> optionalVitalConfigPath = Optional.ofNullable(field.getAnnotation(VitalConfigPath.class));
 
-            if (path == null) {
+            if (optionalVitalConfigPath.isEmpty()) {
                 continue;
             }
 
-            if (!serialized.containsKey(path.value())) {
+            final VitalConfigPath vitalConfigPath = optionalVitalConfigPath.get();
+            final String vitalConfigPathValue = vitalConfigPath.value();
+
+            if (!serialized.containsKey(vitalConfigPathValue)) {
                 // Could not deserialize, since ConfigPath value was not found on serialized content Map!
 
                 continue;
             }
 
             for (Map.Entry<String, Object> stringObjectEntry : serialized.entrySet()) {
-                if (!stringObjectEntry.getKey().equals(path.value())) {
+                if (!stringObjectEntry.getKey().equals(vitalConfigPathValue)) {
                     continue;
                 }
 
@@ -254,10 +280,11 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
                     value = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
                 } else if (value instanceof List<?> list) {
-                    final VitalConfigList vitalConfigList = field.getDeclaredAnnotation(VitalConfigList.class);
+                    final Optional<VitalConfigList> optionalVitalConfigList = Optional.ofNullable(field.getDeclaredAnnotation(VitalConfigList.class));
 
                     // decipher, if we have specified a complex type. via annotation..
-                    if (vitalConfigList != null) {
+                    if (optionalVitalConfigList.isPresent()) {
+                        final VitalConfigList vitalConfigList = optionalVitalConfigList.get();
                         final Class<? extends VitalConfigSerializable> vitalConfigListType = vitalConfigList.value();
                         final List<LinkedHashMap<String, Object>> linkedHashMapList = (List<LinkedHashMap<String, Object>>) list;
                         final List<VitalConfigSerializable> vitalConfigSerializableList = new ArrayList<>();
@@ -270,7 +297,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
 
                         value = vitalConfigSerializableList;
                     }
-                } else if(value instanceof Map<?, ?> map) {
+                } else if (value instanceof Map<?, ?> map) {
                     final Map<String, Object> stringObjectMap = (Map<String, Object>) map;
 
                     value = deserialize((Class<VitalConfigSerializable>) field.getType(), stringObjectMap);
@@ -279,9 +306,9 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
                 fieldObjectMap.put(field, value);
             }
 
-            final VitalConfigEnum vitalConfigEnum = field.getDeclaredAnnotation(VitalConfigEnum.class);
+            final Optional<VitalConfigEnum> optionalVitalConfigEnum = Optional.ofNullable(field.getDeclaredAnnotation(VitalConfigEnum.class));
 
-            if (vitalConfigEnum != null) {
+            if (optionalVitalConfigEnum.isPresent()) {
                 fieldObjectMap.replace(field, Enum.valueOf((Class<Enum>) field.getType(), fieldObjectMap.get(field).toString()));
             }
         }
@@ -333,7 +360,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     }
 
     @Override
-    public void autoRegister(@NotNull Class<? extends JavaPlugin> javaPluginType) {
+    public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
         final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
         final Optional<VitalConfigManager> optionalVitalConfigManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalConfigManager.class);

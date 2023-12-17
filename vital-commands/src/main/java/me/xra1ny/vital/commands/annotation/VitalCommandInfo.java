@@ -1,4 +1,6 @@
-package me.xra1ny.vital.commands;
+package me.xra1ny.vital.commands.annotation;
+
+import me.xra1ny.vital.commands.VitalCommand;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -6,16 +8,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to provide metadata for Vital commands.
- * If combined with the `vital-core-processor` and `vital-commands-processor` dependency as annotation processor, can automatically defines all commands in `plugin.yml` during compile-time.
+ * Annotation used to provide metadata for {@link VitalCommand}.
  *
  * @author xRa1ny
+ * @apiNote If combined with the :vital-core-processor and :vital-commands-processor dependency as annotation processor, can automatically define all commands in plugin.yml during compile-time.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface VitalCommandInfo {
     /**
-     * Defines the name of this command, excluding the slash `/`.
+     * Defines the name of this command, excluding the slash /.
      *
      * @return The name of the command.
      */
@@ -58,10 +60,9 @@ public @interface VitalCommandInfo {
 
     /**
      * Defines all valid arguments of this command.
-     * Supported patterns include "%PLAYER%", "%BOOLEAN%", and "%NUMBER%".
-     * All other patterns will not be converted in auto tab complete.
      *
      * @return An array of valid command arguments (default is an empty array).
+     * @apiNote Supported patterns include "%PLAYER%", "%BOOLEAN%", and "%NUMBER%".
      */
     VitalCommandArg[] args() default {};
 }

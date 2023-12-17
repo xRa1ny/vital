@@ -1,7 +1,7 @@
 package me.xra1ny.vital.core.processor;
 
-import me.xra1ny.vital.core.VitalPluginInfo;
-import org.jetbrains.annotations.NotNull;
+import lombok.NonNull;
+import me.xra1ny.vital.core.annotation.VitalPluginInfo;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -32,26 +32,26 @@ public class VitalPluginInfoAnnotationProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if(ran) {
+        if (ran) {
             return true;
         }
 
         Map.Entry<String, VitalPluginInfo> classNameVitalPluginInfoEntry = null;
 
         // Scan for the Main Class of this Plugin annotated with `VitalPluginInfo`.
-        for(Element element : roundEnv.getElementsAnnotatedWith(VitalPluginInfo.class)) {
+        for (Element element : roundEnv.getElementsAnnotatedWith(VitalPluginInfo.class)) {
             ElementKind elementKind = element.getKind();
 
             if (!elementKind.equals(ElementKind.CLASS)) {
                 continue;
             }
 
-            final TypeElement typeElement = (TypeElement)element;
+            final TypeElement typeElement = (TypeElement) element;
             final TypeMirror typeMirror = typeElement.getSuperclass();
             final String typeMirrorName = typeMirror.toString();
             final String requiredTypeMirrorName = "org.bukkit.plugin.java.JavaPlugin";
 
-            if(!typeMirrorName.equals(requiredTypeMirrorName)) {
+            if (!typeMirrorName.equals(requiredTypeMirrorName)) {
                 continue;
             }
 
@@ -81,12 +81,12 @@ public class VitalPluginInfoAnnotationProcessor extends AbstractProcessor {
     /**
      * Generates the `plugin.yml` file with the specified meta information.
      *
-     * @param className The fully qualified class name of the main class of this plugin.
-     * @param name The name of this plugin.
+     * @param className  The fully qualified class name of the main class of this plugin.
+     * @param name       The name of this plugin.
      * @param apiVersion The api-version this plugin uses.
-     * @param version The version of this plugin.
+     * @param version    The version of this plugin.
      */
-    public void generatePluginYml(@NotNull String className, @NotNull String name, @NotNull String apiVersion, @NotNull String version) {
+    public void generatePluginYml(@NonNull String className, @NonNull String name, @NonNull String apiVersion, @NonNull String version) {
         // append basic plugin meta information to plugin info holder.
         VitalPluginInfoHolder.PLUGIN_INFO.append("main: ").append(className);
         VitalPluginInfoHolder.PLUGIN_INFO.append("\n");
@@ -108,7 +108,7 @@ public class VitalPluginInfoAnnotationProcessor extends AbstractProcessor {
                 final FileObject pluginYmlFileObject = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "plugin.yml");
 
                 // Write the current PluginInfoHolder Information to the newly created `plugin.yml`.
-                try(Writer pluginYmlWriter = pluginYmlFileObject.openWriter()) {
+                try (Writer pluginYmlWriter = pluginYmlFileObject.openWriter()) {
                     pluginYmlWriter.write(VitalPluginInfoHolder.PLUGIN_INFO.toString());
                 }
             } catch (IOException ex) {

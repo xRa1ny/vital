@@ -1,13 +1,13 @@
 package me.xra1ny.vital.tasks;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
+import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Abstract base class for creating repeatable tasks in the Vital plugin framework.
@@ -16,7 +16,8 @@ import org.jetbrains.annotations.Nullable;
  * @author xRa1ny
  */
 public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<VitalRepeatableTaskInfo> {
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private final JavaPlugin javaPlugin;
 
     @Override
@@ -38,13 +39,14 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
     /**
      * The BukkitRunnable associated with this repeatable task, defining its logic.
      */
-    @Getter(onMethod = @__(@NotNull))
+    @Getter
+    @NonNull
     private BukkitRunnable runnable;
 
     /**
      * The BukkitTask representing this repeatable task.
      */
-    @Getter(onMethod = @__(@Nullable))
+    @Getter
     private BukkitTask task;
 
     /**
@@ -61,7 +63,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
      *
      * @param javaPlugin The JavaPlugin instance associated with this task.
      */
-    public VitalRepeatableTask(@NotNull JavaPlugin javaPlugin) {
+    public VitalRepeatableTask(@NonNull JavaPlugin javaPlugin) {
         this.javaPlugin = javaPlugin;
 
         final VitalRepeatableTaskInfo vitalRepeatableTaskInfo = getRequiredAnnotation();
@@ -75,7 +77,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
      * @param javaPlugin The JavaPlugin instance associated with this task.
      * @param interval   The interval at which this task should execute, in milliseconds.
      */
-    public VitalRepeatableTask(@NotNull JavaPlugin javaPlugin, int interval) {
+    public VitalRepeatableTask(@NonNull JavaPlugin javaPlugin, int interval) {
         this.javaPlugin = javaPlugin;
         this.interval = interval;
     }
@@ -97,7 +99,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
         this.runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if(!allowTick) {
+                if (!allowTick) {
                     return;
                 }
 

@@ -1,18 +1,23 @@
 package me.xra1ny.vital.players;
 
-import me.xra1ny.vital.tasks.VitalRepeatableTaskInfo;
+import lombok.NonNull;
+import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
+/**
+ * The default player timeout handler implementation that handles {@link VitalPlayer} session timeouts within the Vital-Framework.
+ *
+ * @author xRa1ny
+ */
 @VitalRepeatableTaskInfo(value = 50)
 public final class DefaultVitalPlayerTimeoutHandler extends VitalPlayerTimeoutHandler<VitalPlayer> {
     /**
      * Constructs a VitalPlayerTimeoutHandler instance.
      *
-     * @param javaPlugin            The JavaPlugin instance associated with this handler.
+     * @param javaPlugin         The JavaPlugin instance associated with this handler.
      * @param vitalPlayerManager The management component responsible for VitalPlayers.
      */
-    public DefaultVitalPlayerTimeoutHandler(@NotNull JavaPlugin javaPlugin, @NotNull VitalPlayerManager<VitalPlayer> vitalPlayerManager) {
+    public DefaultVitalPlayerTimeoutHandler(@NonNull JavaPlugin javaPlugin, @NonNull VitalPlayerManager<VitalPlayer> vitalPlayerManager) {
         super(javaPlugin, vitalPlayerManager);
     }
 }

@@ -1,9 +1,9 @@
 package me.xra1ny.vital.items;
 
+import lombok.NonNull;
 import me.xra1ny.vital.core.VitalListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Listens for player interactions with custom item stacks and handles their interactions accordingly.
@@ -22,7 +22,7 @@ public final class VitalItemStackListener extends VitalListener {
      *
      * @param vitalItemStackManager The management system for custom item stacks.
      */
-    public VitalItemStackListener(@NotNull VitalItemStackManager vitalItemStackManager) {
+    public VitalItemStackListener(@NonNull VitalItemStackManager vitalItemStackManager) {
         this.vitalItemStackManager = vitalItemStackManager;
     }
 
@@ -32,7 +32,7 @@ public final class VitalItemStackListener extends VitalListener {
      * @param e The PlayerInteractEvent triggered by the player's interaction.
      */
     @EventHandler
-    public void onPlayerInteract(@NotNull PlayerInteractEvent e) {
+    public void onPlayerInteract(@NonNull PlayerInteractEvent e) {
         if (e.getItem() == null) {
             // Ignore interactions with empty hands (no item in hand).
             return;

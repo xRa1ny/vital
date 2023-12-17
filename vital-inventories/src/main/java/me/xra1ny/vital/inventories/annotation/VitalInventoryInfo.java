@@ -1,7 +1,8 @@
-package me.xra1ny.vital.inventories;
+package me.xra1ny.vital.inventories.annotation;
 
+import lombok.NonNull;
+import me.xra1ny.vital.inventories.VitalInventory;
 import org.bukkit.Material;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.lang.annotation.ElementType;
@@ -10,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to provide information about a VitalInventoryMenu.
+ * Annotation used to provide information about a {@link VitalInventory}.
  *
  * @author xRa1ny
  */
@@ -22,7 +23,7 @@ public @interface VitalInventoryInfo {
      *
      * @return The title of the inventory menu.
      */
-    @NotNull
+    @NonNull
     String value();
 
     /**
@@ -38,6 +39,6 @@ public @interface VitalInventoryInfo {
      *
      * @return The background material.
      */
-    @NotNull
+    @NonNull
     Material background() default Material.AIR;
 }

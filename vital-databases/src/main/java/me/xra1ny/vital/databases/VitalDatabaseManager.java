@@ -1,7 +1,7 @@
 package me.xra1ny.vital.databases;
 
+import lombok.NonNull;
 import me.xra1ny.vital.core.VitalComponentListManager;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * The {@code VitalDatabaseManager} class manages the registration and unregistration of {@link VitalDatabase} components.
@@ -18,12 +18,12 @@ public final class VitalDatabaseManager extends VitalComponentListManager<VitalD
     }
 
     @Override
-    public void onVitalComponentRegistered(@NotNull VitalDatabase vitalDatabase) {
+    public void onVitalComponentRegistered(@NonNull VitalDatabase vitalDatabase) {
 
     }
 
     @Override
-    public void onVitalComponentUnregistered(@NotNull VitalDatabase vitalDatabase) {
+    public void onVitalComponentUnregistered(@NonNull VitalDatabase vitalDatabase) {
 
     }
 
