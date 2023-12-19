@@ -35,15 +35,15 @@ public final class SampleVitalPlugin extends JavaPlugin {
         // Here we enable Vital
         vital.enable();
 
-        final VitalConfigManager vitalConfigManager = vital.getVitalComponentManager().getVitalComponent(VitalConfigManager.class).get();
+        final VitalConfigManager vitalConfigManager = vital.getVitalComponent(VitalConfigManager.class).get();
         final SampleVitalConfig sampleVitalConfig = new SampleVitalConfig(this);
 
         vitalConfigManager.registerVitalComponent(sampleVitalConfig);
 
-        final DefaultVitalConfig defaultVitalConfig = vital.getVitalComponentManager().getVitalComponent(DefaultVitalConfig.class).get();
+        final DefaultVitalConfig defaultVitalConfig = vital.getVitalComponent(DefaultVitalConfig.class).get();
 
         if (defaultVitalConfig.vitalDatabaseEnabled) {
-            final VitalDatabaseManager vitalDatabaseManager = vital.getVitalComponentManager().getVitalComponent(VitalDatabaseManager.class).get();
+            final VitalDatabaseManager vitalDatabaseManager = vital.getVitalComponent(VitalDatabaseManager.class).get();
             final SampleVitalDatabase sampleVitalDatabase = new SampleVitalDatabase();
             final SampleVitalPlayerRepository sampleVitalPlayerRepository = new SampleVitalPlayerRepository(sampleVitalDatabase);
 
@@ -64,21 +64,21 @@ public final class SampleVitalPlugin extends JavaPlugin {
             // Here we register a sample Listener to showcase Database interactions.
             final SampleVitalDatabaseListener sampleVitalDatabaseListener = new SampleVitalDatabaseListener(sampleVitalPlayerService);
 
-            final VitalListenerManager vitalListenerManager = vital.getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
+            final VitalListenerManager vitalListenerManager = vital.getVitalComponent(VitalListenerManager.class).get();
 
             vitalListenerManager.registerVitalComponent(sampleVitalDatabaseListener);
         }
 
         // Here we register our Command.
-        final VitalCommandManager vitalCommandManager = vital.getVitalComponentManager().getVitalComponent(VitalCommandManager.class).get();
+        final VitalCommandManager vitalCommandManager = vital.getVitalComponent(VitalCommandManager.class).get();
         final SampleVitalCommand sampleVitalCommand = new SampleVitalCommand();
 
         vitalCommandManager.registerVitalComponent(sampleVitalCommand);
 
         // Here we register our Listener.
-        final VitalListenerManager vitalListenerManager = vital.getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
-        final VitalItemStackManager vitalItemStackManager = vital.getVitalComponentManager().getVitalComponent(VitalItemStackManager.class).get();
-        final VitalHologramManager vitalHologramManager = vital.getVitalComponentManager().getVitalComponent(VitalHologramManager.class).get();
+        final VitalListenerManager vitalListenerManager = vital.getVitalComponent(VitalListenerManager.class).get();
+        final VitalItemStackManager vitalItemStackManager = vital.getVitalComponent(VitalItemStackManager.class).get();
+        final VitalHologramManager vitalHologramManager = vital.getVitalComponent(VitalHologramManager.class).get();
         final SampleVitalListener sampleVitalListener = new SampleVitalListener(vitalItemStackManager, vitalHologramManager, sampleVitalConfig);
 
         vitalListenerManager.registerVitalComponent(sampleVitalListener);

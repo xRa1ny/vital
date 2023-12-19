@@ -6,7 +6,6 @@ import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponent;
 import me.xra1ny.vital.core.VitalDIUtils;
 import me.xra1ny.vital.core.VitalListenerManager;
-import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import me.xra1ny.vital.core.annotation.VitalDI;
 
 import java.util.Optional;
@@ -15,7 +14,6 @@ import java.util.Optional;
  * Manages the current state of a minigame using the Vital framework.
  */
 @Log
-@VitalAutoRegistered
 @VitalDI
 public final class VitalMinigameManager implements VitalComponent {
     private final VitalListenerManager vitalListenerManager;
@@ -83,7 +81,7 @@ public final class VitalMinigameManager implements VitalComponent {
 
     @Override
     public void onRegistered() {
-        log.info("Successfully registered VitalMinigameManagement!");
+        log.info("VitalMinigameManager online!");
     }
 
     @Override

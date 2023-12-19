@@ -1,21 +1,23 @@
 package me.xra1ny.vital.players;
 
 import lombok.NonNull;
-import org.bukkit.plugin.java.JavaPlugin;
+import me.xra1ny.vital.core.annotation.VitalDI;
+import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
 
 /**
  * The default {@link VitalPlayer} listener of the Vital-Framework.
  *
  * @author xRa1ny
  */
+@VitalDI
+@VitalManagerAutoRegistered
 public final class DefaultVitalPlayerListener extends VitalPlayerListener<VitalPlayer> {
     /**
      * Creates a new instance of VitalPlayerListener.
      *
-     * @param javaPlugin         The JavaPlugin instance associated with the listener.
      * @param vitalPlayerManager The VitalUserManagement instance to manage VitalPlayer components.
      */
-    public DefaultVitalPlayerListener(@NonNull JavaPlugin javaPlugin, @NonNull VitalPlayerManager<VitalPlayer> vitalPlayerManager) {
+    public DefaultVitalPlayerListener(@NonNull VitalPlayerManager<VitalPlayer> vitalPlayerManager) {
         super(vitalPlayerManager);
     }
 

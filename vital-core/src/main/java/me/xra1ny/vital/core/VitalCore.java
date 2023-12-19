@@ -13,6 +13,7 @@ import org.reflections.Reflections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -23,8 +24,17 @@ import java.util.function.Predicate;
  */
 @SuppressWarnings("unused")
 @Log
-public abstract class VitalCore<T extends JavaPlugin> {
+public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentListManager<VitalComponent> {
     private static VitalCore<?> instance;
+
+    /**
+     * Holds a list of all classes registered on this classpath for later use of dependency injection.
+     *
+     * @apiNote This implementation is used to improve performance across many managers since scanning takes some time.
+     */
+    @Getter
+    @NonNull
+    private static final Set<Class<? extends VitalComponent>> scannedClassSet = new Reflections().getSubTypesOf(VitalComponent.class);
 
     /**
      * The JavaPlugin instance associated with this {@link VitalCore}.
@@ -32,13 +42,6 @@ public abstract class VitalCore<T extends JavaPlugin> {
     @Getter
     @NonNull
     private final T javaPlugin;
-
-    /**
-     * The management component for handling {@link VitalComponent}.
-     */
-    @Getter
-    @NonNull
-    private final VitalComponentManager vitalComponentManager = new VitalComponentManager();
 
     @Getter
     private boolean enabled;
@@ -50,7 +53,8 @@ public abstract class VitalCore<T extends JavaPlugin> {
      */
     public VitalCore(@NonNull T javaPlugin) {
         this.javaPlugin = javaPlugin;
-        vitalComponentManager.registerVitalComponent(new VitalListenerManager(javaPlugin));
+        instance = this;
+        registerVitalComponent(new VitalListenerManager(javaPlugin));
     }
 
     /**
@@ -77,6 +81,21 @@ public abstract class VitalCore<T extends JavaPlugin> {
         return instance;
     }
 
+    @Override
+    public void onVitalComponentRegistered(@NonNull VitalComponent vitalComponent) {
+
+    }
+
+    @Override
+    public void onVitalComponentUnregistered(@NonNull VitalComponent vitalComponent) {
+
+    }
+
+    @Override
+    public Class<VitalComponent> managedType() {
+        return VitalComponent.class;
+    }
+
     /**
      * Enables the Vital-Framework, initialising needed systems.
      */
@@ -84,8 +103,6 @@ public abstract class VitalCore<T extends JavaPlugin> {
         if (enabled) {
             return;
         }
-
-        instance = this;
 
         log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
         onEnable();
@@ -104,12 +121,12 @@ public abstract class VitalCore<T extends JavaPlugin> {
             if (optionalVitalComponent.isEmpty()) {
                 log.severe("Vital attempted to automatically register " + vitalComponentClass + " but failed!");
             } else {
-                vitalComponentManager.registerVitalComponent(optionalVitalComponent.get());
+                registerVitalComponent(optionalVitalComponent.get());
             }
         }
 
         // loop over every registered manager and enable them.
-        for (VitalComponentListManager<?> vitalComponentListManager : getVitalComponentManager().getVitalComponentList(VitalComponentListManager.class)) {
+        for (VitalComponentListManager<?> vitalComponentListManager : getVitalComponentList(VitalComponentListManager.class)) {
             vitalComponentListManager.enable();
         }
 
@@ -201,5 +218,15 @@ public abstract class VitalCore<T extends JavaPlugin> {
                 .toList()) {
             player.playSound(player, sound, volume, pitch);
         }
+    }
+
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
     }
 }

@@ -3,6 +3,8 @@ package me.xra1ny.vital.commands;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -11,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author xRa1ny
  */
 @Log
+@VitalDI
 public final class VitalCommandManager extends VitalComponentListManager<VitalCommand> {
     private final JavaPlugin javaPlugin;
 
@@ -25,7 +28,7 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
 
     @Override
     public void onRegistered() {
-        log.info("Successfully registered VitalCommandManagement!");
+        log.info("VitalCommandManager online!");
     }
 
     @Override

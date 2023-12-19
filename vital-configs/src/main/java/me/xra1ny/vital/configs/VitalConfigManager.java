@@ -3,6 +3,7 @@ package me.xra1ny.vital.configs;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import me.xra1ny.vital.core.annotation.VitalDI;
 
 /**
  * Class responsible for managing {@link VitalConfig}.
@@ -10,11 +11,12 @@ import me.xra1ny.vital.core.VitalComponentListManager;
  * @author xRa1ny
  */
 @Log
+@VitalDI
 public final class VitalConfigManager extends VitalComponentListManager<VitalConfig> {
 
     @Override
     public void onRegistered() {
-        log.info("Successfully registered VitalConfigManagement!");
+        log.info("VitalConfigManager online!");
     }
 
 
