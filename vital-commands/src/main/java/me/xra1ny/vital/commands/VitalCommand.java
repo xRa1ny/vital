@@ -8,6 +8,7 @@ import me.xra1ny.vital.commands.annotation.VitalCommandInfo;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalCore;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,6 +30,7 @@ import java.util.Optional;
  *
  * @author xRa1ny
  */
+@VitalDI
 public abstract class VitalCommand implements AnnotatedVitalComponent<VitalCommandInfo>, VitalAutoRegisterable, CommandExecutor, TabExecutor {
     /**
      * The name of the command.
@@ -524,7 +526,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
     public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
         final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
-        final Optional<VitalCommandManager> optionalVitalCommandManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalCommandManager.class);
+        final Optional<VitalCommandManager> optionalVitalCommandManager = vitalCore.getVitalComponent(VitalCommandManager.class);
         final VitalCommandManager vitalCommandManager = optionalVitalCommandManager.get();
 
         vitalCommandManager.registerVitalComponent(this);

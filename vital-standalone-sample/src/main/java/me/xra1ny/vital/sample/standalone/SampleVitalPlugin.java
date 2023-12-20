@@ -22,29 +22,29 @@ public class SampleVitalPlugin extends JavaPlugin {
             // Here we register Vital's CommandManager
             final VitalCommandManager vitalCommandManager = new VitalCommandManager(getJavaPlugin());
 
-            getVitalComponentManager().registerVitalComponent(vitalCommandManager);
+            registerVitalComponent(vitalCommandManager);
 
             // Here we register Vital's ListenerManager
             final VitalListenerManager vitalListenerManager = new VitalListenerManager(getJavaPlugin());
 
-            getVitalComponentManager().registerVitalComponent(vitalListenerManager);
+            registerVitalComponent(vitalListenerManager);
 
             // Here we register Vital's ItemStackManager
             final VitalItemStackManager vitalItemStackManager = new VitalItemStackManager(getJavaPlugin());
 
-            getVitalComponentManager().registerVitalComponent(vitalItemStackManager);
+            registerVitalComponent(vitalItemStackManager);
 
             // Here we register Vital's HologramManager
             final VitalConfigManager vitalConfigManager = new VitalConfigManager();
             final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig(getJavaPlugin());
             final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
-            getVitalComponentManager().registerVitalComponent(vitalHologramManager);
+            registerVitalComponent(vitalHologramManager);
 
             // Here we register Vital's DatabaseManager
             final VitalDatabaseManager vitalDatabaseManager = new VitalDatabaseManager();
 
-            getVitalComponentManager().registerVitalComponent(vitalDatabaseManager);
+            registerVitalComponent(vitalDatabaseManager);
 
             // You get the gist, when using this approach you manually have to implement all of Vital's functionality which allows you to fully control which aspect of Vital is present in your project.
             // If you need more help regarding actually implementing functionality with Vital, follow the examples in the `vital-full-sample` module

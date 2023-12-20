@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -13,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author xRa1ny
  */
 @Log
+@VitalDI
 public final class VitalItemStackManager extends VitalComponentListManager<VitalItemStack> {
     /**
      * The cooldown handler responsible for managing cooldowns of custom item stacks.
@@ -34,7 +36,7 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
 
     @Override
     public void onRegistered() {
-        log.info("Successfully registered VitalItemStackManagement!");
+        log.info("VitalItemStackManager online!");
     }
 
     @Override

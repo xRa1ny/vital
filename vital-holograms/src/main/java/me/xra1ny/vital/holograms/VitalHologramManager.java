@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 @Log
+@VitalDI
 public final class VitalHologramManager extends VitalComponentListManager<VitalHologram> {
     private final JavaPlugin javaPlugin;
     private final VitalHologramConfig vitalHologramConfig;
@@ -80,7 +82,7 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
             }
         }
 
-        log.info("Successfully registered VitalHologramManagement!");
+        log.info("VitalHologramManager online!");
     }
 
     /**

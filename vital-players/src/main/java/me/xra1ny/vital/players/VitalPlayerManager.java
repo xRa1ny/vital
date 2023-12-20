@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
+import me.xra1ny.vital.core.annotation.VitalDI;
 
 /**
  * A management class responsible for handling and managing VitalPlayer components associated with players.
@@ -12,6 +13,7 @@ import me.xra1ny.vital.core.VitalComponentListManager;
  */
 @Getter
 @Log
+@VitalDI
 public abstract class VitalPlayerManager<T extends VitalPlayer> extends VitalComponentListManager<T> {
     private final int vitalPlayerTimeout;
 
@@ -26,7 +28,7 @@ public abstract class VitalPlayerManager<T extends VitalPlayer> extends VitalCom
 
     @Override
     public final void onRegistered() {
-        log.info("Successfully registered VitalUserManagement!");
+        log.info("VitalPlayerManager online!");
     }
 
     @Override

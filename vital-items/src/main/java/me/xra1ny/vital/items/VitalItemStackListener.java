@@ -2,6 +2,8 @@ package me.xra1ny.vital.items;
 
 import lombok.NonNull;
 import me.xra1ny.vital.core.VitalListener;
+import me.xra1ny.vital.core.annotation.VitalDI;
+import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -11,6 +13,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
  *
  * @author xRa1ny
  */
+@VitalDI
+@VitalManagerAutoRegistered
 public final class VitalItemStackListener extends VitalListener {
     /**
      * The management system for custom item stacks.

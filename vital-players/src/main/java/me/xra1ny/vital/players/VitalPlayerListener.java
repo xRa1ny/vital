@@ -3,6 +3,7 @@ package me.xra1ny.vital.players;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.xra1ny.vital.core.VitalListener;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -15,6 +16,7 @@ import java.util.Optional;
  *
  * @author xRa1ny
  */
+@VitalDI
 public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalListener {
     private final VitalPlayerManager<T> vitalPlayerManager;
 

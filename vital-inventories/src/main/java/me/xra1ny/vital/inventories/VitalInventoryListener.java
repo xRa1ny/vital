@@ -2,6 +2,9 @@ package me.xra1ny.vital.inventories;
 
 import lombok.NonNull;
 import me.xra1ny.vital.core.VitalListener;
+import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
+import me.xra1ny.vital.core.annotation.VitalDI;
+import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,6 +22,8 @@ import java.util.Optional;
  *
  * @author xRa1ny
  */
+@VitalDI
+@VitalManagerAutoRegistered
 public final class VitalInventoryListener extends VitalListener {
     /**
      * Handles the event when a player opens an inventory.

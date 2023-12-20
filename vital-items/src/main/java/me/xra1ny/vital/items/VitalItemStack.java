@@ -197,7 +197,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
     public final void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
         final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
-        final Optional<VitalItemStackManager> optionalVitalItemStackManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalItemStackManager.class);
+        final Optional<VitalItemStackManager> optionalVitalItemStackManager = vitalCore.getVitalComponent(VitalItemStackManager.class);
         final VitalItemStackManager vitalItemStackManager = optionalVitalItemStackManager.get();
 
         vitalItemStackManager.registerVitalComponent(this);

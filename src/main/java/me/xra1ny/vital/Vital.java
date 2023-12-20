@@ -27,8 +27,6 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
-    private static Vital<?> instance;
-
     /**
      * Constructs a new instance of the Vital-Framework.
      *
@@ -44,38 +42,38 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         final VitalConfigManager vitalConfigManager = new VitalConfigManager();
         final DefaultVitalConfig defaultVitalConfig = new DefaultVitalConfig(getJavaPlugin());
 
-        getVitalComponentManager().registerVitalComponent(vitalConfigManager);
-        getVitalComponentManager().registerVitalComponent(defaultVitalConfig);
+        registerVitalComponent(vitalConfigManager);
+        registerVitalComponent(defaultVitalConfig);
 
         // Register VitalPlayerManagement if no other player management has yet been registered by implementing programmer.
         final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
         final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(defaultVitalConfig.vitalPlayerTimeout);
-        final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(getJavaPlugin(), defaultVitalPlayerManager);
+        final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(defaultVitalPlayerManager);
         final DefaultVitalPlayerTimeoutHandler defaultVitalPlayerTimeoutHandler = new DefaultVitalPlayerTimeoutHandler(getJavaPlugin(), defaultVitalPlayerManager);
 
-        getVitalComponentManager().registerVitalComponent(defaultVitalPlayerManager);
+        registerVitalComponent(defaultVitalPlayerManager);
         vitalListenerManager.registerVitalComponent(defaultVitalPlayerListener);
-        getVitalComponentManager().registerVitalComponent(defaultVitalPlayerTimeoutHandler);
+        registerVitalComponent(defaultVitalPlayerTimeoutHandler);
 
         // Register VitalCommandManagement
         final VitalCommandManager vitalCommandManager = new VitalCommandManager(getJavaPlugin());
 
-        getVitalComponentManager().registerVitalComponent(vitalCommandManager);
+        registerVitalComponent(vitalCommandManager);
 
         // Register VitalHologramManagement
         final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig(getJavaPlugin());
         final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
-        getVitalComponentManager().registerVitalComponent(vitalHologramManager);
+        registerVitalComponent(vitalHologramManager);
 
         // Register VitalItemStackManagement and VitalItemStackCooldownHandler
         final VitalItemStackManager vitalItemStackManager = new VitalItemStackManager(getJavaPlugin());
         final VitalItemStackListener vitalItemStackListener = new VitalItemStackListener(vitalItemStackManager);
         final VitalItemStackCooldownHandler vitalItemStackCooldownHandler = new VitalItemStackCooldownHandler(getJavaPlugin(), vitalItemStackManager);
 
-        getVitalComponentManager().registerVitalComponent(vitalItemStackManager);
+        registerVitalComponent(vitalItemStackManager);
         vitalListenerManager.registerVitalComponent(vitalItemStackListener);
-        getVitalComponentManager().registerVitalComponent(vitalItemStackCooldownHandler);
+        registerVitalComponent(vitalItemStackCooldownHandler);
 
         // Register VitalInventoryMenuListener
         final VitalInventoryListener vitalInventoryListener = new VitalInventoryListener();
@@ -86,11 +84,8 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
             // Register VitalDatabaseManager
             final VitalDatabaseManager vitalDatabaseManager = new VitalDatabaseManager();
 
-            getVitalComponentManager().registerVitalComponent(vitalDatabaseManager);
+            registerVitalComponent(vitalDatabaseManager);
         }
-
-        // finally register this instance for singleton access point.
-        instance = this;
     }
 
     /**
@@ -99,13 +94,13 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @apiNote This method is implemented for convenience for registering custom player management.
      */
     public void unregisterDefaultVitalPlayerManagement() {
-        final Optional<DefaultVitalPlayerManager> optionalDefaultVitalPlayerManager = getVitalComponentManager().getVitalComponent(DefaultVitalPlayerManager.class);
-        final Optional<DefaultVitalPlayerListener> optionalDefaultVitalPlayerListener = getVitalComponentManager().getVitalComponent(DefaultVitalPlayerListener.class);
-        final Optional<DefaultVitalPlayerTimeoutHandler> optionalDefaultVitalPlayerTimeoutHandler = getVitalComponentManager().getVitalComponent(DefaultVitalPlayerTimeoutHandler.class);
+        final Optional<DefaultVitalPlayerManager> optionalDefaultVitalPlayerManager = getVitalComponent(DefaultVitalPlayerManager.class);
+        final Optional<DefaultVitalPlayerListener> optionalDefaultVitalPlayerListener = getVitalComponent(DefaultVitalPlayerListener.class);
+        final Optional<DefaultVitalPlayerTimeoutHandler> optionalDefaultVitalPlayerTimeoutHandler = getVitalComponent(DefaultVitalPlayerTimeoutHandler.class);
 
-        optionalDefaultVitalPlayerManager.ifPresent(getVitalComponentManager()::unregisterVitalComponent);
-        optionalDefaultVitalPlayerListener.ifPresent(getVitalComponentManager()::unregisterVitalComponent);
-        optionalDefaultVitalPlayerTimeoutHandler.ifPresent(getVitalComponentManager()::unregisterVitalComponent);
+        optionalDefaultVitalPlayerManager.ifPresent(this::unregisterVitalComponent);
+        optionalDefaultVitalPlayerListener.ifPresent(this::unregisterVitalComponent);
+        optionalDefaultVitalPlayerTimeoutHandler.ifPresent(this::unregisterVitalComponent);
     }
 
     /**
@@ -127,14 +122,14 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     public <P extends VitalPlayer, M extends VitalPlayerManager<P>, L extends VitalPlayerListener<P>, TH extends VitalPlayerTimeoutHandler<P>> void registerSimpleCustomPlayerManagement(@NonNull Class<P> customVitalPlayerClass, @NonNull Class<M> customVitalPlayerManagerClass, @NonNull Class<L> customVitalPlayerListenerClass, @NonNull Class<TH> customVitalPlayerTimeoutHandlerClass, int customVitalPlayerTimeout) {
         unregisterDefaultVitalPlayerManagement();
 
-        final VitalListenerManager vitalListenerManager = getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
-        final M customVitalPlayerManager = customVitalPlayerManagerClass.getDeclaredConstructor().newInstance();
-        final L customVitalPlayerListener = customVitalPlayerListenerClass.getDeclaredConstructor(JavaPlugin.class, VitalPlayerManager.class, int.class).newInstance(getJavaPlugin(), customVitalPlayerManager, customVitalPlayerTimeout);
-        final TH customVitalPlayerTimeoutHandler = customVitalPlayerTimeoutHandlerClass.getDeclaredConstructor(JavaPlugin.class, VitalPlayerManager.class).newInstance(getJavaPlugin(), customVitalPlayerManager);
+        final VitalListenerManager vitalListenerManager = getVitalComponent(VitalListenerManager.class).get();
+        final M customVitalPlayerManager = customVitalPlayerManagerClass.getDeclaredConstructor(int.class).newInstance(customVitalPlayerTimeout);
+        final L customVitalPlayerListener = customVitalPlayerListenerClass.getDeclaredConstructor(customVitalPlayerManagerClass, customVitalPlayerClass.getClass()).newInstance(customVitalPlayerManager, customVitalPlayerClass);
+        final TH customVitalPlayerTimeoutHandler = customVitalPlayerTimeoutHandlerClass.getDeclaredConstructor(JavaPlugin.class, customVitalPlayerManagerClass).newInstance(getJavaPlugin(), customVitalPlayerManager);
 
-        getVitalComponentManager().registerVitalComponent(customVitalPlayerManager);
+        registerVitalComponent(customVitalPlayerManager);
         vitalListenerManager.registerVitalComponent(customVitalPlayerListener);
-        getVitalComponentManager().registerVitalComponent(customVitalPlayerTimeoutHandler);
+        registerVitalComponent(customVitalPlayerTimeoutHandler);
     }
 
     /**
@@ -148,14 +143,14 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     public <P extends VitalPlayer> void registerSimpleCustomPlayerManagement(@NonNull Class<P> customVitalPlayerClass, int customVitalPlayerTimeout) {
         unregisterDefaultVitalPlayerManagement();
 
-        final VitalListenerManager vitalListenerManager = getVitalComponentManager().getVitalComponent(VitalListenerManager.class).get();
+        final VitalListenerManager vitalListenerManager = getVitalComponent(VitalListenerManager.class).get();
         final CustomVitalPlayerManager<P> customVitalPlayerManager = new CustomVitalPlayerManager<>(customVitalPlayerTimeout);
-        final CustomVitalPlayerListener<P> customVitalPlayerListener = new CustomVitalPlayerListener<>(getJavaPlugin(), customVitalPlayerManager, customVitalPlayerClass);
+        final CustomVitalPlayerListener<P> customVitalPlayerListener = new CustomVitalPlayerListener<>(customVitalPlayerManager, customVitalPlayerClass);
         final CustomVitalPlayerTimeoutHandler<P> customVitalPlayerTimeoutHandler = new CustomVitalPlayerTimeoutHandler<>(getJavaPlugin(), customVitalPlayerManager);
 
-        getVitalComponentManager().registerVitalComponent(customVitalPlayerManager);
+        registerVitalComponent(customVitalPlayerManager);
         vitalListenerManager.registerVitalComponent(customVitalPlayerListener);
-        getVitalComponentManager().registerVitalComponent(customVitalPlayerTimeoutHandler);
+        registerVitalComponent(customVitalPlayerTimeoutHandler);
     }
 
     /**
@@ -164,7 +159,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<VitalConfigManager> getVitalConfigManager() {
-        return getVitalComponentManager().getVitalComponent(VitalConfigManager.class);
+        return getVitalComponent(VitalConfigManager.class);
     }
 
     /**
@@ -173,7 +168,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<VitalListenerManager> getVitalListenerManager() {
-        return getVitalComponentManager().getVitalComponent(VitalListenerManager.class);
+        return getVitalComponent(VitalListenerManager.class);
     }
 
     /**
@@ -182,7 +177,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<DefaultVitalPlayerManager> getDefaultVitalPlayerManager() {
-        return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerManager.class);
+        return getVitalComponent(DefaultVitalPlayerManager.class);
     }
 
     /**
@@ -191,7 +186,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<DefaultVitalPlayerListener> getDefaultVitalPlayerListener() {
-        return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerListener.class);
+        return getVitalComponent(DefaultVitalPlayerListener.class);
     }
 
     /**
@@ -200,7 +195,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<DefaultVitalPlayerTimeoutHandler> getDefaultVitalPlayerTimeoutHandler() {
-        return getVitalComponentManager().getVitalComponent(DefaultVitalPlayerTimeoutHandler.class);
+        return getVitalComponent(DefaultVitalPlayerTimeoutHandler.class);
     }
 
     /**
@@ -210,7 +205,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      */
     @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerManager> getCustomVitalPlayerManager() {
-        return getVitalComponentManager().getVitalComponent(CustomVitalPlayerManager.class);
+        return getVitalComponent(CustomVitalPlayerManager.class);
     }
 
     /**
@@ -220,7 +215,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      */
     @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerListener> getCustomVitalPlayerListener() {
-        return getVitalComponentManager().getVitalComponent(CustomVitalPlayerListener.class);
+        return getVitalComponent(CustomVitalPlayerListener.class);
     }
 
     /**
@@ -230,7 +225,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      */
     @SuppressWarnings("rawtypes")
     public Optional<CustomVitalPlayerTimeoutHandler> getCustomVitalPlayerTimeoutHandler() {
-        return getVitalComponentManager().getVitalComponent(CustomVitalPlayerTimeoutHandler.class);
+        return getVitalComponent(CustomVitalPlayerTimeoutHandler.class);
     }
 
     /**
@@ -239,7 +234,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<VitalCommandManager> getVitalCommandManager() {
-        return getVitalComponentManager().getVitalComponent(VitalCommandManager.class);
+        return getVitalComponent(VitalCommandManager.class);
     }
 
     /**
@@ -248,7 +243,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<VitalHologramManager> getVitalHologramManager() {
-        return getVitalComponentManager().getVitalComponent(VitalHologramManager.class);
+        return getVitalComponent(VitalHologramManager.class);
     }
 
     /**
@@ -257,7 +252,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<VitalItemStackManager> getVitalItemStackManager() {
-        return getVitalComponentManager().getVitalComponent(VitalItemStackManager.class);
+        return getVitalComponent(VitalItemStackManager.class);
     }
 
     /**
@@ -266,19 +261,14 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * @return An {@link Optional} holding either the fetched value; or empty.
      */
     public Optional<VitalDatabaseManager> getVitalDatabaseManager() {
-        return getVitalComponentManager().getVitalComponent(VitalDatabaseManager.class);
+        return getVitalComponent(VitalDatabaseManager.class);
     }
 
-    /**
-     * Singleton access-point for {@link Vital} instance.
-     *
-     * @param type Your plugin's main Class.
-     * @param <T>  The type of your plugin's main class.
-     * @return The {@link Vital} instance.
-     * @throws ClassCastException If the provided type and {@link Vital} plugin instance don't match.
-     */
-    @SuppressWarnings("unchecked")
+    public static Vital<?> getVitalInstance() {
+        return (Vital<?>) getVitalCoreInstance();
+    }
+
     public static <T extends JavaPlugin> Vital<T> getVitalInstance(@NonNull Class<T> type) {
-        return (Vital<T>) instance;
+        return (Vital<T>) getVitalCoreInstance(type);
     }
 }

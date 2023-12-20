@@ -4,7 +4,6 @@ import lombok.NonNull;
 import me.xra1ny.vital.players.VitalPlayer;
 import me.xra1ny.vital.players.VitalPlayerListener;
 import me.xra1ny.vital.players.VitalPlayerManager;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Defines a custom player listener for the specified {@link VitalPlayer} type.
@@ -18,11 +17,10 @@ public class CustomVitalPlayerListener<T extends VitalPlayer> extends VitalPlaye
     /**
      * Creates a new instance of VitalPlayerListener.
      *
-     * @param javaPlugin             The {@link JavaPlugin} instance associated with the listener.
      * @param vitalPlayerManager     The {@link VitalPlayerManager} instance to manage {@link VitalPlayer} components.
      * @param customVitalPlayerClass The {@link VitalPlayer} to manage.
      */
-    public CustomVitalPlayerListener(@NonNull JavaPlugin javaPlugin, @NonNull VitalPlayerManager<T> vitalPlayerManager, @NonNull Class<T> customVitalPlayerClass) {
+    public CustomVitalPlayerListener(@NonNull VitalPlayerManager<T> vitalPlayerManager, @NonNull Class<T> customVitalPlayerClass) {
         super(vitalPlayerManager);
 
         this.customVitalPlayerClass = customVitalPlayerClass;

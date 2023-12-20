@@ -10,6 +10,7 @@ import me.xra1ny.vital.configs.annotation.VitalConfigPath;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalCore;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,6 +30,7 @@ import java.util.*;
  *
  * @author xRa1ny
  */
+@VitalDI
 public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfigInfo>, VitalAutoRegisterable {
     /**
      * The name of the configuration file.
@@ -363,7 +365,7 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
         final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
-        final Optional<VitalConfigManager> optionalVitalConfigManager = vitalCore.getVitalComponentManager().getVitalComponent(VitalConfigManager.class);
+        final Optional<VitalConfigManager> optionalVitalConfigManager = vitalCore.getVitalComponent(VitalConfigManager.class);
         final VitalConfigManager vitalConfigManager = optionalVitalConfigManager.get();
 
         vitalConfigManager.registerVitalComponent(this);

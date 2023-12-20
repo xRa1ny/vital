@@ -1,6 +1,7 @@
 package me.xra1ny.vital.players;
 
 import lombok.NonNull;
+import me.xra1ny.vital.core.annotation.VitalDI;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
 import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @param <T> The type of VitalPlayer to manage.
  * @author xRa1ny
  */
+@VitalDI
 @VitalRepeatableTaskInfo(value = 50)
 public class VitalPlayerTimeoutHandler<T extends VitalPlayer> extends VitalRepeatableTask {
     private final VitalPlayerManager<T> vitalPlayerManager;
@@ -62,15 +64,5 @@ public class VitalPlayerTimeoutHandler<T extends VitalPlayer> extends VitalRepea
                 vitalPlayer.setTimeout(vitalPlayer.getTimeout() + 1);
             }
         }
-    }
-
-    @Override
-    public final void onRegistered() {
-
-    }
-
-    @Override
-    public final void onUnregistered() {
-
     }
 }

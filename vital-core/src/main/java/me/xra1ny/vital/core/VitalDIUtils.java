@@ -6,7 +6,6 @@ import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -32,16 +31,15 @@ public class VitalDIUtils {
             // check if instance is already existent on base vital manager...
             final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) type;
             final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
-            final VitalComponentManager vitalComponentManager = vitalCore.getVitalComponentManager();
 
-            final Optional<? extends VitalComponent> optionalVitalComponent = vitalComponentManager.getVitalComponent(vitalComponentClass);
+            final Optional<? extends VitalComponent> optionalVitalComponent = vitalCore.getVitalComponent(vitalComponentClass);
 
             if (optionalVitalComponent.isPresent()) {
                 return (Optional<T>) optionalVitalComponent;
             }
 
             // if not, attempt to get instance from any manager on vital...
-            for (VitalComponentListManager<?> vitalComponentListManager : vitalComponentManager.getVitalComponentList(VitalComponentListManager.class)) {
+            for (VitalComponentListManager<?> vitalComponentListManager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
                 if (!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
                     continue;
                 }
@@ -76,7 +74,7 @@ public class VitalDIUtils {
                 final T instance = defaultConstructor.newInstance();
 
                 return Optional.of(instance);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            } catch (Exception e) {
                 log.severe("Vital has encountered an internal error while trying to create a dependency injected instance of type " + type);
                 log.severe("Is the type instantiable? (class, not abstract, public)");
             }
@@ -99,9 +97,8 @@ public class VitalDIUtils {
                     if (VitalComponentListManager.class.isAssignableFrom(parameter.getType())) {
                         final Class<? extends VitalComponentListManager<?>> managerClass = (Class<? extends VitalComponentListManager<?>>) parameter.getType();
                         final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
-                        final VitalComponentManager vitalComponentManager = vitalCore.getVitalComponentManager();
 
-                        final Optional<? extends VitalComponentListManager<?>> optionalVitalComponentListManager = vitalComponentManager.getVitalComponent(managerClass);
+                        final Optional<? extends VitalComponentListManager<?>> optionalVitalComponentListManager = vitalCore.getVitalComponent(managerClass);
 
                         if(optionalVitalComponentListManager.isPresent()) {
                             injectableList.add(optionalVitalComponentListManager.get());
@@ -113,9 +110,8 @@ public class VitalDIUtils {
                     // normal vital component. VitalConfig
                     final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) parameter.getType();
                     final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
-                    final VitalComponentManager vitalComponentManager = vitalCore.getVitalComponentManager();
 
-                    final Optional<? extends VitalComponent> optionalVitalComponent = vitalComponentManager.getVitalComponent(vitalComponentClass);
+                    final Optional<? extends VitalComponent> optionalVitalComponent = vitalCore.getVitalComponent(vitalComponentClass);
 
                     if (optionalVitalComponent.isPresent()) {
                         injectableList.add(optionalVitalComponent.get());
@@ -124,7 +120,7 @@ public class VitalDIUtils {
                     }
 
                     // if not present on base.
-                    for (VitalComponentListManager<?> vitalComponentListManager : vitalComponentManager.getVitalComponentList(VitalComponentListManager.class)) {
+                    for (VitalComponentListManager<?> vitalComponentListManager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
                         if (!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
                             continue;
                         }
@@ -144,13 +140,12 @@ public class VitalDIUtils {
                     final T instance = (T) constructor.newInstance(injectableList.toArray());
 
                     return Optional.of(instance);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
+                } catch (Exception ex) {
                     log.severe("Vital could not create a dependency injected instance of " + type);
                     log.severe("Vital has deciphered the following constructor viable for dependency injection: " + constructor);
                     log.severe("Vital has deciphered the following arguments to inject into said constructor: " + injectableList);
                     log.severe("Did you declare a circular dependency?");
                     log.severe("Are you sure all constructor arguments are viable for dependeny injection? (@VitalDI, @VitalManagerAutoregistered, @VitalAutoregistered, VitalComponent)");
-                    ex.printStackTrace();
                 }
 
             }
