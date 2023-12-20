@@ -141,6 +141,16 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
      */
     public abstract void onEnable();
 
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
+    }
+
     /**
      * Broadcasts a message to all players currently connected to the server.
      * Identical to {@link Bukkit#broadcastMessage(String)}.

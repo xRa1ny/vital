@@ -263,4 +263,12 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     public Optional<VitalDatabaseManager> getVitalDatabaseManager() {
         return getVitalComponent(VitalDatabaseManager.class);
     }
+
+    public static Vital<?> getVitalInstance() {
+        return (Vital<?>) getVitalCoreInstance();
+    }
+
+    public static <T extends JavaPlugin> Vital<T> getVitalInstance(@NonNull Class<T> type) {
+        return (Vital<T>) getVitalCoreInstance(type);
+    }
 }
