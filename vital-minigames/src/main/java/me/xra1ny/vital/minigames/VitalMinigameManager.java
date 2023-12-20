@@ -71,11 +71,9 @@ public final class VitalMinigameManager implements VitalComponent {
             }
 
             vitalListenerManager.unregisterVitalComponent(this.vitalMinigameState);
-            this.vitalMinigameState.onUnregistered();
         }
 
         vitalListenerManager.registerVitalComponent(vitalMinigameState);
-        vitalMinigameState.onRegistered();
         this.vitalMinigameState = vitalMinigameState;
     }
 
