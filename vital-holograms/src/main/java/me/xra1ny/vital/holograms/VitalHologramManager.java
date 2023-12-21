@@ -60,7 +60,7 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
     public void removeVitalHologramFromConfig(@NonNull VitalHologram vitalHologram) {
         final Optional<List<VitalHologram>> optionalVitalHologramList = Optional.ofNullable(vitalHologramConfig.getVitalHologramList());
 
-        if(optionalVitalHologramList.isEmpty()) {
+        if (optionalVitalHologramList.isEmpty()) {
             return;
         }
 

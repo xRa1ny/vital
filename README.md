@@ -24,6 +24,7 @@ development:
 - 🎮**vital-minigames**: Level up your server with complex minigames while keeping code clean and organized.
 - 💾**vital-databases**: Implemented with the Hibernate Framework, this module provides an OOP-Driven JPA Entity System
   like the Spring Framework, organize your DB-Entities with Repositories and Services!
+- 🛠️**vital-utils**: Standalone utilities module offering useful and helpful methods many developers might need.
 
 ## 📦Flexible Integration
 

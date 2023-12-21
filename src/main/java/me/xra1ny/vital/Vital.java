@@ -43,7 +43,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         final DefaultVitalConfig defaultVitalConfig = new DefaultVitalConfig(getJavaPlugin());
 
         registerVitalComponent(vitalConfigManager);
-        registerVitalComponent(defaultVitalConfig);
+        vitalConfigManager.registerVitalComponent(defaultVitalConfig);
 
         // Register VitalPlayerManagement if no other player management has yet been registered by implementing programmer.
         final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
@@ -64,6 +64,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig(getJavaPlugin());
         final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
+        vitalConfigManager.registerVitalComponent(vitalHologramConfig);
         registerVitalComponent(vitalHologramManager);
 
         // Register VitalItemStackManagement and VitalItemStackCooldownHandler

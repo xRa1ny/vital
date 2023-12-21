@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 /**
  * Specifies that the annotated class is viable for automatic registration when its respective manager instance is enabled.
  *
- * @apiNote Autoregistered Components also need to be annotated with {@link VitalDI} so Vital is able to inject all needed dependencies for creation.
  * @author xRa1ny
+ * @apiNote Autoregistered Components also need to be annotated with {@link VitalDI} so Vital is able to inject all needed dependencies for creation.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

@@ -54,6 +54,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
                 .name(info.name())
                 .amount(info.amount())
                 .lore(List.of(info.lore()))
+                .namespacedKey(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING, UUID.randomUUID().toString())
                 .itemFlags(List.of(info.itemFlags()))
                 .unbreakable(info.unbreakable())
                 .build();

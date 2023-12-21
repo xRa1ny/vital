@@ -3,7 +3,6 @@ package me.xra1ny.vital.commands;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
-import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
 

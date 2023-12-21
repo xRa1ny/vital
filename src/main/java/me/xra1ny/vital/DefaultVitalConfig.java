@@ -6,7 +6,6 @@ import me.xra1ny.vital.configs.VitalConfig;
 import me.xra1ny.vital.configs.annotation.VitalConfigInfo;
 import me.xra1ny.vital.configs.annotation.VitalConfigPath;
 import me.xra1ny.vital.core.annotation.VitalDI;
-import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
 import me.xra1ny.vital.players.VitalPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,7 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author xRa1ny
  */
 @VitalDI
-@VitalManagerAutoRegistered
 @EqualsAndHashCode(callSuper = true)
 @VitalConfigInfo("config.yml")
 public final class DefaultVitalConfig extends VitalConfig {

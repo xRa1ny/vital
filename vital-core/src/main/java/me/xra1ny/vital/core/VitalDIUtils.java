@@ -100,7 +100,7 @@ public class VitalDIUtils {
 
                         final Optional<? extends VitalComponentListManager<?>> optionalVitalComponentListManager = vitalCore.getVitalComponent(managerClass);
 
-                        if(optionalVitalComponentListManager.isPresent()) {
+                        if (optionalVitalComponentListManager.isPresent()) {
                             injectableList.add(optionalVitalComponentListManager.get());
 
                             continue;

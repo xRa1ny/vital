@@ -69,6 +69,18 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
     }
 
     /**
+     * Checks if the given {@link VitalComponent} is registered on this manager.
+     *
+     * @param vitalComponent The {@link VitalComponent}.
+     * @return true if the {@link VitalComponent} is registered, false otherwise.
+     */
+    public final boolean isVitalComponentRegistered(@NonNull T vitalComponent) {
+        return vitalComponentList.contains(vitalComponent)
+                || getVitalComponent(vitalComponent.getUniqueId()).isPresent()
+                || getVitalComponent(vitalComponent.getName()).isPresent();
+    }
+
+    /**
      * Gets the VitalComponent by the specified uniqueId.
      *
      * @param vitalComponentUniqueId The uniqueId of the VitalComponent.
@@ -112,7 +124,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @param vitalComponent The VitalComponent to register.
      */
     public final void registerVitalComponent(@NonNull T vitalComponent) {
-        if (isVitalComponentRegistered(vitalComponent.getUniqueId())) {
+        if (isVitalComponentRegistered(vitalComponent)) {
             return;
         }
 
