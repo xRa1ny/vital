@@ -75,9 +75,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @return true if the {@link VitalComponent} is registered, false otherwise.
      */
     public final boolean isVitalComponentRegistered(@NonNull T vitalComponent) {
-        return vitalComponentList.contains(vitalComponent)
-                || getVitalComponent(vitalComponent.getUniqueId()).isPresent()
-                || getVitalComponent(vitalComponent.getName()).isPresent();
+        return vitalComponentList.contains(vitalComponent);
     }
 
     /**
