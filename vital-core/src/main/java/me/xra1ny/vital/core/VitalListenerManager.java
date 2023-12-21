@@ -2,7 +2,6 @@ package me.xra1ny.vital.core;
 
 import lombok.NonNull;
 import lombok.extern.java.Log;
-import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -15,7 +14,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 @Log
 @VitalDI
-@VitalAutoRegistered
 public final class VitalListenerManager extends VitalComponentListManager<VitalListener> {
     private final JavaPlugin javaPlugin;
 

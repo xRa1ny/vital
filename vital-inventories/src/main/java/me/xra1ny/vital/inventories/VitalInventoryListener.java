@@ -2,9 +2,7 @@ package me.xra1ny.vital.inventories;
 
 import lombok.NonNull;
 import me.xra1ny.vital.core.VitalListener;
-import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import me.xra1ny.vital.core.annotation.VitalDI;
-import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -23,7 +21,6 @@ import java.util.Optional;
  * @author xRa1ny
  */
 @VitalDI
-@VitalManagerAutoRegistered
 public final class VitalInventoryListener extends VitalListener {
     /**
      * Handles the event when a player opens an inventory.
@@ -66,7 +63,7 @@ public final class VitalInventoryListener extends VitalListener {
             // If the User clicks outside of Inventory Window, close it
             final Optional<Inventory> optionalPreviousInventory = Optional.ofNullable(vitalInventory.getPreviousInventory());
 
-            if(optionalClickedInventory.isEmpty() && optionalPreviousInventory.isPresent()) {
+            if (optionalClickedInventory.isEmpty() && optionalPreviousInventory.isPresent()) {
                 final Inventory previousInventory = optionalPreviousInventory.get();
 
                 player.openInventory(previousInventory);
@@ -86,7 +83,7 @@ public final class VitalInventoryListener extends VitalListener {
             // If the User clicks outside of Inventory Window, close it
             final Optional<Inventory> optionalPreviousInventory = Optional.ofNullable(vitalInventoryBuilder.getPreviousInventory());
 
-            if(optionalClickedInventory.isEmpty() && optionalPreviousInventory.isPresent()) {
+            if (optionalClickedInventory.isEmpty() && optionalPreviousInventory.isPresent()) {
                 final Inventory previousInventory = optionalPreviousInventory.get();
 
                 player.openInventory(previousInventory);
@@ -130,7 +127,7 @@ public final class VitalInventoryListener extends VitalListener {
             // check the action of our click result, if set to `CLOSE_INVENTORY`, close the inventory accordingly.
             if (inventoryAction == VitalInventoryClickEvent.Action.CLOSE_INVENTORY) {
                 player.closeInventory();
-            }else if(inventoryAction == VitalInventoryClickEvent.Action.OPEN_PREVIOUS_INVENTORY) {
+            } else if (inventoryAction == VitalInventoryClickEvent.Action.OPEN_PREVIOUS_INVENTORY) {
                 final Optional<Inventory> optionalPreviousBuilderInventory = Optional.ofNullable(vitalInventoryBuilder.getPreviousInventory());
 
                 if (optionalPreviousBuilderInventory.isPresent()) {

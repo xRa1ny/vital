@@ -6,7 +6,6 @@ import lombok.Setter;
 import me.xra1ny.vital.configs.VitalConfig;
 import me.xra1ny.vital.configs.annotation.VitalConfigInfo;
 import me.xra1ny.vital.core.annotation.VitalDI;
-import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import java.util.List;
  * @author xRa1ny
  */
 @VitalDI
-@VitalManagerAutoRegistered
 @VitalConfigInfo("holograms.yml")
 public final class VitalHologramConfig extends VitalConfig {
     /**

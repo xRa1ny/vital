@@ -1,7 +1,8 @@
 package me.xra1ny.vital.samples.full.command;
 
 import lombok.NonNull;
-import me.xra1ny.vital.commands.*;
+import me.xra1ny.vital.commands.VitalCommand;
+import me.xra1ny.vital.commands.VitalCommandReturnState;
 import me.xra1ny.vital.commands.annotation.VitalCommandArg;
 import me.xra1ny.vital.commands.annotation.VitalCommandArgHandler;
 import me.xra1ny.vital.commands.annotation.VitalCommandInfo;

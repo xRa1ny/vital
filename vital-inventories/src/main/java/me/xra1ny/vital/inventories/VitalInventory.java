@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.inventories.annotation.VitalInventoryInfo;
-import me.xra1ny.vital.items.VitalItemStackBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -15,6 +14,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -67,10 +67,14 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
 
         this.title = info.value();
         this.size = info.size();
-        this.background = new VitalItemStackBuilder()
-                .name(null)
-                .type(info.background())
-                .build();
+
+        final ItemStack backgroundItemStack = new ItemStack(info.background());
+        final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
+
+        backgroundItemMeta.setDisplayName(null);
+        backgroundItemStack.setItemMeta(backgroundItemMeta);
+
+        this.background = backgroundItemStack;
         this.previousInventory = null;
     }
 
@@ -84,10 +88,14 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
 
         this.title = info.value();
         this.size = info.size();
-        this.background = new VitalItemStackBuilder()
-                .name(null)
-                .type(info.background())
-                .build();
+
+        final ItemStack backgroundItemStack = new ItemStack(info.background());
+        final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
+
+        backgroundItemMeta.setDisplayName(null);
+        backgroundItemStack.setItemMeta(backgroundItemMeta);
+
+        this.background = backgroundItemStack;
         this.previousInventory = previousInventory;
     }
 
