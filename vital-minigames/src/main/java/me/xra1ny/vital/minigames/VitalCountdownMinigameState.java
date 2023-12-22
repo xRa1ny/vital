@@ -53,6 +53,11 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
         run(javaPlugin, interval);
     }
 
+    /**
+     * Gets the {@link JavaPlugin} instance attached to this {@link VitalCountdownMinigameState}.
+     *
+     * @return The {@link JavaPlugin} instance attached to this {@link VitalCountdownMinigameState}.
+     */
     public JavaPlugin getJavaPlugin() {
         return vitalRepeatableTask.getJavaPlugin();
     }
