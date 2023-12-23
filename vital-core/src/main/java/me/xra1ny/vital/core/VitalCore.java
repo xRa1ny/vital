@@ -42,6 +42,33 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
     @Getter
     private boolean enabled;
 
+    @Getter
+    private boolean usingVitalConfigs;
+
+    @Getter
+    private boolean usingVitalHolograms;
+
+    @Getter
+    private boolean usingVitalPlayers;
+
+    @Getter
+    private boolean usingVitalCommands;
+
+    @Getter
+    private boolean usingVitalItems;
+
+    @Getter
+    private boolean usingVitalInventories;
+
+    @Getter
+    private boolean usingVitalDatabases;
+
+    @Getter
+    private boolean usingVitalMinigames;
+
+    @Getter
+    private boolean usingVitalUtils;
+
     /**
      * Constructs a new {@link VitalCore} instance.
      *
@@ -101,6 +128,61 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
         }
 
         log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
+
+        try {
+            Class.forName("me.xra1ny.vital.configs.VitalConfigManager");
+
+            usingVitalConfigs = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.holograms.VitalHologramManager");
+
+            usingVitalHolograms = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.players.VitalPlayerManager");
+
+            usingVitalPlayers = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.commands.VitalCommandManager");
+
+            usingVitalCommands = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.items.VitalItemStackManager");
+
+            usingVitalItems = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.inventories.VitalInventoryListener");
+
+            usingVitalInventories = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.databases.VitalDatabaseManager");
+
+            usingVitalDatabases = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.minigames.VitalMinigameManager");
+
+            usingVitalDatabases = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.utils.VitalUtils");
+
+            usingVitalUtils = true;
+        }catch (ClassNotFoundException ignored) {}
+
         onEnable();
 
         // hold all scanned and ready for dependency injected classes.

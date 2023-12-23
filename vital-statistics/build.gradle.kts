@@ -3,7 +3,6 @@ version = "1.0"
 
 dependencies {
     implementation(project(":vital-core"))
-    implementation(project(":vital-core-processor"))
     implementation(project(":vital-commands"))
 }
 
