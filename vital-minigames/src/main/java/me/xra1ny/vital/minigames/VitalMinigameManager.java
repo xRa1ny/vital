@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 @Log
 @VitalDI
-public class VitalMinigameManager {
+public final class VitalMinigameManager {
     private static VitalMinigameManager instance;
     private final VitalListenerManager vitalListenerManager;
 

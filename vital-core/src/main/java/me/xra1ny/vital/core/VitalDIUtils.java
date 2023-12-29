@@ -88,6 +88,12 @@ public class VitalDIUtils {
                         break;
                     }
 
+                    if(VitalCore.class.isAssignableFrom(parameter.getType())) {
+                        injectableList.add(VitalCore.getVitalCoreInstance());
+
+                        continue;
+                    }
+
                     if (JavaPlugin.class.isAssignableFrom(parameter.getType())) {
                         injectableList.add(VitalCore.getVitalCoreInstance().getJavaPlugin());
 
@@ -102,6 +108,19 @@ public class VitalDIUtils {
 
                         if (optionalVitalComponentListManager.isPresent()) {
                             injectableList.add(optionalVitalComponentListManager.get());
+
+                            continue;
+                        }
+
+                        // if not present, attempt to create a dependency injected instance of it and register it on the base manager.
+
+                        final Optional<? extends VitalComponentListManager<?>> optionalNewVitalComponentListManager = getDependencyInjectedInstance(managerClass);
+
+                        if(optionalNewVitalComponentListManager.isPresent()) {
+                            final VitalComponentListManager<?> newVitalComponentListManager = optionalNewVitalComponentListManager.get();
+
+                            vitalCore.registerVitalComponent(newVitalComponentListManager);
+                            injectableList.add(newVitalComponentListManager);
 
                             continue;
                         }
@@ -120,7 +139,7 @@ public class VitalDIUtils {
                     }
 
                     // if not present on base.
-                    for (VitalComponentListManager<?> vitalComponentListManager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
+                    for (VitalComponentListManager<VitalComponent> vitalComponentListManager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
                         if (!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
                             continue;
                         }
@@ -131,7 +150,23 @@ public class VitalDIUtils {
                         // afterward attempt to get the instance we're looking for.
                         final Optional<? extends VitalComponent> optionalVitalComponent1 = vitalComponentListManager.getVitalComponent(vitalComponentClass);
 
-                        optionalVitalComponent1.ifPresent(injectableList::add);
+                        if(optionalVitalComponent1.isPresent()) {
+                            injectableList.add(optionalVitalComponent1.get());
+
+                            continue;
+                        }
+
+                        // else attempt to create new instance and register it on manager.
+                        final Optional<? extends VitalComponent> optionalNewVitalComponent = getDependencyInjectedInstance(vitalComponentClass);
+
+                        if(optionalNewVitalComponent.isPresent()) {
+                            final VitalComponent newVitalComponent = optionalNewVitalComponent.get();
+
+                            vitalComponentListManager.registerVitalComponent(newVitalComponent);
+                            injectableList.add(newVitalComponent);
+
+                            continue;
+                        }
                     }
                 }
 
@@ -147,10 +182,10 @@ public class VitalDIUtils {
                     log.severe("Did you declare a circular dependency?");
                     log.severe("Are you sure all constructor arguments are viable for dependeny injection? (@VitalDI, @VitalManagerAutoregistered, @VitalAutoregistered, VitalComponent)");
                 }
-
             }
         }
 
         return Optional.empty();
     }
 }
+
