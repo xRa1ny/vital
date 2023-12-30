@@ -12,6 +12,7 @@ import org.bukkit.scoreboard.Score;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Manages a global scoreboard displayed to multiple players.
@@ -32,7 +33,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      */
     @Getter
     @NonNull
-    private List<String> lines;
+    private List<Supplier<String>> lines;
 
     /**
      * The list of users associated with this global scoreboard.
@@ -47,8 +48,9 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      * @param title The title of the scoreboard.
      * @param lines The lines of the scoreboard.
      */
+    @SafeVarargs
     @SneakyThrows
-    public VitalGlobalScoreboard(@NonNull String title, @NonNull String... lines) {
+    public VitalGlobalScoreboard(@NonNull String title, @NonNull Supplier<String>... lines) {
         this.vitalScoreboardContent = new VitalScoreboardContent(title);
         this.lines = Arrays.asList(lines);
     }
@@ -58,7 +60,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      *
      * @param lines The lines to set.
      */
-    public void setLines(@NonNull String... lines) {
+    public void setLines(@NonNull Supplier<String>... lines) {
         this.lines = List.of(lines);
     }
 
@@ -94,7 +96,9 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
         final Objective objective = this.vitalScoreboardContent.getBukkitScoreboard().getObjective(ChatColor.stripColor(this.vitalScoreboardContent.getTitle()));
 
         for (int i = 0; i < this.lines.size(); i++) {
-            final Score score = objective.getScore(this.lines.get(i) + String.valueOf(ChatColor.RESET).repeat(i));
+            final Supplier<String> lineSupplier = lines.get(i);
+            final String line = lineSupplier.get();
+            final Score score = objective.getScore(line + String.valueOf(ChatColor.RESET).repeat(i));
 
             score.setScore(this.lines.size() - i);
         }
