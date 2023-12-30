@@ -13,8 +13,8 @@ public interface SampleVitalScoreboard {
 
     VitalGlobalScoreboard GLOBAL_SCOREBOARD = new VitalGlobalScoreboard(
             "TITLE",
-            "line1",
-            "line2",
-            "line3"
+            () -> "line1", // With Supplier<T> we define a String implementation.
+            () -> "line2",
+            () -> "line3"
     );
 }

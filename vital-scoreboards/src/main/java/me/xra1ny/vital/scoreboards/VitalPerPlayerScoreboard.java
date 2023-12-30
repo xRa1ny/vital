@@ -107,7 +107,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      *
      * @param player the player
      */
-    public void add(@NonNull Player player) {
+    public void addPlayer(@NonNull Player player) {
         if (this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
@@ -122,7 +122,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      * @param player the player
      */
     @SuppressWarnings("DataFlowIssue")
-    public void remove(@NonNull Player player) {
+    public void removePlayer(@NonNull Player player) {
         if (!this.vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
