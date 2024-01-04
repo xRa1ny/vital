@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.xra1ny.vital.commands.VitalCommandManager;
 import me.xra1ny.vital.configs.VitalConfigManager;
+import me.xra1ny.vital.core.VitalComponent;
 import me.xra1ny.vital.core.VitalCore;
 import me.xra1ny.vital.core.VitalDIUtils;
 import me.xra1ny.vital.core.VitalListenerManager;
@@ -137,7 +138,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
         // register mini game management.
         try {
-            final Class<?> vitalMinigameManagerClass = Class.forName("me.xra1ny.vital.minigames.VitalMinigameManager");
+            final Class<? extends VitalComponent> vitalMinigameManagerClass = (Class<? extends VitalComponent>) Class.forName("me.xra1ny.vital.minigames.VitalMinigameManager");
 
             // call the constructor, so it registers itself using singleton pattern.
             VitalDIUtils.getDependencyInjectedInstance(vitalMinigameManagerClass);

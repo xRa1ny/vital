@@ -3,6 +3,7 @@ package me.xra1ny.vital.minigames;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
+import me.xra1ny.vital.core.VitalComponent;
 import me.xra1ny.vital.core.VitalDIUtils;
 import me.xra1ny.vital.core.VitalListenerManager;
 import me.xra1ny.vital.core.annotation.VitalDI;
@@ -17,7 +18,7 @@ import java.util.Optional;
  */
 @Log
 @VitalDI
-public final class VitalMinigameManager {
+public final class VitalMinigameManager implements VitalComponent {
     private static VitalMinigameManager instance;
     private final VitalListenerManager vitalListenerManager;
 
@@ -79,5 +80,15 @@ public final class VitalMinigameManager {
 
         instance.vitalListenerManager.registerVitalComponent(vitalMinigameState);
         instance.vitalMinigameState = vitalMinigameState;
+    }
+
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
     }
 }

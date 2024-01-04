@@ -109,7 +109,10 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
         // scan for all classes annotated with `@VitalAutoRegistered` and attempt to register them on the base manager.
         // NOTE: this configuration is entirely user dependent, if a user wrongly implements their auto registered components,
         // with components that cannot be dependency injected, this registration will not work!!!
-        for (Class<?> vitalComponentClass : new Reflections().getTypesAnnotatedWith(VitalAutoRegistered.class).stream().filter(VitalComponent.class::isAssignableFrom).toList()) {
+        for (Class<? extends VitalComponent> vitalComponentClass : new Reflections().getTypesAnnotatedWith(VitalAutoRegistered.class).stream()
+                .filter(VitalComponent.class::isAssignableFrom)
+                .map(VitalComponent.class.getClass()::cast)
+                .toList()) {
             // assume every class is extended from `VitalComponent` since we filtered in our chain above.
             final Optional<? extends VitalComponent> optionalVitalComponent = (Optional<? extends VitalComponent>) VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
 

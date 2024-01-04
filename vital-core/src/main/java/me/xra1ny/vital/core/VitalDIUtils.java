@@ -6,7 +6,7 @@ import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,163 +26,168 @@ public class VitalDIUtils {
      * @param <T>  The type of the supplied class object.
      * @return An {@link Optional} holding either the newly created instance; or empty.
      */
-    public static <T> Optional<T> getDependencyInjectedInstance(@NonNull Class<T> type) {
-        if (VitalComponent.class.isAssignableFrom(type)) {
-            // check if instance is already existent on base vital manager...
-            final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) type;
-            final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
-
-            final Optional<? extends VitalComponent> optionalVitalComponent = vitalCore.getVitalComponent(vitalComponentClass);
-
-            if (optionalVitalComponent.isPresent()) {
-                return (Optional<T>) optionalVitalComponent;
-            }
-
-            // if not, attempt to get instance from any manager on vital...
-            for (VitalComponentListManager<?> vitalComponentListManager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
-                if (!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
-                    continue;
-                }
-
-                final Optional<? extends VitalComponent> optionalVitalComponent1 = vitalComponentListManager.getVitalComponent(vitalComponentClass);
-
-                if (optionalVitalComponent1.isPresent()) {
-                    return (Optional<T>) optionalVitalComponent1;
-                }
-            }
-        }
-
-        // check if component is viable for automatic dependency injection (DI).
+    public static <T extends VitalComponent> Optional<T> getDependencyInjectedInstance(@NonNull Class<T> type) {
         if (!type.isAnnotationPresent(VitalDI.class)) {
-            log.severe(type + " is not annotated with VitalDI");
+            log.severe("Vital cannot create a dependency injected instance of type " + type.getSimpleName());
+            log.severe("@VitalDI not present");
 
             return Optional.empty();
         }
 
-        // if the class we are trying to automatically DI is abstract, cancel operation since no instance can be created without throwing exceptions.
-        if (Modifier.isAbstract(type.getModifiers())) {
-            log.severe(type.getSimpleName() + " is annotated with @VitalDI but abstract and can therefore not be dependency injected by Vital");
+        final Optional<T> optionalBaseVitalComponent = getDependencyInjectedInstanceFromVitalCore(type);
+
+        // when the instance is found on the base manager of Vital, return it.
+        if (optionalBaseVitalComponent.isPresent()) {
+            return optionalBaseVitalComponent;
+        }
+
+        // else create it.
+        final Optional<Constructor<T>> optionalConstructor = getConstructorViableForDependencyInjection(type);
+
+        if (optionalConstructor.isEmpty()) {
+            log.severe("Vital could not decipher constructor viable for dependency injection for type " + type.getSimpleName());
 
             return Optional.empty();
         }
 
-        try {
-            // attempt to get default constructor...
-            final Constructor<T> defaultConstructor = type.getDeclaredConstructor();
+        final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
+        final Constructor<T> constructor = optionalConstructor.get();
+        final List<Object> parameterList = new ArrayList<>();
 
-            try {
-                final T instance = defaultConstructor.newInstance();
+        for (Parameter parameter : constructor.getParameters()) {
+            // attempt to get implementation of parameter from base.
+            if (JavaPlugin.class.isAssignableFrom(parameter.getType())) {
+                parameterList.add(vitalCore.getJavaPlugin());
 
-                return Optional.of(instance);
-            } catch (Exception e) {
-                log.severe("Vital has encountered an internal error while trying to create a dependency injected instance of type " + type);
-                log.severe("Is the type instantiable? (class, not abstract, public)");
+                continue;
             }
+
+            if (VitalCore.class.isAssignableFrom(parameter.getType())) {
+                parameterList.add(vitalCore);
+
+                continue;
+            }
+
+            final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) parameter.getType();
+            final Optional<? extends VitalComponent> optionalVitalComponent = getDependencyInjectedInstance(vitalComponentClass);
+
+            if (optionalVitalComponent.isEmpty()) {
+                log.severe("Vital could not decipher implementation of type " + type.getSimpleName());
+
+                continue;
+            }
+
+            parameterList.add(optionalVitalComponent.get());
+        }
+
+        final Object[] parameterArray = parameterList.toArray();
+        try {
+            final T instance = constructor.newInstance(parameterArray);
+
+            log.info("Vital has created a dependency injected instance of type " + type.getSimpleName());
+
+            // search for the types origin (if it should be registered on any particular manager, or rather the base).
+            for (VitalComponentListManager<?> manager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
+                if (manager.managedType().isAssignableFrom(type)) {
+                    final VitalComponentListManager<T> vitalComponentListManager = (VitalComponentListManager<T>) manager;
+
+                    vitalComponentListManager.registerVitalComponent(instance);
+
+                    return Optional.of(instance);
+                }
+            }
+
+            // not found on any child manager, register on base...
+            vitalCore.registerVitalComponent(instance);
+
+            return Optional.of(instance);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            log.severe("Vital encountered a critical error while attempting to create a dependency injected instance of type " + type.getSimpleName());
+
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Attempts to get a {@link Constructor} from the supplied type, which is viable for dependency injection within Vital.
+     *
+     * @param type The type which contains the {@link Constructor}.
+     * @param <T>  The type of the class which holds the {@link Constructor}.
+     * @return An {@link Optional} holding either the {@link Constructor}; or empty.
+     */
+    @NonNull
+    private static <T extends VitalComponent> Optional<Constructor<T>> getConstructorViableForDependencyInjection(Class<T> type) {
+        try {
+            // attempt to get and return default constructor.
+            return Optional.of(type.getDeclaredConstructor());
         } catch (NoSuchMethodException e) {
-            for (Constructor<?> constructor : type.getDeclaredConstructors()) {
-                final List<Object> injectableList = new ArrayList<>();
+            // attempt to get constructor with parameters that are viable for dependency injection.
+            for (Constructor<?> constructor : type.getConstructors()) {
+                int parameterCount = 0;
 
                 for (Parameter parameter : constructor.getParameters()) {
-                    if (!VitalComponent.class.isAssignableFrom(parameter.getType()) && !JavaPlugin.class.isAssignableFrom(parameter.getType())) {
-                        // ignore when parameter is not of type `JavaPlugin` or `VitalComponent`.
+                    if (!JavaPlugin.class.isAssignableFrom(parameter.getType()) &&
+                            !VitalComponent.class.isAssignableFrom(parameter.getType())) {
+                        parameterCount = 0;
+
                         break;
                     }
 
-                    if(VitalCore.class.isAssignableFrom(parameter.getType())) {
-                        injectableList.add(VitalCore.getVitalCoreInstance());
-
-                        continue;
-                    }
-
-                    if (JavaPlugin.class.isAssignableFrom(parameter.getType())) {
-                        injectableList.add(VitalCore.getVitalCoreInstance().getJavaPlugin());
-
-                        continue;
-                    }
-
-                    if (VitalComponentListManager.class.isAssignableFrom(parameter.getType())) {
-                        final Class<? extends VitalComponentListManager<?>> managerClass = (Class<? extends VitalComponentListManager<?>>) parameter.getType();
-                        final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
-
-                        final Optional<? extends VitalComponentListManager<?>> optionalVitalComponentListManager = vitalCore.getVitalComponent(managerClass);
-
-                        if (optionalVitalComponentListManager.isPresent()) {
-                            injectableList.add(optionalVitalComponentListManager.get());
-
-                            continue;
-                        }
-
-                        // if not present, attempt to create a dependency injected instance of it and register it on the base manager.
-
-                        final Optional<? extends VitalComponentListManager<?>> optionalNewVitalComponentListManager = getDependencyInjectedInstance(managerClass);
-
-                        if(optionalNewVitalComponentListManager.isPresent()) {
-                            final VitalComponentListManager<?> newVitalComponentListManager = optionalNewVitalComponentListManager.get();
-
-                            vitalCore.registerVitalComponent(newVitalComponentListManager);
-                            injectableList.add(newVitalComponentListManager);
-
-                            continue;
-                        }
-                    }
-
-                    // normal vital component. VitalConfig
-                    final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) parameter.getType();
-                    final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
-
-                    final Optional<? extends VitalComponent> optionalVitalComponent = vitalCore.getVitalComponent(vitalComponentClass);
-
-                    if (optionalVitalComponent.isPresent()) {
-                        injectableList.add(optionalVitalComponent.get());
-
-                        continue;
-                    }
-
-                    // if not present on base.
-                    for (VitalComponentListManager<VitalComponent> vitalComponentListManager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
-                        if (!vitalComponentListManager.managedType().isAssignableFrom(vitalComponentClass)) {
-                            continue;
-                        }
-
-                        // enable that manager for potentially missing components.
-                        vitalComponentListManager.enable();
-
-                        // afterward attempt to get the instance we're looking for.
-                        final Optional<? extends VitalComponent> optionalVitalComponent1 = vitalComponentListManager.getVitalComponent(vitalComponentClass);
-
-                        if(optionalVitalComponent1.isPresent()) {
-                            injectableList.add(optionalVitalComponent1.get());
-
-                            continue;
-                        }
-
-                        // else attempt to create new instance and register it on manager.
-                        final Optional<? extends VitalComponent> optionalNewVitalComponent = getDependencyInjectedInstance(vitalComponentClass);
-
-                        if(optionalNewVitalComponent.isPresent()) {
-                            final VitalComponent newVitalComponent = optionalNewVitalComponent.get();
-
-                            vitalComponentListManager.registerVitalComponent(newVitalComponent);
-                            injectableList.add(newVitalComponent);
-
-                            continue;
-                        }
-                    }
+                    parameterCount++;
                 }
 
-                try {
-                    // create dependency injected instance.
-                    final T instance = (T) constructor.newInstance(injectableList.toArray());
-
-                    return Optional.of(instance);
-                } catch (Exception ex) {
-                    log.severe("Vital could not create a dependency injected instance of " + type);
-                    log.severe("Vital has deciphered the following constructor viable for dependency injection: " + constructor);
-                    log.severe("Vital has deciphered the following arguments to inject into said constructor: " + injectableList);
-                    log.severe("Did you declare a circular dependency?");
-                    log.severe("Are you sure all constructor arguments are viable for dependeny injection? (@VitalDI, @VitalManagerAutoregistered, @VitalAutoregistered, VitalComponent)");
+                if (parameterCount == constructor.getParameterCount()) {
+                    return Optional.of((Constructor<T>) constructor);
                 }
             }
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Attempts to get a dependency injected instance from Vital's main container.
+     *
+     * @param type The class from which the di instance should be created.
+     * @param <T>  The type of the supplied class object.
+     * @return An {@link Optional} holding either the dependency injected instance; or empty.
+     */
+    @NonNull
+    private static <T extends VitalComponent> Optional<T> getDependencyInjectedInstanceFromVitalCore(@NonNull Class<T> type) {
+        final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
+        final Optional<T> optionalBaseVitalComponent = vitalCore.getVitalComponent(type);
+
+        // when the type we are searching for, is not contained within Vital's main container, search all registered managers for the type.
+        if (optionalBaseVitalComponent.isPresent()) {
+            return optionalBaseVitalComponent;
+        }
+
+        for (VitalComponentListManager<?> manager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
+            // if the manager we currently have in this iteration, does not manage the type of our param, skip iteration.
+            if (!manager.managedType().isAssignableFrom(type)) {
+                continue;
+            }
+
+            // we now have a manager with the correct managing type.
+            // attempt to grab instance from this manager.
+            final Optional<T> optionalVitalComponent = manager.getVitalComponent(type);
+
+            // when this instance exists on this manager, return the instance.
+            if (optionalVitalComponent.isPresent()) {
+                return optionalVitalComponent;
+            }
+
+            // TODO: if not, we have to enable the manager, but enabling causes StackOverflowException since we recurse indefinitely.
+            //  when we enable, the managers loops through its classes annotated with @VitalManagerAutoRegistered
+            //  and then tries to get a dependency injected instance of every annotated class member,
+            //  which then executes this method right here.
+            //  causing recursion back to manager enabling...
+
+            // TODO: possible fix
+            //  we might be able to register a component right after its DI creation,
+            //  but how do we know if the component is to be registered on the base manager or not?
+            //  how do we get the specific manager that member belongs to???
+            //  method to work on `getDependencyInjectedInstance(_)`
         }
 
         return Optional.empty();
