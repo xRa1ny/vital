@@ -84,8 +84,6 @@ public class VitalDIUtils {
         try {
             final T instance = constructor.newInstance(parameterArray);
 
-            log.info("Vital has created a dependency injected instance of type " + type.getSimpleName());
-
             // search for the types origin (if it should be registered on any particular manager, or rather the base).
             for (VitalComponentListManager<?> manager : vitalCore.getVitalComponentList(VitalComponentListManager.class)) {
                 if (manager.managedType().isAssignableFrom(type)) {
@@ -176,18 +174,6 @@ public class VitalDIUtils {
             if (optionalVitalComponent.isPresent()) {
                 return optionalVitalComponent;
             }
-
-            // TODO: if not, we have to enable the manager, but enabling causes StackOverflowException since we recurse indefinitely.
-            //  when we enable, the managers loops through its classes annotated with @VitalManagerAutoRegistered
-            //  and then tries to get a dependency injected instance of every annotated class member,
-            //  which then executes this method right here.
-            //  causing recursion back to manager enabling...
-
-            // TODO: possible fix
-            //  we might be able to register a component right after its DI creation,
-            //  but how do we know if the component is to be registered on the base manager or not?
-            //  how do we get the specific manager that member belongs to???
-            //  method to work on `getDependencyInjectedInstance(_)`
         }
 
         return Optional.empty();
