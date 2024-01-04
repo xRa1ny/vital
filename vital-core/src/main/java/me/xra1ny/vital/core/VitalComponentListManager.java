@@ -18,7 +18,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
     /**
      * Cache a set of all subclasses of the type this manager manages.
      */
-    private Set<Class<?>> vitalComponentClassSet = new LinkedHashSet<>();
+    private Set<Class<? extends VitalComponent>> vitalComponentClassSet = new LinkedHashSet<>();
 
     @Getter
     @NonNull
@@ -193,7 +193,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      *
      * @return A Set of all Classes of Components this Manager manages.
      */
-    public Set<Class<?>> getVitalComponentClassSet() {
+    public Set<Class<? extends VitalComponent>> getVitalComponentClassSet() {
         if (vitalComponentClassSet.isEmpty()) {
             vitalComponentClassSet = VitalCore.getScannedClassSet().stream()
                     .filter(managedType()::isAssignableFrom)
@@ -210,7 +210,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      */
     public void enable() {
         // iterate over every subclass and attempt to create a dependency injected instance.
-        for (Class<?> vitalComponentClass : getVitalComponentClassSet().stream()
+        for (Class<? extends VitalComponent> vitalComponentClass : getVitalComponentClassSet().stream()
                 // only get classes annotated with `@VitalManagerAutoRegistered`
                 .filter(clazz -> clazz.getDeclaredAnnotation(VitalManagerAutoRegistered.class) != null)
                 .toList()) {
