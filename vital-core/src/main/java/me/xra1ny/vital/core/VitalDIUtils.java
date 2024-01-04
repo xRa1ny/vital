@@ -28,10 +28,6 @@ public class VitalDIUtils {
      */
     public static <T> Optional<T> getDependencyInjectedInstance(@NonNull Class<T> type) {
         if (VitalComponent.class.isAssignableFrom(type)) {
-            if(VitalCore.class.isAssignableFrom(type)) {
-                return (Optional<T>) Optional.of(VitalCore.getVitalCoreInstance());
-            }
-
             // check if instance is already existent on base vital manager...
             final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) type;
             final VitalCore<?> vitalCore = VitalCore.getVitalCoreInstance();
@@ -90,12 +86,6 @@ public class VitalDIUtils {
                     if (!VitalComponent.class.isAssignableFrom(parameter.getType()) && !JavaPlugin.class.isAssignableFrom(parameter.getType())) {
                         // ignore when parameter is not of type `JavaPlugin` or `VitalComponent`.
                         break;
-                    }
-
-                    if(VitalCore.class.isAssignableFrom(parameter.getType())) {
-                        injectableList.add(VitalCore.getVitalCoreInstance());
-
-                        continue;
                     }
 
                     if (JavaPlugin.class.isAssignableFrom(parameter.getType())) {
