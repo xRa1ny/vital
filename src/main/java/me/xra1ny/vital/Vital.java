@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import me.xra1ny.vital.commands.VitalCommandManager;
 import me.xra1ny.vital.configs.VitalConfigManager;
+import me.xra1ny.vital.core.VitalComponent;
 import me.xra1ny.vital.core.VitalCore;
 import me.xra1ny.vital.core.VitalDIUtils;
 import me.xra1ny.vital.core.VitalListenerManager;
@@ -44,10 +45,7 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         boolean vitalDatabaseEnabled = false;
 
         // register config and hologram management.
-        try {
-            // register config management.
-            Class.forName("me.xra1ny.vital.configs.VitalConfigManager");
-
+        if (isUsingVitalConfigs()) {
             final VitalConfigManager vitalConfigManager = new VitalConfigManager();
             final DefaultVitalConfig defaultVitalConfig = new DefaultVitalConfig(getJavaPlugin());
 
@@ -58,25 +56,21 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
             vitalDatabaseEnabled = defaultVitalConfig.vitalDatabaseEnabled;
 
             // register hologram management.
-            try {
-                Class.forName("me.xra1ny.vital.holograms.VitalHologramManager");
-
+            if(isUsingVitalHolograms()) {
                 // Register VitalHologramManagement
                 final VitalHologramConfig vitalHologramConfig = new VitalHologramConfig(getJavaPlugin());
                 final VitalHologramManager vitalHologramManager = new VitalHologramManager(getJavaPlugin(), vitalHologramConfig);
 
                 vitalConfigManager.registerVitalComponent(vitalHologramConfig);
                 registerVitalComponent(vitalHologramManager);
-            }catch(ClassNotFoundException ignored) {}
-        } catch(ClassNotFoundException ignored) {}
+            }
+        }
 
         // register player management.
-        try {
-            Class.forName("me.xra1ny.vital.players.VitalPlayerManager");
-
+        if(isUsingVitalPlayers()) {
             final List<VitalPlayerManager> vitalPlayerManagerList = getVitalComponentList(VitalPlayerManager.class);
 
-            if(vitalPlayerManagerList.isEmpty()) {
+            if (vitalPlayerManagerList.isEmpty()) {
                 final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
                 final DefaultVitalPlayerManager defaultVitalPlayerManager = new DefaultVitalPlayerManager(vitalPlayerTimeout);
                 final DefaultVitalPlayerListener defaultVitalPlayerListener = new DefaultVitalPlayerListener(defaultVitalPlayerManager);
@@ -86,21 +80,17 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
                 vitalListenerManager.registerVitalComponent(defaultVitalPlayerListener);
                 registerVitalComponent(defaultVitalPlayerTimeoutHandler);
             }
-        }catch(ClassNotFoundException ignored) {}
+        }
 
         // register command management.
-        try {
-            Class.forName("me.xra1ny.vital.commands.VitalCommandManager");
-
+        if(isUsingVitalCommands()) {
             final VitalCommandManager vitalCommandManager = new VitalCommandManager(getJavaPlugin());
 
             registerVitalComponent(vitalCommandManager);
-        }catch(ClassNotFoundException ignored) {}
+        }
 
         // register item management.
-        try {
-            Class.forName("me.xra1ny.vital.items.VitalItemStackManager");
-
+        if(isUsingVitalItems()) {
             // Register VitalItemStackManagement and VitalItemStackCooldownHandler
             final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
             final VitalItemStackManager vitalItemStackManager = new VitalItemStackManager(getJavaPlugin());
@@ -110,38 +100,34 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
             registerVitalComponent(vitalItemStackManager);
             vitalListenerManager.registerVitalComponent(vitalItemStackListener);
             registerVitalComponent(vitalItemStackCooldownHandler);
-        }catch(ClassNotFoundException ignored) {}
+        }
 
         // register inventory management.
-        try {
-            Class.forName("me.xra1ny.vital.inventories.VitalInventoryListener");
-
+        if(isUsingVitalInventories()) {
             // Register VitalInventoryMenuListener
             final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
             final VitalInventoryListener vitalInventoryListener = new VitalInventoryListener();
 
             vitalListenerManager.registerVitalComponent(vitalInventoryListener);
-        }catch(ClassNotFoundException ignored) {}
+        }
 
         // register database management.
-        try {
-            Class.forName("me.xra1ny.vital.databases.VitalDatabaseManager");
-
+        if(isUsingVitalDatabases()) {
             if (vitalDatabaseEnabled) {
                 // Register VitalDatabaseManager
                 final VitalDatabaseManager vitalDatabaseManager = new VitalDatabaseManager();
 
                 registerVitalComponent(vitalDatabaseManager);
             }
-        }catch(ClassNotFoundException ignored) {}
+        }
 
         // register mini game management.
         try {
-            final Class<?> vitalMinigameManagerClass = Class.forName("me.xra1ny.vital.minigames.VitalMinigameManager");
+            final Class<? extends VitalComponent> vitalMinigameManagerClass = (Class<? extends VitalComponent>) Class.forName("me.xra1ny.vital.minigames.VitalMinigameManager");
 
             // call the constructor, so it registers itself using singleton pattern.
             VitalDIUtils.getDependencyInjectedInstance(vitalMinigameManagerClass);
-        }catch (ClassNotFoundException ignored) {}
+        } catch (ClassNotFoundException ignored) {}
     }
 
     /**
@@ -333,8 +319,8 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      * Gets this {@link Vital} instance with the {@link JavaPlugin} type specified.
      *
      * @param type The type of your {@link JavaPlugin} implementation.
+     * @param <T>  The type of your {@link JavaPlugin}. implementation.
      * @return This generic accurate {@link Vital} instance.
-     * @param <T> The type of your {@link JavaPlugin}. implementation.
      */
     public static <T extends JavaPlugin> Vital<T> getVitalInstance(@NonNull Class<T> type) {
         return (Vital<T>) getVitalCoreInstance(type);

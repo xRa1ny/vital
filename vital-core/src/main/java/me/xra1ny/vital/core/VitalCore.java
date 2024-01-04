@@ -7,8 +7,6 @@ import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,6 +39,33 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
 
     @Getter
     private boolean enabled;
+
+    @Getter
+    private boolean usingVitalConfigs;
+
+    @Getter
+    private boolean usingVitalHolograms;
+
+    @Getter
+    private boolean usingVitalPlayers;
+
+    @Getter
+    private boolean usingVitalCommands;
+
+    @Getter
+    private boolean usingVitalItems;
+
+    @Getter
+    private boolean usingVitalInventories;
+
+    @Getter
+    private boolean usingVitalDatabases;
+
+    @Getter
+    private boolean usingVitalMinigames;
+
+    @Getter
+    private boolean usingVitalUtils;
 
     /**
      * Constructs a new {@link VitalCore} instance.
@@ -101,17 +126,72 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
         }
 
         log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
-        onEnable();
 
-        // hold all scanned and ready for dependency injected classes.
-        final Map<Class<? extends VitalComponent>, Integer> prioritisedDependencyInjectableClasses = new HashMap<>();
+        try {
+            Class.forName("me.xra1ny.vital.configs.VitalConfigManager");
+
+            usingVitalConfigs = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.holograms.VitalHologramManager");
+
+            usingVitalHolograms = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.players.VitalPlayerManager");
+
+            usingVitalPlayers = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.commands.VitalCommandManager");
+
+            usingVitalCommands = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.items.VitalItemStackManager");
+
+            usingVitalItems = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.inventories.VitalInventoryListener");
+
+            usingVitalInventories = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.databases.VitalDatabaseManager");
+
+            usingVitalDatabases = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.minigames.VitalMinigameManager");
+
+            usingVitalDatabases = true;
+        } catch (ClassNotFoundException ignored) {}
+
+        try {
+            Class.forName("me.xra1ny.vital.utils.VitalUtils");
+
+            usingVitalUtils = true;
+        }catch (ClassNotFoundException ignored) {}
+
+        onEnable();
 
         // scan for all classes annotated with `@VitalAutoRegistered` and attempt to register them on the base manager.
         // NOTE: this configuration is entirely user dependent, if a user wrongly implements their auto registered components,
         // with components that cannot be dependency injected, this registration will not work!!!
-        for (Class<?> vitalComponentClass : new Reflections().getTypesAnnotatedWith(VitalAutoRegistered.class).stream().filter(VitalComponent.class::isAssignableFrom).toList()) {
+        for (Class<? extends VitalComponent> vitalComponentClass : new Reflections().getTypesAnnotatedWith(VitalAutoRegistered.class).stream()
+                .filter(VitalComponent.class::isAssignableFrom)
+                .map(VitalComponent.class.getClass()::cast)
+                .toList()) {
             // assume every class is extended from `VitalComponent` since we filtered in our chain above.
-            final Optional<? extends VitalComponent> optionalVitalComponent = (Optional<? extends VitalComponent>) VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
+            final Optional<? extends VitalComponent> optionalVitalComponent = VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
 
             // display error if a dependency injected instance of our marked class could not be created, else register it von the base manager of vital.
             if (optionalVitalComponent.isEmpty()) {
