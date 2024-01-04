@@ -7,8 +7,6 @@ import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -185,9 +183,6 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
 
         onEnable();
 
-        // hold all scanned and ready for dependency injected classes.
-        final Map<Class<? extends VitalComponent>, Integer> prioritisedDependencyInjectableClasses = new HashMap<>();
-
         // scan for all classes annotated with `@VitalAutoRegistered` and attempt to register them on the base manager.
         // NOTE: this configuration is entirely user dependent, if a user wrongly implements their auto registered components,
         // with components that cannot be dependency injected, this registration will not work!!!
@@ -196,7 +191,7 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
                 .map(VitalComponent.class.getClass()::cast)
                 .toList()) {
             // assume every class is extended from `VitalComponent` since we filtered in our chain above.
-            final Optional<? extends VitalComponent> optionalVitalComponent = (Optional<? extends VitalComponent>) VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
+            final Optional<? extends VitalComponent> optionalVitalComponent = VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
 
             // display error if a dependency injected instance of our marked class could not be created, else register it von the base manager of vital.
             if (optionalVitalComponent.isEmpty()) {
