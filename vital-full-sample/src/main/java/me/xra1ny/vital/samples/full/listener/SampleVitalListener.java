@@ -29,7 +29,7 @@ public final class SampleVitalListener extends VitalListener {
     @SuppressWarnings("deprecation")
     @EventHandler
     public void onPlayerJoinServer(@NonNull PlayerJoinEvent e) {
-        SampleVitalScoreboard.PER_PLAYER_SCOREBOARD.add(e.getPlayer());
+        SampleVitalScoreboard.PER_PLAYER_SCOREBOARD.addPlayer(e.getPlayer());
 //        SampleVitalScoreboard.GLOBAL_SCOREBOARD.add(e.getPlayer());
 
         e.getPlayer().getInventory().clear();
@@ -47,7 +47,7 @@ public final class SampleVitalListener extends VitalListener {
 
     @EventHandler
     public void onPlayerLeaveServer(@NonNull PlayerQuitEvent e) {
-        SampleVitalScoreboard.PER_PLAYER_SCOREBOARD.remove(e.getPlayer());
+        SampleVitalScoreboard.PER_PLAYER_SCOREBOARD.removePlayer(e.getPlayer());
 //        SampleVitalScoreboard.GLOBAL_SCOREBOARD.remove(e.getPlayer());
     }
 }

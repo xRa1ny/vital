@@ -71,8 +71,10 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         final ItemStack backgroundItemStack = new ItemStack(info.background());
         final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
 
-        backgroundItemMeta.setDisplayName(null);
-        backgroundItemStack.setItemMeta(backgroundItemMeta);
+        if(backgroundItemMeta != null) {
+            backgroundItemMeta.setDisplayName(null);
+            backgroundItemStack.setItemMeta(backgroundItemMeta);
+        }
 
         this.background = backgroundItemStack;
         this.previousInventory = null;

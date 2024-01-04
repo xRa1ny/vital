@@ -117,6 +117,16 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
     }
 
     /**
+     * Reset the countdown to its initial value, restarting its responsible {@link VitalRepeatableTask}.
+     */
+    public final void resetCountdown() {
+        vitalRepeatableTask.stop();
+        countdown = initialCountdown;
+        vitalRepeatableTask.start();
+        onCountdownReset();
+    }
+
+    /**
      * Called when the countdown starts.
      */
     public void onCountdownStart() {
@@ -141,6 +151,15 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      * Called when the countdown expires.
      */
     public void onCountdownExpire() {
+
+    }
+
+    /**
+     * Called when the countdown is told to reset
+     *
+     * @see VitalCountdownMinigameState#resetCountdown()
+     */
+    public void onCountdownReset() {
 
     }
 }
