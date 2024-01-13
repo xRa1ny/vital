@@ -8,6 +8,7 @@ import me.xra1ny.vital.core.annotation.VitalDI;
 import me.xra1ny.vital.databases.annotation.VitalDatabaseInfo;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The {@link VitalDatabase} class represents a component responsible for managing database connections and
@@ -66,7 +67,7 @@ public class VitalDatabase extends VitalComponentListManager<VitalRepository> im
     }
 
     @Override
-    public Class<VitalRepository> managedType() {
+    public @NotNull Class<VitalRepository> managedType() {
         return VitalRepository.class;
     }
 

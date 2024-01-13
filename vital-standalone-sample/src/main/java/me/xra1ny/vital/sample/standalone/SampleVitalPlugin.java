@@ -7,6 +7,7 @@ import me.xra1ny.vital.core.VitalListenerManager;
 import me.xra1ny.vital.databases.VitalDatabaseManager;
 import me.xra1ny.vital.holograms.VitalHologramConfig;
 import me.xra1ny.vital.holograms.VitalHologramManager;
+import me.xra1ny.vital.items.VitalItemStackCooldownHandler;
 import me.xra1ny.vital.items.VitalItemStackManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -30,9 +31,13 @@ public class SampleVitalPlugin extends JavaPlugin {
             registerVitalComponent(vitalListenerManager);
 
             // Here we register Vital's ItemStackManager
-            final VitalItemStackManager vitalItemStackManager = new VitalItemStackManager(getJavaPlugin());
+            final VitalItemStackManager vitalItemStackManager = new VitalItemStackManager();
+
+            // Here we register Vital's ItemStackCooldownHandler
+            final VitalItemStackCooldownHandler vitalItemStackCooldownHandler = new VitalItemStackCooldownHandler(getJavaPlugin(), vitalItemStackManager);
 
             registerVitalComponent(vitalItemStackManager);
+            registerVitalComponent(vitalItemStackCooldownHandler);
 
             // Here we register Vital's HologramManager
             final VitalConfigManager vitalConfigManager = new VitalConfigManager();
@@ -50,6 +55,11 @@ public class SampleVitalPlugin extends JavaPlugin {
             // If you need more help regarding actually implementing functionality with Vital, follow the examples in the `vital-full-sample` module
             // The Implementation of functionality does not differ when using either the full package of vital or the manual implementation explained in this class.
             // All implementations will always be the same in principle.
+        }
+
+        @Override
+        public void onDisable() {
+            // Here you can implement any logic that happens when VitalCore#disable is called.
         }
     };
 

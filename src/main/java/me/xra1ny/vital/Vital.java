@@ -40,6 +40,11 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
     }
 
     @Override
+    public void onDisable() {
+
+    }
+
+    @Override
     public void onEnable() {
         int vitalPlayerTimeout = 0;
         boolean vitalDatabaseEnabled = false;
@@ -93,13 +98,13 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         if(isUsingVitalItems()) {
             // Register VitalItemStackManagement and VitalItemStackCooldownHandler
             final VitalListenerManager vitalListenerManager = getVitalListenerManager().get();
-            final VitalItemStackManager vitalItemStackManager = new VitalItemStackManager(getJavaPlugin());
-            final VitalItemStackListener vitalItemStackListener = new VitalItemStackListener(vitalItemStackManager);
+            final VitalItemStackManager vitalItemStackManager = new VitalItemStackManager();
             final VitalItemStackCooldownHandler vitalItemStackCooldownHandler = new VitalItemStackCooldownHandler(getJavaPlugin(), vitalItemStackManager);
+            final VitalItemStackListener vitalItemStackListener = new VitalItemStackListener(vitalItemStackManager);
 
             registerVitalComponent(vitalItemStackManager);
-            vitalListenerManager.registerVitalComponent(vitalItemStackListener);
             registerVitalComponent(vitalItemStackCooldownHandler);
+            vitalListenerManager.registerVitalComponent(vitalItemStackListener);
         }
 
         // register inventory management.

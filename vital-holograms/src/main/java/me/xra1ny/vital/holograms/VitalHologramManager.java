@@ -6,6 +6,7 @@ import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
 import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,26 +86,8 @@ public final class VitalHologramManager extends VitalComponentListManager<VitalH
         log.info("VitalHologramManager online!");
     }
 
-    /**
-     * Called when this VitalHologramManagement instance is unregistered.
-     */
     @Override
-    public void onUnregistered() {
-
-    }
-
-    @Override
-    public void onVitalComponentRegistered(@NonNull VitalHologram vitalHologram) {
-
-    }
-
-    @Override
-    public void onVitalComponentUnregistered(@NonNull VitalHologram vitalHologram) {
-
-    }
-
-    @Override
-    public Class<VitalHologram> managedType() {
+    public @NotNull Class<VitalHologram> managedType() {
         return VitalHologram.class;
     }
 }

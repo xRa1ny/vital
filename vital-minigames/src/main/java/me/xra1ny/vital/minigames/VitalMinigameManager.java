@@ -5,8 +5,10 @@ import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponent;
 import me.xra1ny.vital.core.VitalDIUtils;
-import me.xra1ny.vital.core.VitalListenerManager;
 import me.xra1ny.vital.core.annotation.VitalDI;
+import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Optional;
 
@@ -20,7 +22,6 @@ import java.util.Optional;
 @VitalDI
 public final class VitalMinigameManager implements VitalComponent {
     private static VitalMinigameManager instance;
-    private final VitalListenerManager vitalListenerManager;
 
     /**
      * The currently active minigame state.
@@ -28,14 +29,16 @@ public final class VitalMinigameManager implements VitalComponent {
     @Getter
     private VitalMinigameState vitalMinigameState;
 
+    private final JavaPlugin javaPlugin;
+
     /**
-     * Constructs a new minigame manager instance with the specified {@link VitalListenerManager}.
+     * Constructs a new minigame manager instance with the specified {@link JavaPlugin}.
      *
-     * @param vitalListenerManager The {@link VitalListenerManager}.
+     * @param javaPlugin The {@link JavaPlugin}.
      */
-    public VitalMinigameManager(@NonNull VitalListenerManager vitalListenerManager) {
-        this.vitalListenerManager = vitalListenerManager;
+    public VitalMinigameManager(@NonNull JavaPlugin javaPlugin) {
         instance = this;
+        this.javaPlugin = javaPlugin;
     }
 
     /**
@@ -57,7 +60,7 @@ public final class VitalMinigameManager implements VitalComponent {
      * @param vitalMinigameStateClass The Class of the minigame state to set to (must be registered).
      */
     public static void setVitalMinigameState(@NonNull Class<? extends VitalMinigameState> vitalMinigameStateClass) {
-        final Optional<? extends VitalMinigameState> optionalDiVitalMinigameState = VitalDIUtils.getDependencyInjectedInstance(vitalMinigameStateClass);
+        final Optional<? extends VitalMinigameState> optionalDiVitalMinigameState = VitalDIUtils.getDependencyInjectedInstance(vitalMinigameStateClass, false);
 
         optionalDiVitalMinigameState.ifPresent(VitalMinigameManager::setVitalMinigameState);
     }
@@ -75,11 +78,14 @@ public final class VitalMinigameManager implements VitalComponent {
                 vitalCountdownMinigameState.stopCountdown();
             }
 
-            instance.vitalListenerManager.unregisterVitalComponent(instance.vitalMinigameState);
+            // unregister listener from bukkit.
+            HandlerList.unregisterAll(instance.vitalMinigameState);
+            instance.vitalMinigameState.onUnregistered();
         }
 
-        instance.vitalListenerManager.registerVitalComponent(vitalMinigameState);
         instance.vitalMinigameState = vitalMinigameState;
+        Bukkit.getPluginManager().registerEvents(vitalMinigameState, instance.javaPlugin);
+        vitalMinigameState.onRegistered();
     }
 
     @Override

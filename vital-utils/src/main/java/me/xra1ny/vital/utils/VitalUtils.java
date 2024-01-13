@@ -2,8 +2,10 @@ package me.xra1ny.vital.utils;
 
 import lombok.NonNull;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.CreativeCategory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -223,7 +225,9 @@ public class VitalUtils {
      * Clears all potion effects for all players currently connected to this server.
      */
     public static void broadcastClearPotionEffects() {
-        broadcastAction(Player::clearActivePotionEffects);
+        broadcastAction(player -> player.getActivePotionEffects().stream()
+                .map(PotionEffect::getType)
+                .forEach(player::removePotionEffect));
     }
 
     /**
@@ -232,6 +236,91 @@ public class VitalUtils {
      * @param playerPredicate The {@link Predicate} specifying the condition in which all potion effects are removed.
      */
     public static void broadcastClearPotionEffects(@NonNull Predicate<Player> playerPredicate) {
-        broadcastAction(Player::clearActivePotionEffects, playerPredicate);
+        broadcastAction(player -> player.getActivePotionEffects().stream()
+                .map(PotionEffect::getType)
+                .forEach(player::removePotionEffect), playerPredicate);
+    }
+
+    /**
+     * Checks if the given {@link Material} type is valid for placement in midair.
+     *
+     * @param material The {@link Material} type.
+     * @return true if the type can be placed in midair; false otherwise.
+     */
+    public static boolean canBePlacedInMidAir(@NonNull Material material) {
+        return !material.hasGravity() &&
+                !isVegetation(material) &&
+                (material != Material.REDSTONE &&
+                        material != Material.REDSTONE_TORCH &&
+                        material != Material.REPEATER &&
+                        material != Material.COMPARATOR &&
+                        material != Material.LEVER &&
+                        material != Material.TRIPWIRE &&
+                        !material.name().contains("BUTTON") &&
+                        !material.name().contains("PRESSURE_PLATE") &&
+                        !material.name().contains("RAIL"));
+    }
+
+    /**
+     * Checks if the given {@link Material} type is vegetation or not.
+     *
+     * @param material The {@link Material} type.
+     * @return true if the given type is vegetation; false otherwise.
+     */
+    public static boolean isVegetation(@NonNull Material material) {
+        return material.name().contains("SAPLING") ||
+                material.name().contains("FLOWER") ||
+                material.name().contains("WHEAT") ||
+                material.name().contains("SEEDS") ||
+                material.name().contains("CROP") ||
+                material.name().contains("KELP") ||
+                material.name().contains("BUSH") ||
+                material.name().contains("MUSHROOM") ||
+                material.name().contains("CHORUS") ||
+                material.name().contains("FERN") ||
+                material.name().contains("POTTED") ||
+                material.name().contains("ROSE") ||
+                material.name().contains("POPPY") ||
+                material == Material.MELON_STEM ||
+                material == Material.PUMPKIN_STEM ||
+                material == Material.BAMBOO ||
+                material == Material.SUGAR_CANE ||
+                material == Material.SEA_PICKLE ||
+                material == Material.NETHER_WART ||
+                material == Material.LILY_PAD ||
+                material == Material.VINE ||
+                material == Material.GLOW_LICHEN ||
+                material == Material.SCULK_VEIN ||
+                material == Material.CACTUS ||
+                material == Material.LILAC ||
+                material == Material.PEONY ||
+                material == Material.TALL_GRASS ||
+                material == Material.TALL_SEAGRASS ||
+                material == Material.MANGROVE_PROPAGULE;
+    }
+
+    /**
+     * Checks if the given {@link Material} type is a redstone machine like, redstone torch, piston, comparator, etc.
+     *
+     * @param material The {@link Material} type.
+     * @return true if the type is a redstone machine; false otherwise.
+     */
+    public static boolean isRedstoneMachine(@NonNull Material material) {
+        return material.getCreativeCategory() == CreativeCategory.REDSTONE && (
+                material == Material.REDSTONE_TORCH ||
+                        material.name().contains("PISTON") ||
+                        material.name().contains("BUTTON") ||
+                        material.name().contains("PRESSURE_PLATE") ||
+                        material.name().contains("DETECTOR") ||
+                        material.name().contains("LAMP") ||
+                        material == Material.COMPARATOR ||
+                        material == Material.REPEATER ||
+                        material == Material.REDSTONE ||
+                        material == Material.REDSTONE_WIRE ||
+                        material == Material.OBSERVER ||
+                        material == Material.DROPPER ||
+                        material == Material.DISPENSER ||
+                        material == Material.HOPPER ||
+                        material == Material.HOPPER_MINECART);
     }
 }

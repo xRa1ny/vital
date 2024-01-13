@@ -4,15 +4,14 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Range;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Defines a builder all interactive inventory disobeying the "Component-Class" pattern.
@@ -58,6 +57,13 @@ public class VitalInventoryBuilder implements InventoryHolder {
     @NonNull
     private VitalInventoryCloseEvent vitalInventoryCloseEvent = player -> {
     };
+
+    /**
+     * Stores all players that currently have this inventory open.
+     */
+    @Getter
+    @NonNull
+    private final List<Player> playerList = new ArrayList<>();
 
     /**
      * Define the size of this inventory.
@@ -176,5 +182,14 @@ public class VitalInventoryBuilder implements InventoryHolder {
         this.vitalInventoryCloseEvent = vitalInventoryCloseEvent;
 
         return this;
+    }
+
+    /**
+     * Updates this inventory for all players that have it open.
+     */
+    public void update() {
+        for(Player player : playerList) {
+            player.openInventory(build());
+        }
     }
 }

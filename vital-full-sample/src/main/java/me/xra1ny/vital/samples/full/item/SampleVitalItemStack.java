@@ -68,7 +68,7 @@ public final class SampleVitalItemStack extends VitalItemStack {
         final SampleVitalInventory sampleVitalInventory = new SampleVitalInventory();
 
         // And open it for the right-clicking player.
-        player.openInventory(sampleVitalInventory.build());
+        player.openInventory(sampleVitalInventory.getInventory());
 
         final VitalInventoryBuilder secondInventory = new VitalInventoryBuilder()
                 .setItemStack(1, new ItemStack(Material.BARRIER), (player1, itemStack) -> {

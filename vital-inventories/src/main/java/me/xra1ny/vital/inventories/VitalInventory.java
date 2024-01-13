@@ -17,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -60,6 +62,13 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     private final Inventory previousInventory;
 
     /**
+     * Stores all players that have this inventory open.
+     */
+    @Getter
+    @NonNull
+    private final List<Player> playerList = new ArrayList<>();
+
+    /**
      * Constructs a new VitalInventoryMenu instance.
      */
     public VitalInventory() {
@@ -71,13 +80,14 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         final ItemStack backgroundItemStack = new ItemStack(info.background());
         final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
 
-        if(backgroundItemMeta != null) {
+        if (backgroundItemMeta != null) {
             backgroundItemMeta.setDisplayName(null);
             backgroundItemStack.setItemMeta(backgroundItemMeta);
         }
 
         this.background = backgroundItemStack;
         this.previousInventory = null;
+        this.inventory = Bukkit.createInventory(this, size, title);
     }
 
     /**
@@ -94,11 +104,14 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         final ItemStack backgroundItemStack = new ItemStack(info.background());
         final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
 
-        backgroundItemMeta.setDisplayName(null);
-        backgroundItemStack.setItemMeta(backgroundItemMeta);
+        if (backgroundItemMeta != null) {
+            backgroundItemMeta.setDisplayName(null);
+            backgroundItemStack.setItemMeta(backgroundItemMeta);
+        }
 
         this.background = backgroundItemStack;
         this.previousInventory = previousInventory;
+        this.inventory = Bukkit.createInventory(this, size, title);
     }
 
     @Override
@@ -199,5 +212,55 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         inventory = Bukkit.createInventory(this, size, title);
 
         return inventory;
+    }
+
+    /**
+     * Updates this inventory removing all items and resetting them for all players that have this inventory open.
+     *
+     * @param perPlayer Defines whether this inventory should be updated as a per session (per player) inventory, meaning, players have different views instead of one centralised.
+     * @see VitalInventory#setItems(Player)
+     *
+     */
+    public final void update(boolean perPlayer) {
+        inventory.clear();
+        onUpdate();
+
+        for (Player player : playerList) {
+            onUpdate(player);
+            setItems(player);
+
+            if (perPlayer) {
+                final VitalInventory vitalInventory = (VitalInventory) player.getOpenInventory().getTopInventory().getHolder();
+
+                vitalInventory.setItems(player);
+            }
+        }
+    }
+
+    /**
+     * Updates this inventory removing all items and resetting them for all players that have this inventory open.
+     *
+     * @apiNote This method calls {@link VitalInventory#update(boolean)} with param true as a centralised non session (non per player) based implementation.
+     * @see VitalInventory#setItems(Player)
+     */
+    public final void update() {
+        update(false);
+    }
+
+    /**
+     * Called when this inventory is updated.
+     */
+    public void onUpdate() {
+
+    }
+
+    /**
+     * Called when this inventory is updated;
+     *
+     * @apiNote This method is called for every player this inventory is updated.
+     * @param player The player.
+     */
+    public void onUpdate(@NonNull Player player) {
+
     }
 }

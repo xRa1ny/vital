@@ -5,6 +5,7 @@ import lombok.extern.java.Log;
 import me.xra1ny.vital.core.VitalComponentListManager;
 import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Class responsible for managing {@link VitalCommand}.
@@ -30,11 +31,6 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
         log.info("VitalCommandManager online!");
     }
 
-    @Override
-    public void onUnregistered() {
-
-    }
-
     @SuppressWarnings("DataFlowIssue")
     @Override
     public void onVitalComponentRegistered(@NonNull VitalCommand vitalCommand) {
@@ -48,7 +44,7 @@ public final class VitalCommandManager extends VitalComponentListManager<VitalCo
     }
 
     @Override
-    public Class<VitalCommand> managedType() {
+    public @NotNull Class<VitalCommand> managedType() {
         return VitalCommand.class;
     }
 }

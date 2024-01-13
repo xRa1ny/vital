@@ -23,6 +23,7 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Abstract base class for custom Minecraft commands using the Vital framework.
@@ -473,6 +474,19 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
                 }
             }
         }
+
+        final String formattedArgs = String.join(" ", Stream.of(args)
+                .map(arg -> "?")
+                .toList());
+        final List<String> commandTabCompleted = onCommandTabComplete(sender, formattedArgs);
+
+        // when our OWN implementation is not empty, clear all of Vital's defaults.
+        if(!commandTabCompleted.isEmpty()) {
+            tabCompleted.clear();
+        }
+
+        // finally add further tab-completed suggestions implemented by the developer.
+        tabCompleted.addAll(commandTabCompleted);
 
         return tabCompleted; // Return the list of tab-completed suggestions.
     }

@@ -5,8 +5,10 @@ import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -103,17 +105,7 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
     }
 
     @Override
-    public void onVitalComponentRegistered(@NonNull VitalComponent vitalComponent) {
-
-    }
-
-    @Override
-    public void onVitalComponentUnregistered(@NonNull VitalComponent vitalComponent) {
-
-    }
-
-    @Override
-    public Class<VitalComponent> managedType() {
+    public @NotNull Class<VitalComponent> managedType() {
         return VitalComponent.class;
     }
 
@@ -217,12 +209,18 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
     public abstract void onEnable();
 
     @Override
-    public void onRegistered() {
+    public final void disable() {
+        // disable all managers within Vital.
+        new ArrayList<>(getVitalComponentList(VitalComponentListManager.class))
+                .forEach(VitalComponentListManager::disable);
 
+        // now unregister all remaining components.
+        new ArrayList<>(getVitalComponentList())
+                .forEach(this::unregisterVitalComponent);
     }
 
-    @Override
-    public void onUnregistered() {
-
-    }
+    /**
+     * Called when this VitalCore is disabled.
+     */
+    public abstract void onDisable();
 }

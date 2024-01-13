@@ -24,9 +24,10 @@ public class VitalDIUtils {
      *
      * @param type The class from which the di instance should be created.
      * @param <T>  The type of the supplied class object.
+     * @param register If the dependency injected instance should be registered upon creation.
      * @return An {@link Optional} holding either the newly created instance; or empty.
      */
-    public static <T extends VitalComponent> Optional<T> getDependencyInjectedInstance(@NonNull Class<T> type) {
+    public static <T extends VitalComponent> Optional<T> getDependencyInjectedInstance(@NonNull Class<T> type, boolean register) {
         if (!type.isAnnotationPresent(VitalDI.class)) {
             log.severe("Vital cannot create a dependency injected instance of type " + type.getSimpleName());
             log.severe("@VitalDI not present");
@@ -69,7 +70,7 @@ public class VitalDIUtils {
             }
 
             final Class<? extends VitalComponent> vitalComponentClass = (Class<? extends VitalComponent>) parameter.getType();
-            final Optional<? extends VitalComponent> optionalVitalComponent = getDependencyInjectedInstance(vitalComponentClass);
+            final Optional<? extends VitalComponent> optionalVitalComponent = getDependencyInjectedInstance(vitalComponentClass, true);
 
             if (optionalVitalComponent.isEmpty()) {
                 log.severe("Vital could not decipher implementation of type " + type.getSimpleName());
@@ -89,14 +90,18 @@ public class VitalDIUtils {
                 if (manager.managedType().isAssignableFrom(type)) {
                     final VitalComponentListManager<T> vitalComponentListManager = (VitalComponentListManager<T>) manager;
 
-                    vitalComponentListManager.registerVitalComponent(instance);
+                    if(register) {
+                        vitalComponentListManager.registerVitalComponent(instance);
+                    }
 
                     return Optional.of(instance);
                 }
             }
 
-            // not found on any child manager, register on base...
-            vitalCore.registerVitalComponent(instance);
+            if(register) {
+                // not found on any child manager, register on base...
+                vitalCore.registerVitalComponent(instance);
+            }
 
             return Optional.of(instance);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -104,6 +109,18 @@ public class VitalDIUtils {
 
             return Optional.empty();
         }
+    }
+
+    /**
+     * Attempts to create a dependency injected instance of the supplied class type.
+     * Upon creation, registers the instance within Vital.
+     *
+     * @param type The class from which the di instance should be created.
+     * @param <T>  The type of the supplied class object.
+     * @return An {@link Optional} holding either the newly created instance; or empty.
+     */
+    public static <T extends VitalComponent> Optional<T> getDependencyInjectedInstance(@NonNull Class<T> type) {
+        return getDependencyInjectedInstance(type, true);
     }
 
     /**

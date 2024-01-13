@@ -351,16 +351,6 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
     }
 
     @Override
-    public final void onRegistered() {
-        update();
-    }
-
-    @Override
-    public final void onUnregistered() {
-        save();
-    }
-
-    @Override
     public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
         final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
 
@@ -368,5 +358,15 @@ public abstract class VitalConfig implements AnnotatedVitalComponent<VitalConfig
         final VitalConfigManager vitalConfigManager = optionalVitalConfigManager.get();
 
         vitalConfigManager.registerVitalComponent(this);
+    }
+
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
     }
 }

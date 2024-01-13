@@ -6,6 +6,7 @@ import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The default listener manager of the Vital-Framework.
@@ -32,11 +33,6 @@ public final class VitalListenerManager extends VitalComponentListManager<VitalL
     }
 
     @Override
-    public void onUnregistered() {
-
-    }
-
-    @Override
     public void onVitalComponentRegistered(@NonNull VitalListener vitalListener) {
         Bukkit.getPluginManager().registerEvents(vitalListener, javaPlugin);
     }
@@ -47,7 +43,7 @@ public final class VitalListenerManager extends VitalComponentListManager<VitalL
     }
 
     @Override
-    public Class<VitalListener> managedType() {
+    public @NotNull Class<VitalListener> managedType() {
         return VitalListener.class;
     }
 }

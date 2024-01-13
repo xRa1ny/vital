@@ -1,6 +1,7 @@
 package me.xra1ny.vital.minigames;
 
-import me.xra1ny.vital.core.VitalListener;
+import me.xra1ny.vital.core.VitalComponent;
+import org.bukkit.event.Listener;
 
 /**
  * Abstract base class for minigame states within the Vital framework.
@@ -9,5 +10,14 @@ import me.xra1ny.vital.core.VitalListener;
  *
  * @author xRa1ny
  */
-public abstract class VitalMinigameState extends VitalListener {
+public abstract class VitalMinigameState implements VitalComponent, Listener {
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
+    }
 }

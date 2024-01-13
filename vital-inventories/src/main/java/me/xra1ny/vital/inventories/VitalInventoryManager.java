@@ -5,6 +5,7 @@ import me.xra1ny.vital.core.VitalComponentListManager;
 import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
 import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -19,22 +20,7 @@ public class VitalInventoryManager extends VitalComponentListManager<VitalInvent
     }
 
     @Override
-    public void onUnregistered() {
-
-    }
-
-    @Override
-    public void onVitalComponentRegistered(@NonNull VitalInventory vitalComponent) {
-
-    }
-
-    @Override
-    public void onVitalComponentUnregistered(@NonNull VitalInventory vitalComponent) {
-
-    }
-
-    @Override
-    public Class<VitalInventory> managedType() {
+    public @NotNull Class<VitalInventory> managedType() {
         return VitalInventory.class;
     }
 
@@ -53,6 +39,6 @@ public class VitalInventoryManager extends VitalComponentListManager<VitalInvent
 
         final VitalInventory vitalInventory = optionalVitalInventory.get();
 
-        player.openInventory(vitalInventory.build());
+        player.openInventory(vitalInventory.getInventory());
     }
 }

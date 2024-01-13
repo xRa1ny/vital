@@ -127,8 +127,8 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
         }
 
         vitalComponentList.add(vitalComponent);
-        vitalComponent.onRegistered();
         onVitalComponentRegistered(vitalComponent);
+        vitalComponent.onRegistered();
     }
 
     /**
@@ -154,6 +154,16 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
         onVitalComponentUnregistered(vitalComponent);
     }
 
+    @Override
+    public void onUnregistered() {
+
+    }
+
+    @Override
+    public void onRegistered() {
+
+    }
+
     /**
      * Attempts to unregister a {@link VitalComponent} by its specified class.
      *
@@ -170,14 +180,18 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      *
      * @param vitalComponent The VitalComponent registered.
      */
-    public abstract void onVitalComponentRegistered(@NonNull T vitalComponent);
+    public void onVitalComponentRegistered(@NonNull T vitalComponent) {
+
+    }
 
     /**
      * Called when the specified VitalComponent is unregistered.
      *
      * @param vitalComponent The VitalComponent unregistered.
      */
-    public abstract void onVitalComponentUnregistered(@NonNull T vitalComponent);
+    public void onVitalComponentUnregistered(@NonNull T vitalComponent) {
+
+    }
 
     /**
      * Defines the type that is managed by this manager
@@ -185,6 +199,7 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
      * @return The type of {@link VitalComponent} this manager manages.
      * @apiNote Needed for dependency injection pattern.
      */
+    @NonNull
     public abstract Class<T> managedType();
 
     /**
@@ -220,5 +235,13 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
             // if that component could be dependency injected and created, register it on our manager.
             optionalVitalComponent.ifPresent(this::registerVitalComponent);
         }
+    }
+
+    /**
+     * Disables this manager, unregistering any registered components.
+     */
+    public void disable() {
+        new ArrayList<>(vitalComponentList)
+                .forEach(this::unregisterVitalComponent);
     }
 }
