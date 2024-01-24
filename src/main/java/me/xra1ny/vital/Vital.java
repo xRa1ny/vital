@@ -171,8 +171,8 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
         final VitalListenerManager vitalListenerManager = getVitalComponent(VitalListenerManager.class).get();
         final M customVitalPlayerManager = customVitalPlayerManagerClass.getDeclaredConstructor(int.class).newInstance(customVitalPlayerTimeout);
-        final L customVitalPlayerListener = customVitalPlayerListenerClass.getDeclaredConstructor(customVitalPlayerManagerClass, customVitalPlayerClass.getClass()).newInstance(customVitalPlayerManager, customVitalPlayerClass);
-        final TH customVitalPlayerTimeoutHandler = customVitalPlayerTimeoutHandlerClass.getDeclaredConstructor(JavaPlugin.class, customVitalPlayerManagerClass).newInstance(getJavaPlugin(), customVitalPlayerManager);
+        final L customVitalPlayerListener = customVitalPlayerListenerClass.getConstructor(VitalPlayerManager.class).newInstance(customVitalPlayerManager);
+        final TH customVitalPlayerTimeoutHandler = customVitalPlayerTimeoutHandlerClass.getDeclaredConstructor(JavaPlugin.class, VitalPlayerManager.class).newInstance(getJavaPlugin(), customVitalPlayerManager);
 
         registerVitalComponent(customVitalPlayerManager);
         vitalListenerManager.registerVitalComponent(customVitalPlayerListener);

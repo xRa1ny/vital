@@ -33,7 +33,6 @@ public final class VitalInventoryListener extends VitalListener {
         final Player player = (Player) e.getPlayer();
 
         if (inventoryHolder instanceof VitalInventory vitalInventory) {
-            vitalInventory.getPlayerList().add(player);
             vitalInventory.onOpen(e);
 
             vitalInventory.setBackground();
@@ -155,7 +154,6 @@ public final class VitalInventoryListener extends VitalListener {
         final Player player = (Player) e.getPlayer();
 
         if (inventoryHolder instanceof VitalInventory vitalInventory) {
-            vitalInventory.getPlayerList().remove(player);
             vitalInventory.onClose(e);
         } else if (inventoryHolder instanceof VitalInventoryBuilder vitalInventoryBuilder) {
             vitalInventoryBuilder.getPlayerList().remove(player);

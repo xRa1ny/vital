@@ -1,11 +1,10 @@
 package me.xra1ny.vital.minigames;
 
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
-import me.xra1ny.vital.minigames.annotation.VitalCountdownMinigameStateInfo;
+import me.xra1ny.vital.tasks.VitalCountdownTask;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
+import me.xra1ny.vital.tasks.annotation.VitalCountdownTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -13,15 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author xRa1ny
  */
-public abstract class VitalCountdownMinigameState extends VitalMinigameState implements AnnotatedVitalComponent<VitalCountdownMinigameStateInfo> {
-    private VitalRepeatableTask vitalRepeatableTask;
-
-    @Getter
-    private final int initialCountdown;
-
-    @Getter
-    @Setter
-    private int countdown;
+public abstract class VitalCountdownMinigameState extends VitalMinigameState implements AnnotatedVitalComponent<VitalCountdownTaskInfo> {
+    private VitalCountdownTask vitalCountdownTask;
 
     /**
      * Constructor for VitalCountdownMinigameState with the default interval from the annotation.
@@ -30,12 +22,9 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      */
     @SuppressWarnings("unused")
     public VitalCountdownMinigameState(@NonNull JavaPlugin javaPlugin) {
-        final VitalCountdownMinigameStateInfo vitalCountdownMinigameStateInfo = getRequiredAnnotation();
+        final VitalCountdownTaskInfo vitalCountdownTaskInfo = getRequiredAnnotation();
 
-        this.initialCountdown = vitalCountdownMinigameStateInfo.value();
-        this.countdown = this.initialCountdown;
-
-        run(javaPlugin, vitalCountdownMinigameStateInfo.interval());
+        run(javaPlugin, vitalCountdownTaskInfo.interval(), vitalCountdownTaskInfo.value());
     }
 
     /**
@@ -47,10 +36,7 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      */
     @SuppressWarnings("unused")
     public VitalCountdownMinigameState(@NonNull JavaPlugin javaPlugin, int interval, int countdown) {
-        this.initialCountdown = countdown;
-        this.countdown = this.initialCountdown;
-
-        run(javaPlugin, interval);
+        run(javaPlugin, interval, countdown);
     }
 
     /**
@@ -59,71 +45,64 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      * @return The {@link JavaPlugin} instance attached to this {@link VitalCountdownMinigameState}.
      */
     public JavaPlugin getJavaPlugin() {
-        return vitalRepeatableTask.getJavaPlugin();
+        return vitalCountdownTask.getJavaPlugin();
     }
 
     /**
      * Sets up the countdown task using a VitalRepeatableTask.
      *
      * @param javaPlugin The JavaPlugin instance.
+     * @param countdown  The countdown.
      * @param interval   The countdown update interval.
      */
-    private void run(@NonNull JavaPlugin javaPlugin, int interval) {
-        vitalRepeatableTask = new VitalRepeatableTask(javaPlugin, interval) {
+    private void run(@NonNull JavaPlugin javaPlugin, int interval, int countdown) {
+        vitalCountdownTask = new VitalCountdownTask(javaPlugin, interval, countdown) {
             @Override
             public void onStart() {
-                onCountdownStart();
-            }
-
-            @Override
-            public void onStop() {
-                onCountdownStop();
+                VitalCountdownMinigameState.this.onCountdownStart();
             }
 
             @Override
             public void onTick() {
-                if (countdown <= 0) {
-                    stop();
-                    onCountdownExpire();
+                VitalCountdownMinigameState.this.onCountdownTick();
+            }
 
-                    return;
-                }
+            @Override
+            public void onStop() {
+                VitalCountdownMinigameState.this.onCountdownStop();
+            }
 
-                onCountdownTick();
+            @Override
+            public void onExpire() {
+                VitalCountdownMinigameState.this.onCountdownExpire();
+            }
 
-                countdown--;
+            @Override
+            public void onRestart() {
+                VitalCountdownMinigameState.this.onCountdownRestart();
             }
         };
-    }
-
-    @Override
-    public final Class<VitalCountdownMinigameStateInfo> requiredAnnotationType() {
-        return VitalCountdownMinigameStateInfo.class;
     }
 
     /**
      * Start the countdown.
      */
-    @SuppressWarnings("unused")
     public final void startCountdown() {
-        vitalRepeatableTask.start();
+        vitalCountdownTask.start();
     }
 
     /**
      * Stop the countdown.
      */
     public final void stopCountdown() {
-        vitalRepeatableTask.stop();
+        vitalCountdownTask.stop();
     }
 
     /**
      * Reset the countdown to its initial value, restarting its responsible {@link VitalRepeatableTask}.
      */
-    public final void resetCountdown() {
-        vitalRepeatableTask.stop();
-        countdown = initialCountdown;
-        vitalRepeatableTask.start();
-        onCountdownReset();
+    public final void restartCountdown() {
+        vitalCountdownTask.restart();
     }
 
     /**
@@ -155,11 +134,24 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
     }
 
     /**
-     * Called when the countdown is told to reset
+     * Called when the countdown is told to restart
      *
-     * @see VitalCountdownMinigameState#resetCountdown()
+     * @see VitalCountdownMinigameState#restartCountdown()
      */
-    public void onCountdownReset() {
+    public void onCountdownRestart() {
 
+    }
+
+    @Override
+    public Class<VitalCountdownTaskInfo> requiredAnnotationType() {
+        return VitalCountdownTaskInfo.class;
+    }
+
+    public int getInitialCountdown() {
+        return vitalCountdownTask.getInitialCountdown();
+    }
+
+    public int getCountdown() {
+        return vitalCountdownTask.getCountdown();
     }
 }

@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -23,24 +24,11 @@ import java.util.Map.Entry;
  */
 public final class VitalItemStackBuilder {
     @Getter
-    @NonNull
     private String name;
 
     @Getter
     @NonNull
     private Material type = Material.COBBLESTONE;
-
-    @Getter
-    @NonNull
-    private List<String> lore = new ArrayList<>();
-
-    @Getter
-    @NonNull
-    private List<ItemFlag> itemFlagList = new ArrayList<>();
-
-    @Getter
-    @NonNull
-    private Map<Enchantment, Integer> enchantmentLevelMap = new HashMap<>();
 
     @Getter
     private int amount = 1;
@@ -50,7 +38,19 @@ public final class VitalItemStackBuilder {
 
     @Getter
     @NonNull
-    private Map<NamespacedKey, Map.Entry<PersistentDataType<?, ?>, ?>> namespacedKeyMap = new HashMap<>();
+    private final List<String> lore = new ArrayList<>();
+
+    @Getter
+    @NonNull
+    private final List<ItemFlag> itemFlagList = new ArrayList<>();
+
+    @Getter
+    @NonNull
+    private final Map<Enchantment, Integer> enchantmentLevelMap = new HashMap<>();
+
+    @Getter
+    @NonNull
+    private final Map<NamespacedKey, Map.Entry<PersistentDataType<?, ?>, ?>> namespacedKeyMap = new HashMap<>();
 
     /**
      * Define the name for this {@link ItemStack}.
@@ -58,7 +58,7 @@ public final class VitalItemStackBuilder {
      * @param name The name.
      * @return This builder instance.
      */
-    public VitalItemStackBuilder name(String name) {
+    public VitalItemStackBuilder name(@Nullable String name) {
         this.name = name;
 
         return this;
@@ -82,8 +82,8 @@ public final class VitalItemStackBuilder {
      * @param lore The lore {@link List}.
      * @return This builder instance.
      */
-    public VitalItemStackBuilder lore(List<String> lore) {
-        this.lore = lore;
+    public VitalItemStackBuilder lore(@NonNull List<String> lore) {
+        this.lore.addAll(lore);
 
         return this;
     }
@@ -94,11 +94,7 @@ public final class VitalItemStackBuilder {
      * @param lore The lore line to add.
      * @return This builder instance.
      */
-    public VitalItemStackBuilder lore(String lore) {
-        if (this.lore == null) {
-            this.lore = new ArrayList<>();
-        }
-
+    public VitalItemStackBuilder lore(@NonNull String lore) {
         this.lore.add(lore);
 
         return this;
@@ -110,8 +106,8 @@ public final class VitalItemStackBuilder {
      * @param itemFlagList The {@link List} of all {@link ItemFlag} instances..
      * @return This builder instance.
      */
-    public VitalItemStackBuilder itemFlags(List<ItemFlag> itemFlagList) {
-        this.itemFlagList = itemFlagList;
+    public VitalItemStackBuilder itemFlags(@NonNull List<ItemFlag> itemFlagList) {
+        this.itemFlagList.addAll(itemFlagList);
 
         return this;
     }
@@ -122,11 +118,7 @@ public final class VitalItemStackBuilder {
      * @param itemFlag The {@link ItemFlag} to add.
      * @return This builder instance.
      */
-    public VitalItemStackBuilder itemFlag(ItemFlag itemFlag) {
-        if (this.itemFlagList == null) {
-            this.itemFlagList = new ArrayList<>();
-        }
-
+    public VitalItemStackBuilder itemFlag(@NonNull ItemFlag itemFlag) {
         this.itemFlagList.add(itemFlag);
 
         return this;
@@ -138,8 +130,8 @@ public final class VitalItemStackBuilder {
      * @param enchantmentLevelMap The {@link Map} of all {@link Enchantment} instances and their level.
      * @return This builder instance.
      */
-    public VitalItemStackBuilder enchantments(Map<Enchantment, Integer> enchantmentLevelMap) {
-        this.enchantmentLevelMap = enchantmentLevelMap;
+    public VitalItemStackBuilder enchantments(@NonNull Map<Enchantment, Integer> enchantmentLevelMap) {
+        this.enchantmentLevelMap.putAll(enchantmentLevelMap);
 
         return this;
     }
@@ -151,11 +143,7 @@ public final class VitalItemStackBuilder {
      * @param enchantmentLevel The enchantment level.
      * @return This builder instance.
      */
-    public VitalItemStackBuilder enchantment(Enchantment enchantment, int enchantmentLevel) {
-        if (this.enchantmentLevelMap == null) {
-            this.enchantmentLevelMap = new HashMap<>();
-        }
-
+    public VitalItemStackBuilder enchantment(@NonNull Enchantment enchantment, int enchantmentLevel) {
         this.enchantmentLevelMap.put(enchantment, enchantmentLevel);
 
         return this;
@@ -227,7 +215,7 @@ public final class VitalItemStackBuilder {
     @NonNull
     public <Z> ItemStack build() {
         // Create ItemStack and ItemMeta
-        final ItemStack item = new ItemStack((type != null ? type : Material.COBBLESTONE), amount);
+        final ItemStack item = new ItemStack(type, amount);
 
         if (this.type != Material.AIR) {
             final ItemMeta meta = item.getItemMeta();
@@ -237,19 +225,19 @@ public final class VitalItemStackBuilder {
                 if (this.name.isBlank()) {
                     meta.setDisplayName(ChatColor.RESET.toString());
                 } else {
-                    meta.setDisplayName(this.name);
+                    meta.setDisplayName(ChatColor.RESET + this.name);
                 }
             }
 
             // Set Enchantments if set
-            if (enchantmentLevelMap != null && !enchantmentLevelMap.isEmpty()) {
+            if (!enchantmentLevelMap.isEmpty()) {
                 for (Entry<Enchantment, Integer> entrySet : enchantmentLevelMap.entrySet()) {
                     meta.addEnchant(entrySet.getKey(), entrySet.getValue(), true);
                 }
             }
 
             // Set ItemFlags if set, else use all
-            if (itemFlagList != null && !itemFlagList.isEmpty()) {
+            if (!itemFlagList.isEmpty()) {
                 for (ItemFlag itemFlag : itemFlagList) {
                     meta.addItemFlags(itemFlag);
                 }

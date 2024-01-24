@@ -36,7 +36,8 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
      * The interval at which this repeatable task should execute, in milliseconds.
      */
     @Getter
-    private final int interval;
+    @Setter
+    private int interval;
 
     /**
      * The BukkitRunnable associated with this repeatable task, defining its logic.

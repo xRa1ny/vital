@@ -5,6 +5,7 @@ import lombok.NonNull;
 import me.xra1ny.vital.core.annotation.VitalManagerAutoRegistered;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -114,6 +115,39 @@ public abstract class VitalComponentListManager<T extends VitalComponent> implem
                 .filter(vitalComponent -> vitalComponentClass.equals(vitalComponent.getClass()))
                 .map(vitalComponentClass::cast)
                 .findFirst();
+    }
+
+    /**
+     * Gets a random VitalComponent registered on this manager instance.
+     *
+     * @return An {@link Optional} holding either the value of the random {@link VitalComponent}; or empty.
+     */
+    public final Optional<T> getRandomVitalComponent() {
+        if (getVitalComponentList().isEmpty()) {
+            return Optional.empty();
+        }
+
+        final int randomIndex = new Random().nextInt(getVitalComponentList().size());
+
+        return Optional.of(getVitalComponentList().get(randomIndex));
+    }
+
+    /**
+     * Gets a random VitalComponent, matching the given {@link Predicate} registered on this manager instance.
+     *
+     * @return An {@link Optional} holding either the value of the random {@link VitalComponent}; or empty.
+     */
+    public final Optional<T> getRandomVitalComponent(@NonNull Predicate<T> predicate) {
+        if (getVitalComponentList().isEmpty()) {
+            return Optional.empty();
+        }
+
+        final List<T> filteredVitalComponentList = getVitalComponentList().stream()
+                .filter(predicate)
+                .toList();
+        final int randomIndex = new Random().nextInt(filteredVitalComponentList.size());
+
+        return Optional.of(filteredVitalComponentList.get(randomIndex));
     }
 
     /**

@@ -6,8 +6,10 @@ import me.xra1ny.vital.core.VitalComponentListManager;
 import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -35,23 +37,31 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
     /**
      * Attempts to set the specified {@link VitalItemStack} by its class.
      *
-     * @param inventory The {@link Inventory} to add the item to.
+     * @param inventory      The {@link Inventory} to add the item to.
      * @param itemStackClass The class of the {@link VitalItemStack} (must be registered).
+     * @return The {@link Map} containing all items that didn't fit.
      */
-    public static void addItem(@NonNull Inventory inventory, @NonNull Class<? extends VitalItemStack> itemStackClass) {
+    @NonNull
+    public static Map<Integer, ItemStack> addItem(@NonNull Inventory inventory, @NonNull Class<? extends VitalItemStack> itemStackClass) {
         final Optional<? extends VitalItemStack> optionalVitalItemStack = instance.getVitalComponent(itemStackClass);
 
-        optionalVitalItemStack.ifPresent(inventory::addItem);
+        if(optionalVitalItemStack.isPresent()) {
+            return inventory.addItem(optionalVitalItemStack.get());
+        }
+
+        return Map.of();
     }
 
     /**
      * Attempts to set the specified {@link VitalItemStack} by its class.
      *
-     * @param player The {@link Player} to add the item to.
+     * @param player         The {@link Player} to add the item to.
      * @param itemStackClass The class of the {@link VitalItemStack} (must be registered).
+     * @return The {@link Map} containing all items that didn't fit.
      */
-    public static void addItem(@NonNull Player player, @NonNull Class<? extends VitalItemStack> itemStackClass) {
-        addItem(player.getInventory(), itemStackClass);
+    @NonNull
+    public static Map<Integer, ItemStack> addItem(@NonNull Player player, @NonNull Class<? extends VitalItemStack> itemStackClass) {
+        return addItem(player.getInventory(), itemStackClass);
     }
 
     /**

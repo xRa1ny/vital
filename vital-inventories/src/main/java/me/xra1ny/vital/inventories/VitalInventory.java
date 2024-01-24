@@ -17,8 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -60,13 +58,6 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      */
     @Getter
     private final Inventory previousInventory;
-
-    /**
-     * Stores all players that have this inventory open.
-     */
-    @Getter
-    @NonNull
-    private final List<Player> playerList = new ArrayList<>();
 
     /**
      * Constructs a new VitalInventoryMenu instance.
@@ -217,34 +208,28 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     /**
      * Updates this inventory removing all items and resetting them for all players that have this inventory open.
      *
-     * @param perPlayer Defines whether this inventory should be updated as a per session (per player) inventory, meaning, players have different views instead of one centralised.
      * @see VitalInventory#setItems(Player)
      *
      */
-    public final void update(boolean perPlayer) {
+    public final void update() {
         inventory.clear();
         onUpdate();
 
-        for (Player player : playerList) {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            final InventoryHolder inventoryHolder = player.getOpenInventory().getTopInventory().getHolder();
+
+            if(!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.equals(this)) {
+                continue;
+            }
+
+            final Inventory builtInventory = build();
+
             onUpdate(player);
             setItems(player);
 
-            if (perPlayer) {
-                final VitalInventory vitalInventory = (VitalInventory) player.getOpenInventory().getTopInventory().getHolder();
-
-                vitalInventory.setItems(player);
-            }
+            // open the newly updated inventory for the player that has this inventory holder open.
+            player.openInventory(builtInventory);
         }
-    }
-
-    /**
-     * Updates this inventory removing all items and resetting them for all players that have this inventory open.
-     *
-     * @apiNote This method calls {@link VitalInventory#update(boolean)} with param true as a centralised non session (non per player) based implementation.
-     * @see VitalInventory#setItems(Player)
-     */
-    public final void update() {
-        update(false);
     }
 
     /**
