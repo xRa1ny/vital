@@ -209,30 +209,23 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      * Updates this inventory removing all items and resetting them for all players that have this inventory open.
      *
      * @see VitalInventory#setItems(Player)
-     *
      */
     public final void update() {
         inventory.clear();
         onUpdate();
 
-        for(Player player : Bukkit.getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             final InventoryHolder inventoryHolder = player.getOpenInventory().getTopInventory().getHolder();
 
-            if(!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.getClass().equals(getClass())) {
+            if (!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.getClass().equals(getClass())) {
                 continue;
             }
-
-            final Inventory builtInventory = build();
 
             onUpdate(player);
             setItems(player);
 
-            if(!vitalInventory.equals(this)) {
-                // open the newly updated inventory for the player that has this inventory holder open.
-                player.openInventory(builtInventory);
-            }else {
-                player.openInventory(getInventory());
-            }
+            // open the newly updated inventory for the player that has this inventory holder open.
+            player.openInventory(player.getOpenInventory().getTopInventory());
         }
     }
 
@@ -246,8 +239,8 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     /**
      * Called when this inventory is updated;
      *
-     * @apiNote This method is called for every player this inventory is updated.
      * @param player The player.
+     * @apiNote This method is called for every player this inventory is updated.
      */
     public void onUpdate(@NonNull Player player) {
 
