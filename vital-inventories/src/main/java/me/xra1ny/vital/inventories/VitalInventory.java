@@ -218,7 +218,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         for(Player player : Bukkit.getOnlinePlayers()) {
             final InventoryHolder inventoryHolder = player.getOpenInventory().getTopInventory().getHolder();
 
-            if(!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.equals(this)) {
+            if(!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.getClass().equals(getClass())) {
                 continue;
             }
 
@@ -227,8 +227,12 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
             onUpdate(player);
             setItems(player);
 
-            // open the newly updated inventory for the player that has this inventory holder open.
-            player.openInventory(builtInventory);
+            if(!vitalInventory.equals(this)) {
+                // open the newly updated inventory for the player that has this inventory holder open.
+                player.openInventory(builtInventory);
+            }else {
+                player.openInventory(getInventory());
+            }
         }
     }
 
