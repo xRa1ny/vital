@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
@@ -118,6 +119,12 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
         }
 
         log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
+
+        final VitalExceptionsHandlerManager vitalExceptionsHandlerManager = new VitalExceptionsHandlerManager();
+        final VitalUncaughtExceptionHandler vitalUncaughtExceptionHandler = new VitalUncaughtExceptionHandler(vitalExceptionsHandlerManager);
+
+        registerVitalComponent(vitalExceptionsHandlerManager);
+        Bukkit.getLogger().addHandler(vitalUncaughtExceptionHandler);
 
         try {
             Class.forName("me.xra1ny.vital.configs.VitalConfigManager");
