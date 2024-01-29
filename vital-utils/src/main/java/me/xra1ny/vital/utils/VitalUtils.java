@@ -1,15 +1,14 @@
 package me.xra1ny.vital.utils;
 
 import lombok.NonNull;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.CreativeCategory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -322,5 +321,145 @@ public class VitalUtils {
                         material == Material.DISPENSER ||
                         material == Material.HOPPER ||
                         material == Material.HOPPER_MINECART);
+    }
+
+    /**
+     * Checks if the given location is contained within the mapped location1 and location2 area.
+     *
+     * @param location1 The first location.
+     * @param location2 The second location.
+     * @param location The location to check if it is contained within the area.
+     * @return true if the location is within the area; false otherwise.
+     */
+    public static boolean isInsideLocationArea(@NonNull Location location1, @NonNull Location location2, @NonNull Location location) {
+        final double ourMinX = Math.min(location1.getX(), location2.getX());
+        final double ourMaxX = Math.max(location1.getX(), location2.getX());
+
+        final double ourMinY = Math.min(location1.getY(), location2.getY());
+        final double ourMaxY = Math.max(location1.getY(), location2.getY());
+
+        final double ourMinZ = Math.min(location1.getZ(), location2.getZ());
+        final double ourMaxZ = Math.max(location1.getZ(), location2.getZ());
+
+        final double theirX = location.getX();
+        final double theirY = location.getY();
+        final double theirZ = location.getZ();
+
+        return theirX >= ourMinX && theirX <= ourMaxX &&
+                theirY >= ourMinY && theirY <= ourMaxY &&
+                theirZ >= ourMinZ && theirZ <= ourMaxZ;
+    }
+
+    /**
+     * Gets a random location within the mapped location1 and location2 area.
+     *
+     * @param location1 The first location.
+     * @param location2 The second location.
+     * @return The randomly calculated area location.
+     */
+    @NonNull
+    public static Location getRandomLocationInLocationArea(@NonNull Location location1, @NonNull Location location2) {
+        final double ourMinX = Math.min(location1.getX(), location2.getX());
+        final double ourMaxX = Math.max(location1.getX(), location2.getX());
+
+        final double ourMinY = Math.min(location1.getY(), location2.getY());
+        final double ourMaxY = Math.max(location1.getY(), location2.getY());
+
+        final double ourMinZ = Math.min(location1.getZ(), location2.getZ());
+        final double ourMaxZ = Math.max(location1.getZ(), location2.getZ());
+
+        final double randomX = new Random().nextDouble(ourMinX, ourMaxX);
+        final double randomY = new Random().nextDouble(ourMinY, ourMaxY);
+        final double randomZ = new Random().nextDouble(ourMinZ, ourMaxZ);
+
+        return new Location(location1.getWorld(), randomX, randomY, randomZ);
+    }
+
+    /**
+     * Gets the centered offset block location of the given location.
+     *
+     * @param location The block location.
+     * @param xOffset The x offset.
+     * @param yOffset The y offset.
+     * @param zOffset The z offset.
+     * @return The centered offset location.
+     */
+    @NonNull
+    public static Location getCenterBlockLocation(@NonNull Location location, double xOffset, double yOffset, double zOffset) {
+        return location.getBlock().getLocation().clone()
+                .add(.5, .5, .5)
+                .add(xOffset, yOffset, zOffset);
+    }
+
+    /**
+     * Gets the center location of the targeted location block.
+     *
+     * @return The centered block location.
+     */
+    @NonNull
+    public static Location getCenterBlockLocation(@NonNull Location location) {
+        return getCenterBlockLocation(location, 0, 0, 0);
+    }
+
+    /**
+     * Gets the top location of the targeted location block, while offsetting only the y-axis to be on top of the block.
+     *
+     * @param location The location.
+     * @return The location.
+     */
+    @NonNull
+    public static Location getCenterBlockTopLocation(@NonNull Location location) {
+        return getCenterBlockLocation(location, 0, .5, 0);
+    }
+
+    /**
+     * Gets the horizontal centered location of the targeted location block, while offsetting only the x- and z-axis of the block.
+     *
+     * @param location The location.
+     * @return The location.
+     */
+    @NonNull
+    public static Location getCenterBlockSideLocation(@NonNull Location location) {
+        return getCenterBlockLocation(location, 0, -.5, 0);
+    }
+
+    /**
+     * Takes the given world and "cleans" all gamerules for minigame purposes.
+     *
+     * @apiNote This calling this method sets the following values:
+     * <ul>
+     *  <li>DO_DAYLIGHT_CYCLE       : false</li>
+     *  <li>DO_FIRE_TICK            : false</li>
+     *  <li>DO_MOB_SPAWNING         : false</li>
+     *  <li>ANNOUNCE_ADVANCEMENTS   : false</li>
+     *  <li>DO_MOB_LOOT             : false</li>
+     *  <li>DO_MOB_SPAWNING         : false</li>
+     *  <li>DO_TRADER_SPAWNING      : false</li>
+     *  <li>DO_VINES_SPREAD         : false</li>
+     *  <li>MOB_GRIEFING            : false</li>
+     *  <li>SHOW_DEATH_MESSAGES     : false</li>
+     *  <li>KEEP_INVENTORY          : true</li>
+     *  <li>DISABLE_RAIDS           : true</li>
+     *  <li>TIME                    : 0</li>
+     *  <li>DIFFICULTY              : PEACEFUL</li>
+     * </ul>
+     * @param world The world.
+     */
+    public static void cleanGamerules(@NonNull World world) {
+        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        world.setGameRule(GameRule.DO_FIRE_TICK, false);
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        world.setGameRule(GameRule.DO_MOB_LOOT, false);
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        world.setGameRule(GameRule.DO_TRADER_SPAWNING, false);
+        world.setGameRule(GameRule.DO_VINES_SPREAD, false);
+        world.setGameRule(GameRule.MOB_GRIEFING, false);
+        world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+        world.setGameRule(GameRule.KEEP_INVENTORY, true);
+        world.setGameRule(GameRule.DISABLE_RAIDS, true);
+
+        world.setTime(0);
+        world.setDifficulty(Difficulty.PEACEFUL);
     }
 }

@@ -50,6 +50,10 @@ public final class VitalMinigameManager implements VitalComponent {
      */
     @SuppressWarnings("unused")
     public static <T extends VitalMinigameState> boolean isVitalMinigameState(@NonNull Class<T> vitalMinigameStateClass) {
+        if(instance.vitalMinigameState == null) {
+            return false;
+        }
+
         return vitalMinigameStateClass.equals(instance.vitalMinigameState.getClass());
     }
 
