@@ -2,6 +2,7 @@ package me.xra1ny.vital.utils;
 
 import lombok.NonNull;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.CreativeCategory;
 import org.bukkit.potion.PotionEffect;
@@ -424,9 +425,9 @@ public class VitalUtils {
     }
 
     /**
-     * Takes the given world and "cleans" all gamerules for minigame purposes.
+     * Takes the given world and "cleans" all rules for minigame or stale world purposes.
      *
-     * @apiNote This calling this method sets the following values:
+     * @apiNote Calling this method sets the following values:
      * <ul>
      *  <li>DO_DAYLIGHT_CYCLE       : false</li>
      *  <li>DO_FIRE_TICK            : false</li>
@@ -445,7 +446,7 @@ public class VitalUtils {
      * </ul>
      * @param world The world.
      */
-    public static void cleanGamerules(@NonNull World world) {
+    public static void cleanWorld(@NonNull World world) {
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_FIRE_TICK, false);
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
@@ -461,5 +462,49 @@ public class VitalUtils {
 
         world.setTime(0);
         world.setDifficulty(Difficulty.PEACEFUL);
+    }
+
+    /**
+     * Takes the given world and "cleans" all rules for minigame or stale world purposes.
+     *
+     * @param worldName The world name.
+     * @see VitalUtils#cleanWorld(World)
+     */
+    public static void cleanWorld(@NonNull String worldName) {
+        cleanWorld(Bukkit.getWorld(worldName));
+    }
+
+    /**
+     * Teleports the given player to the specified location with the given effect.
+     *
+     * @param player The player to teleport.
+     * @param location The location to teleport the player to.
+     * @param potionEffectType The potion effect for the teleportation.
+     */
+    public static void teleport(@NonNull Player player, @NonNull Location location, @NonNull PotionEffectType potionEffectType) {
+        player.removePotionEffect(potionEffectType);
+        player.addPotionEffect(new PotionEffect(potionEffectType, 2, Integer.MAX_VALUE));
+        player.teleport(location);
+        player.removePotionEffect(potionEffectType);
+    }
+
+    /**
+     * Teleports the given player to the specified location with an effect.
+     *
+     * @param player The player to teleport.
+     * @param location The location to teleport the player to.
+     */
+    public static void teleport(@NonNull Player player, @NonNull Location location) {
+        teleport(player, location, PotionEffectType.SLOW);
+    }
+
+    /**
+     * Teleports the given player to the specified target entity with an effect.
+     *
+     * @param player The player to teleport.
+     * @param to The entity to teleport to.
+     */
+    public static void teleport(@NonNull Player player, @NonNull Entity to) {
+        teleport(player, to.getLocation(), PotionEffectType.SLOW);
     }
 }

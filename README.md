@@ -12,7 +12,7 @@ Vital is thoughtfully organized into a series of submodules, each dedicated to a
 development:
 
 - 🏢**vital-core**: Provides essential functionality.
-- 👥**vital-users**: Manage player data and interactions with ease.
+- 👥**vital-players**: Manage player data and interactions with ease.
 - 📜**vital-configs**: Harness the power of an object-oriented programming (OOP) driven configuration system, eliminating
   the need to manually tweak .yml files.
 - ⌨️**vital-commands**: Effortlessly create and manage custom commands for your server.

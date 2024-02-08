@@ -33,7 +33,10 @@ public final class VitalInventoryListener extends VitalListener {
         final Player player = (Player) e.getPlayer();
 
         if (inventoryHolder instanceof VitalInventory vitalInventory) {
-            vitalInventory.onOpen(e);
+            // only call on open when the two inventories are different
+            if(!vitalInventory.getClass().equals(player.getOpenInventory().getTopInventory().getHolder().getClass())) {
+                vitalInventory.onOpen(e);
+            }
 
             vitalInventory.setBackground();
             vitalInventory.setItems(player);

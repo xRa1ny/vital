@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
 import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Map;
 
 /**
  * A class responsible for managing cooldowns of VitalItemStack items.
@@ -56,13 +59,22 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
     @Override
     public void onTick() {
         for (VitalItemStack vitalItemStack : vitalItemStackManager.getVitalComponentList()) {
-            for (int i = 0; i < 50; i++) {
-                // Reduce Cooldown
-                if (vitalItemStack.getCurrentCooldown() <= 0) {
+            // Reduce Cooldown
+            for (Map.Entry<Player, Integer> entry : vitalItemStack.getPlayerCooldownMap().entrySet()) {
+                if (entry.getValue() <= 0) {
                     continue;
                 }
 
-                vitalItemStack.setCurrentCooldown(vitalItemStack.getCurrentCooldown() - 1);
+                vitalItemStack.getPlayerCooldownMap().put(entry.getKey(), entry.getValue() - 50);
+
+                if(vitalItemStack.equals(entry.getKey().getInventory().getItemInMainHand())) {
+                    vitalItemStack.onCooldownTick(entry.getKey());
+                }
+
+                if (vitalItemStack.getCooldown(entry.getKey()) <= 0) {
+                    // cooldown has expired, call on expired.
+                    vitalItemStack.onCooldownExpire(entry.getKey());
+                }
             }
         }
     }

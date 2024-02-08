@@ -37,7 +37,6 @@ public final class VitalMinigameManager implements VitalComponent {
      * @param javaPlugin The {@link JavaPlugin}.
      */
     public VitalMinigameManager(@NonNull JavaPlugin javaPlugin) {
-        instance = this;
         this.javaPlugin = javaPlugin;
     }
 
@@ -94,7 +93,7 @@ public final class VitalMinigameManager implements VitalComponent {
 
     @Override
     public void onRegistered() {
-
+        instance = this;
     }
 
     @Override

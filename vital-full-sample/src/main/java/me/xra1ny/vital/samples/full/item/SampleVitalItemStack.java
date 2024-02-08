@@ -117,6 +117,6 @@ public final class SampleVitalItemStack extends VitalItemStack {
         final Player player = e.getPlayer();
 
         player.sendMessage("cooling down...");
-        player.sendMessage("remaining: " + getCurrentCooldown());
+        player.sendMessage("remaining: " + getPlayerCooldownMap().get(player));
     }
 }
