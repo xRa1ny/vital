@@ -2,8 +2,9 @@ package me.xra1ny.vital.players;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import me.xra1ny.vital.core.VitalComponent;
+import me.xra1ny.vital.core.VitalCore;
 import me.xra1ny.vital.core.VitalListener;
-import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -16,18 +17,13 @@ import java.util.Optional;
  *
  * @author xRa1ny
  */
-@VitalDI
 public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalListener {
-    private final VitalPlayerManager<T> vitalPlayerManager;
+    private final VitalCore<?> vitalCore;
 
-    /**
-     * Creates a new instance of VitalPlayerListener.
-     *
-     * @param vitalPlayerManager The VitalUserManagement instance to manage VitalPlayer components.
-     */
-    public VitalPlayerListener(@NonNull VitalPlayerManager<T> vitalPlayerManager) {
-        this.vitalPlayerManager = vitalPlayerManager;
+    protected VitalPlayerListener(VitalCore<?> vitalCore) {
+        this.vitalCore = vitalCore;
     }
+
 
     /**
      * Handles the event when a player joins the server.
@@ -38,14 +34,14 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
     @EventHandler
     public final void onPlayerJoinServer(@NonNull PlayerJoinEvent e) {
         // Retrieve the VitalPlayer associated with the joining player, if it exists.
-        final Optional<T> optionalVitalPlayer = vitalPlayerManager.getVitalComponent(e.getPlayer().getUniqueId());
+        final Optional<VitalComponent> optionalVitalPlayer = vitalCore.getComponent(e.getPlayer().getUniqueId());
 
         if (optionalVitalPlayer.isEmpty()) {
             // Create a new VitalPlayer for the joining player.
             final T vitalPlayer = vitalPlayerType().getDeclaredConstructor(Player.class).newInstance(e.getPlayer());
 
             // Register the VitalPlayer with VitalUserManagement.
-            vitalPlayerManager.registerVitalComponent(vitalPlayer);
+            vitalCore.registerComponent(vitalPlayer);
         }
     }
 
@@ -57,16 +53,16 @@ public abstract class VitalPlayerListener<T extends VitalPlayer> extends VitalLi
     @EventHandler
     public final void onPlayerLeaveServer(@NonNull PlayerQuitEvent e) {
         // Retrieve the VitalPlayer associated with the leaving player.
-        final Optional<T> optionalVitalPlayer = vitalPlayerManager.getVitalComponent(e.getPlayer().getUniqueId());
+        final Optional<VitalComponent> optionalVitalPlayer = vitalCore.getComponent(e.getPlayer().getUniqueId());
 
         if (optionalVitalPlayer.isEmpty()) {
             return;
         }
 
-        final T vitalPlayer = optionalVitalPlayer.get();
+        final VitalComponent vitalPlayer = optionalVitalPlayer.get();
 
         // Unregister the VitalPlayer from VitalUserManagement.
-        vitalPlayerManager.unregisterVitalComponent(vitalPlayer);
+        vitalCore.unregisterComponent(vitalPlayer);
     }
 
     /**

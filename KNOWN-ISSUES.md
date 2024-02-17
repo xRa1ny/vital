@@ -20,8 +20,3 @@
 ## vital-commands
 
 - `executeBaseCommand()` will currently still be executed on every `INVALID_ARGS` command return state
-
-## vital-databases
-
-- Developers currently still need to implement hibernate and the mysql-connector-j dependency to their project for Vital
-  to work

@@ -4,7 +4,6 @@ import lombok.NonNull;
 import me.xra1ny.vital.commands.annotation.VitalCommandInfo;
 import me.xra1ny.vital.core.processor.VitalPluginInfoAnnotationProcessor;
 import me.xra1ny.vital.core.processor.VitalPluginInfoHolder;
-import org.reflections.Reflections;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;

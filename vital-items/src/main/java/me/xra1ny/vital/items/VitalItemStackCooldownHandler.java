@@ -2,6 +2,7 @@ package me.xra1ny.vital.items;
 
 import lombok.Getter;
 import lombok.NonNull;
+import me.xra1ny.essentia.inject.annotation.Component;
 import me.xra1ny.vital.tasks.VitalRepeatableTask;
 import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author xRa1ny
  */
+@Component
 @VitalRepeatableTaskInfo(value = 50)
 public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
     /**
@@ -55,7 +57,7 @@ public final class VitalItemStackCooldownHandler extends VitalRepeatableTask {
      */
     @Override
     public void onTick() {
-        for (VitalItemStack vitalItemStack : vitalItemStackManager.getVitalComponentList()) {
+        for (VitalItemStack vitalItemStack : vitalItemStackManager.getComponentList()) {
             for (int i = 0; i < 50; i++) {
                 // Reduce Cooldown
                 if (vitalItemStack.getCurrentCooldown() <= 0) {

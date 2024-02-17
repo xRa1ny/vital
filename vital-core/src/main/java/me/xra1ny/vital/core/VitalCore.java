@@ -2,16 +2,16 @@ package me.xra1ny.vital.core;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
-import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
-import org.bukkit.Bukkit;
+import me.xra1ny.essentia.inject.DIContainer;
+import me.xra1ny.essentia.inject.EssentiaInject;
+import me.xra1ny.except.EssentiaExcept;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The main instance of the Vital-Framework.
@@ -21,7 +21,30 @@ import java.util.Set;
  */
 @SuppressWarnings("unused")
 @Log
-public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentListManager<VitalComponent> {
+public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
+    @Getter
+    @NonNull
+    private final Map<Class<?>, Object> componentClassObjectMap = new HashMap<>();
+
+    @Override
+    public void unregisterComponent(@NonNull Class<?> type) {
+        componentClassObjectMap.remove(type);
+    }
+
+    @Override
+    public void unregisterComponent(@NonNull Object o) {
+        componentClassObjectMap.remove(o.getClass(), o);
+    }
+
+    @Override
+    public void registerComponent(@NonNull Object o) {
+        if(isRegistered(o)) {
+            return;
+        }
+
+        componentClassObjectMap.put(o.getClass(), o);
+    }
+
     private static VitalCore<?> instance;
 
     /**
@@ -43,33 +66,6 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
     @Getter
     private boolean enabled;
 
-    @Getter
-    private boolean usingVitalConfigs;
-
-    @Getter
-    private boolean usingVitalHolograms;
-
-    @Getter
-    private boolean usingVitalPlayers;
-
-    @Getter
-    private boolean usingVitalCommands;
-
-    @Getter
-    private boolean usingVitalItems;
-
-    @Getter
-    private boolean usingVitalInventories;
-
-    @Getter
-    private boolean usingVitalDatabases;
-
-    @Getter
-    private boolean usingVitalMinigames;
-
-    @Getter
-    private boolean usingVitalUtils;
-
     /**
      * Constructs a new {@link VitalCore} instance.
      *
@@ -78,7 +74,8 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
     public VitalCore(@NonNull T javaPlugin) {
         this.javaPlugin = javaPlugin;
         instance = this;
-        registerVitalComponent(new VitalListenerManager(javaPlugin));
+        registerComponent(this);
+        registerComponent(javaPlugin);
     }
 
     /**
@@ -105,14 +102,10 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
         return instance;
     }
 
-    @Override
-    public @NotNull Class<VitalComponent> managedType() {
-        return VitalComponent.class;
-    }
-
     /**
      * Enables the Vital-Framework, initialising needed systems.
      */
+    @SneakyThrows // TODO
     public final void enable() {
         if (enabled) {
             return;
@@ -120,90 +113,13 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
 
         log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
 
-        final VitalExceptionsHandlerManager vitalExceptionsHandlerManager = new VitalExceptionsHandlerManager();
-        final VitalUncaughtExceptionHandler vitalUncaughtExceptionHandler = new VitalUncaughtExceptionHandler(vitalExceptionsHandlerManager);
-
-        registerVitalComponent(vitalExceptionsHandlerManager);
-        Bukkit.getLogger().addHandler(vitalUncaughtExceptionHandler);
-
-        try {
-            Class.forName("me.xra1ny.vital.configs.VitalConfigManager");
-
-            usingVitalConfigs = true;
-        } catch (ClassNotFoundException ignored) {}
-
-        try {
-            Class.forName("me.xra1ny.vital.holograms.VitalHologramManager");
-
-            usingVitalHolograms = true;
-        } catch (ClassNotFoundException ignored) {}
-
-        try {
-            Class.forName("me.xra1ny.vital.players.VitalPlayerManager");
-
-            usingVitalPlayers = true;
-        } catch (ClassNotFoundException ignored) {}
-
-        try {
-            Class.forName("me.xra1ny.vital.commands.VitalCommandManager");
-
-            usingVitalCommands = true;
-        } catch (ClassNotFoundException ignored) {}
-
-        try {
-            Class.forName("me.xra1ny.vital.items.VitalItemStackManager");
-
-            usingVitalItems = true;
-        } catch (ClassNotFoundException ignored) {}
-
-        try {
-            Class.forName("me.xra1ny.vital.inventories.VitalInventoryListener");
-
-            usingVitalInventories = true;
-        } catch (ClassNotFoundException ignored) {}
-
-        try {
-            Class.forName("me.xra1ny.vital.databases.VitalDatabaseManager");
-
-            usingVitalDatabases = true;
-        } catch (ClassNotFoundException ignored) {}
-
-        try {
-            Class.forName("me.xra1ny.vital.minigames.VitalMinigameManager");
-
-            usingVitalDatabases = true;
-        } catch (ClassNotFoundException ignored) {}
-
-        try {
-            Class.forName("me.xra1ny.vital.utils.VitalUtils");
-
-            usingVitalUtils = true;
-        }catch (ClassNotFoundException ignored) {}
+        // accept any class based exception handlers.
+        EssentiaExcept.run(javaPlugin.getLogger(), javaPlugin.getClass().getPackageName(), "me.xra1ny.vital");
 
         onEnable();
 
-        // scan for all classes annotated with `@VitalAutoRegistered` and attempt to register them on the base manager.
-        // NOTE: this configuration is entirely user dependent, if a user wrongly implements their auto registered components,
-        // with components that cannot be dependency injected, this registration will not work!!!
-        for (Class<? extends VitalComponent> vitalComponentClass : new Reflections().getTypesAnnotatedWith(VitalAutoRegistered.class).stream()
-                .filter(VitalComponent.class::isAssignableFrom)
-                .map(VitalComponent.class.getClass()::cast)
-                .toList()) {
-            // assume every class is extended from `VitalComponent` since we filtered in our chain above.
-            final Optional<? extends VitalComponent> optionalVitalComponent = VitalDIUtils.getDependencyInjectedInstance(vitalComponentClass);
-
-            // display error if a dependency injected instance of our marked class could not be created, else register it von the base manager of vital.
-            if (optionalVitalComponent.isEmpty()) {
-                log.severe("Vital attempted to automatically register " + vitalComponentClass + " but failed!");
-            } else {
-                registerVitalComponent(optionalVitalComponent.get());
-            }
-        }
-
-        // loop over every registered manager and enable them.
-        for (VitalComponentListManager<?> vitalComponentListManager : getVitalComponentList(VitalComponentListManager.class)) {
-            vitalComponentListManager.enable();
-        }
+        // register both plugin package and Vital's package.
+        EssentiaInject.run(this, javaPlugin.getClass().getPackageName(), "me.xra1ny.vital");
 
         enabled = true;
         log.info("VitalCore<" + getJavaPlugin() + "> enabled!");
@@ -215,19 +131,32 @@ public abstract class VitalCore<T extends JavaPlugin> extends VitalComponentList
      */
     public abstract void onEnable();
 
-    @Override
-    public final void disable() {
-        // disable all managers within Vital.
-        new ArrayList<>(getVitalComponentList(VitalComponentListManager.class))
-                .forEach(VitalComponentListManager::disable);
-
-        // now unregister all remaining components.
-        new ArrayList<>(getVitalComponentList())
-                .forEach(this::unregisterVitalComponent);
-    }
-
     /**
      * Called when this VitalCore is disabled.
      */
     public abstract void onDisable();
+
+    public Optional<VitalComponent> getComponent(@NotNull UUID uniqueId) {
+        return getComponentList().stream()
+                .filter(VitalComponent.class::isInstance)
+                .map(VitalComponent.class::cast)
+                .filter(component -> component.getUniqueId().equals(uniqueId))
+                .findFirst();
+    }
+
+    public boolean isUsingSubModule(@NonNull Class<? extends VitalSubModule> subModuleType) {
+        return isRegistered(subModuleType);
+    }
+
+    @NonNull
+    public List<? extends VitalSubModule> getUsedSubModules() {
+        return getComponentList(VitalSubModule.class);
+    }
+
+    @NonNull
+    public List<String> getUsedSubModuleNames() {
+        return getUsedSubModules().stream()
+                .map(VitalSubModule::getName)
+                .toList();
+    }
 }

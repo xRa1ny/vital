@@ -1,8 +1,8 @@
 package me.xra1ny.vital.items;
 
 import lombok.NonNull;
+import me.xra1ny.essentia.inject.annotation.Component;
 import me.xra1ny.vital.core.VitalListener;
-import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
  *
  * @author xRa1ny
  */
-@VitalDI
+@Component
 public final class VitalItemStackListener extends VitalListener {
     /**
      * The management system for custom item stacks.
@@ -41,7 +41,7 @@ public final class VitalItemStackListener extends VitalListener {
         }
 
         // Find the custom item stack that matches the player's interaction item.
-        vitalItemStackManager.getVitalComponentList()
+        vitalItemStackManager.getComponentList()
                 .stream()
                 .filter(i -> i.equals(e.getItem()))
                 .findFirst()

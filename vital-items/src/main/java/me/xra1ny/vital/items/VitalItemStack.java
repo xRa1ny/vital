@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
-import me.xra1ny.vital.core.VitalAutoRegisterable;
-import me.xra1ny.vital.core.VitalCore;
 import me.xra1ny.vital.items.annotation.VitalItemStackInfo;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -14,10 +12,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -28,7 +24,7 @@ import java.util.UUID;
  * @author xRa1ny
  */
 @SuppressWarnings("unused")
-public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo>, VitalAutoRegisterable {
+public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo> {
     /**
      * The current Cooldown of this VitalItemStack.
      */
@@ -192,16 +188,6 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      */
     public final boolean isEnchanted() {
         return !getItemMeta().getEnchants().isEmpty();
-    }
-
-    @Override
-    public final void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
-        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
-
-        final Optional<VitalItemStackManager> optionalVitalItemStackManager = vitalCore.getVitalComponent(VitalItemStackManager.class);
-        final VitalItemStackManager vitalItemStackManager = optionalVitalItemStackManager.get();
-
-        vitalItemStackManager.registerVitalComponent(this);
     }
 }
 

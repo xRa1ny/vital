@@ -2,10 +2,12 @@ package me.xra1ny.vital.minigames;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import me.xra1ny.essentia.inject.DIFactory;
+import me.xra1ny.essentia.inject.annotation.AfterInit;
+import me.xra1ny.essentia.inject.annotation.Component;
 import me.xra1ny.vital.core.VitalComponent;
-import me.xra1ny.vital.core.VitalDIUtils;
-import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,7 +21,7 @@ import java.util.Optional;
  * @author xRa1ny
  */
 @Log
-@VitalDI
+@Component
 public final class VitalMinigameManager implements VitalComponent {
     private static VitalMinigameManager instance;
 
@@ -37,8 +39,12 @@ public final class VitalMinigameManager implements VitalComponent {
      * @param javaPlugin The {@link JavaPlugin}.
      */
     public VitalMinigameManager(@NonNull JavaPlugin javaPlugin) {
-        instance = this;
         this.javaPlugin = javaPlugin;
+    }
+
+    @AfterInit
+    public void afterInit() {
+        log.info("VitalMinigameManager online!");
     }
 
     /**
@@ -60,11 +66,12 @@ public final class VitalMinigameManager implements VitalComponent {
     /**
      * Sets the current minigame state by Class.
      *
-     * @apiNote this method attempts to construct a dependency injected instance using Vital's DI utils {@link VitalDIUtils}
+     * @apiNote this method attempts to construct a dependency injected instance using Vital's DI utils {@link DIFactory}
      * @param vitalMinigameStateClass The Class of the minigame state to set to (must be registered).
      */
+    @SneakyThrows // TODO
     public static void setVitalMinigameState(@NonNull Class<? extends VitalMinigameState> vitalMinigameStateClass) {
-        final Optional<? extends VitalMinigameState> optionalDiVitalMinigameState = VitalDIUtils.getDependencyInjectedInstance(vitalMinigameStateClass, false);
+        final Optional<? extends VitalMinigameState> optionalDiVitalMinigameState = Optional.ofNullable(DIFactory.getInstance(vitalMinigameStateClass));
 
         optionalDiVitalMinigameState.ifPresent(VitalMinigameManager::setVitalMinigameState);
     }

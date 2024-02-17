@@ -1,14 +1,17 @@
 package me.xra1ny.vital.items;
 
 import lombok.NonNull;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
-import me.xra1ny.vital.core.VitalComponentListManager;
-import me.xra1ny.vital.core.annotation.VitalDI;
+import me.xra1ny.essentia.inject.DIFactory;
+import me.xra1ny.essentia.inject.annotation.AfterInit;
+import me.xra1ny.essentia.inject.annotation.Component;
+import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,19 +22,21 @@ import java.util.Optional;
  * @author xRa1ny
  */
 @Log
-@VitalDI
-public final class VitalItemStackManager extends VitalComponentListManager<VitalItemStack> {
-    private static VitalItemStackManager instance;
+@Component
+public final class VitalItemStackManager {
+    private final VitalCore<?> vitalCore;
 
-    @Override
-    public void onRegistered() {
-        instance = this;
+    public VitalItemStackManager(VitalCore<?> vitalCore) {
+        this.vitalCore = vitalCore;
+    }
+
+    @AfterInit
+    public void afterInit() {
         log.info("VitalItemStackManager online!");
     }
 
-    @Override
-    public @NotNull Class<VitalItemStack> managedType() {
-        return VitalItemStack.class;
+    public List<VitalItemStack> getComponentList() {
+        return vitalCore.getComponentList(VitalItemStack.class);
     }
 
     /**
@@ -41,9 +46,10 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
      * @param itemStackClass The class of the {@link VitalItemStack} (must be registered).
      * @return The {@link Map} containing all items that didn't fit.
      */
+    @SneakyThrows // TODO
     @NonNull
     public static Map<Integer, ItemStack> addItem(@NonNull Inventory inventory, @NonNull Class<? extends VitalItemStack> itemStackClass) {
-        final Optional<? extends VitalItemStack> optionalVitalItemStack = instance.getVitalComponent(itemStackClass);
+        final Optional<? extends VitalItemStack> optionalVitalItemStack = Optional.ofNullable(DIFactory.getInstance(itemStackClass));
 
         if(optionalVitalItemStack.isPresent()) {
             return inventory.addItem(optionalVitalItemStack.get());
@@ -71,8 +77,9 @@ public final class VitalItemStackManager extends VitalComponentListManager<Vital
      * @param slot The slot.
      * @param itemStackClass The class of te {@link VitalItemStack} (must be registered).
      */
+    @SneakyThrows // TODO
     public static void setItem(@NonNull Inventory inventory, int slot, @NonNull Class<? extends VitalItemStack> itemStackClass) {
-        final Optional<? extends VitalItemStack> optionalVitalItemStack = instance.getVitalComponent(itemStackClass);
+        final Optional<? extends VitalItemStack> optionalVitalItemStack = Optional.ofNullable(DIFactory.getInstance(itemStackClass));
 
         optionalVitalItemStack.ifPresent(vitalItemStack -> inventory.setItem(slot, vitalItemStack));
     }

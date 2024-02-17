@@ -1,15 +1,13 @@
 package me.xra1ny.vital.core;
 
 import lombok.NonNull;
-import me.xra1ny.vital.core.annotation.VitalAutoRegistered;
-import me.xra1ny.vital.core.annotation.VitalDI;
+import me.xra1ny.essentia.inject.annotation.Component;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Interface specifying that any underlying child class is viable for an auto registration mechanism
  *
- * @see VitalDI
- * @see VitalAutoRegistered
+ * @see Component
  * @deprecated Since the introduction to dependency injection.
  */
 @Deprecated

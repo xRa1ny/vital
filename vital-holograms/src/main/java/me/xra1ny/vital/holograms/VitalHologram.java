@@ -4,12 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import me.xra1ny.vital.configs.VitalConfigSerializable;
-import me.xra1ny.vital.configs.annotation.VitalConfigEnum;
-import me.xra1ny.vital.configs.annotation.VitalConfigPath;
-import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalComponent;
-import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -17,19 +12,17 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Represents a hologram in the Vital-Framework.
  *
  * @author xRa1ny
  */
-public final class VitalHologram implements VitalComponent, VitalConfigSerializable, VitalAutoRegisterable {
+public final class VitalHologram implements VitalComponent {
 
     /**
      * The name of this hologram.
@@ -37,7 +30,6 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Getter
     @Setter
     @NonNull
-    @VitalConfigPath("name")
     private String name;
 
     /**
@@ -61,7 +53,6 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Getter
     @Setter
     @NonNull
-    @VitalConfigPath("lines")
     private List<String> lines = new ArrayList<>();
 
     /**
@@ -70,7 +61,6 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Getter
     @Setter
     @NonNull
-    @VitalConfigPath("location")
     private Location location;
 
     /**
@@ -79,16 +69,7 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Getter
     @Setter
     @NonNull
-    @VitalConfigPath("display-type")
-    @VitalConfigEnum
     private Material displayType;
-
-    /**
-     * Constructor for config deserialization.
-     */
-    public VitalHologram() {
-
-    }
 
     /**
      * Constructs a new VitalHologram instance.
@@ -183,15 +164,5 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Override
     public void onUnregistered() {
         remove();
-    }
-
-    @Override
-    public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
-        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
-
-        final Optional<VitalHologramManager> optionalVitalHologramManager = vitalCore.getVitalComponent(VitalHologramManager.class);
-        final VitalHologramManager vitalHologramManager = optionalVitalHologramManager.get();
-
-        vitalHologramManager.registerVitalComponent(this);
     }
 }

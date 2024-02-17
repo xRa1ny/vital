@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
-import me.xra1ny.vital.core.annotation.VitalDI;
 import me.xra1ny.vital.tasks.annotation.VitalRepeatableTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -16,7 +15,6 @@ import org.bukkit.scheduler.BukkitTask;
  *
  * @author xRa1ny
  */
-@VitalDI
 public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<VitalRepeatableTaskInfo> {
     @Getter
     @NonNull

@@ -2,13 +2,11 @@ package me.xra1ny.vital.commands;
 
 import lombok.Getter;
 import lombok.NonNull;
+import me.xra1ny.essentia.inject.annotation.AfterInit;
 import me.xra1ny.vital.commands.annotation.VitalCommandArg;
 import me.xra1ny.vital.commands.annotation.VitalCommandArgHandler;
 import me.xra1ny.vital.commands.annotation.VitalCommandInfo;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
-import me.xra1ny.vital.core.VitalAutoRegisterable;
-import me.xra1ny.vital.core.VitalCore;
-import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,8 +29,7 @@ import java.util.stream.Stream;
  *
  * @author xRa1ny
  */
-@VitalDI
-public abstract class VitalCommand implements AnnotatedVitalComponent<VitalCommandInfo>, VitalAutoRegisterable, CommandExecutor, TabExecutor {
+public abstract class VitalCommand implements AnnotatedVitalComponent<VitalCommandInfo>, CommandExecutor, TabExecutor {
     /**
      * The name of the command.
      */
@@ -70,6 +67,11 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         this.permission = vitalCommandInfo.permission();
         this.requiresPlayer = vitalCommandInfo.requiresPlayer();
         this.vitalCommandArgs = vitalCommandInfo.args();
+    }
+
+    @AfterInit
+    public final void afterInit(JavaPlugin javaPlugin) {
+        javaPlugin.getCommand(name).setExecutor(this);
     }
 
     /**
@@ -534,15 +536,5 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
      */
     protected void onCommandRequiresPlayer(@NonNull CommandSender sender) {
 
-    }
-
-    @Override
-    public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
-        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
-
-        final Optional<VitalCommandManager> optionalVitalCommandManager = vitalCore.getVitalComponent(VitalCommandManager.class);
-        final VitalCommandManager vitalCommandManager = optionalVitalCommandManager.get();
-
-        vitalCommandManager.registerVitalComponent(this);
     }
 }
