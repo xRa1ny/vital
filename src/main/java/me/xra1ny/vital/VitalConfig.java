@@ -13,7 +13,7 @@ import me.xra1ny.essentia.inject.annotation.Component;
  */
 @Component
 @ConfigInfo("config.yml")
-public final class VitalConfig extends Config<Object> {
+public final class VitalConfig extends Config {
 
     /**
      * Flag indicating whether the database is enabled.
@@ -21,35 +21,35 @@ public final class VitalConfig extends Config<Object> {
      *
      * @apiNote Set to true if database support should be enabled, false otherwise.
      */
-    @Property("vital.database-enabled")
+    @Property(boolean.class)
     public boolean vitalDatabaseEnabled = false;
 
     /**
      * Prefix to be used in Vital messages.
      * Example: "§l§cVital  "
      */
-    @Property("vital.prefix")
+    @Property(String.class)
     public String vitalPrefix = "§l§cVital  ";
 
     /**
      * Color for chat messages.
      * Example: "GRAY"
      */
-    @Property("vital.chat-color")
+    @Property(String.class)
     public String vitalChatColorName = "GRAY";
 
     /**
      * Error message to display when a player lacks permission to perform an action.
      * Example: "§l§cERROR! §r§cNo permissions!"
      */
-    @Property("vital.player-no-permission-error-message")
+    @Property(String.class)
     public String vitalPlayerNoPermissionErrorMessage = "§l§cERROR! §r§cNo permissions!";
 
     /**
      * Error message to display when a player is not found.
      * Example: "§l§cERROR! Player not found!"
      */
-    @Property("vital.player-not-found-error-message")
+    @Property(String.class)
     public String vitalPlayerNotFoundErrorMessage = "§l§cERROR! Player not found!";
 
     /**
@@ -60,28 +60,27 @@ public final class VitalConfig extends Config<Object> {
      *
      * @apiNote This message should inform the user that the command is exclusive to players.
      */
-    @Property("vital.command-only-player-error-message")
+    @Property(String.class)
     public String vitalCommandOnlyPlayerErrorMessage = "§l§cERROR! Command can only be executed by a Player!";
 
     /**
      * Error message to display when a command encounters an error.
      * Example: "§l§cERROR! An error occurred while performing Command!"
      */
-    @Property("vital.command-error-message")
+    @Property(String.class)
     public String vitalCommandErrorMessage = "§l§cERROR! An error occurred while performing Command!";
 
     /**
      * Error message to display when a command receives invalid arguments.
      * Example: "§l§cERROR! Command does not support provided Arguments!"
      */
-    @Property("vital.command-invalid-args-error-message")
+    @Property(String.class)
     public String vitalCommandInvalidArgsErrorMessage = "§l§cERROR! Command does not support provided Arguments!";
 
     /**
      * Error message to display when an internal error occurs during command execution.
      * Example: "§l§cERROR! Internal error while performing Command!"
      */
-    @Property("vital.command-internal-error-message")
+    @Property(String.class)
     public String vitalCommandInternalErrorMessage = "§l§cERROR! Internal error while performing Command!";
 }
-

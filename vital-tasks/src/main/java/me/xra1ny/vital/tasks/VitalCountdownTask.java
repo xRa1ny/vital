@@ -104,11 +104,19 @@ public class VitalCountdownTask implements AnnotatedVitalComponent<VitalCountdow
     }
 
     /**
+     * Resets the countdown to its initial value.
+     */
+    public final void reset() {
+        countdown = initialCountdown;
+        onReset();
+    }
+
+    /**
      * Resets the countdown to its initial value, restarting its responsible {@link VitalRepeatableTask}.
      */
     public final void restart() {
         vitalRepeatableTask.stop();
-        countdown = initialCountdown;
+        reset();
         vitalRepeatableTask.start();
         onRestart();
     }
@@ -142,7 +150,14 @@ public class VitalCountdownTask implements AnnotatedVitalComponent<VitalCountdow
     }
 
     /**
-     * Called when the countdown is told to reset
+     * Called when the countdown is told to reset to its initial value.
+     */
+    public void onReset() {
+
+    }
+
+    /**
+     * Called when the countdown is told to restart.
      *
      * @see VitalCountdownTask#restart()
      */

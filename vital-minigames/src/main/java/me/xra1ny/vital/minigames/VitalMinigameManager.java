@@ -44,6 +44,7 @@ public final class VitalMinigameManager implements VitalComponent {
 
     @AfterInit
     public void afterInit() {
+        instance = this;
         log.info("VitalMinigameManager online!");
     }
 

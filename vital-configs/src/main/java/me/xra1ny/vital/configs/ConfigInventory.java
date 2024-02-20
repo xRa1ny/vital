@@ -1,8 +1,7 @@
 package me.xra1ny.vital.configs;
 
-import com.google.j2objc.annotations.Property;
-import lombok.Data;
 import lombok.NonNull;
+import me.xra1ny.essentia.configs.annotation.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -17,13 +16,12 @@ import java.util.Objects;
  *
  * @author xRa1ny
  */
-@Data
 public class ConfigInventory {
-    @Property("type")
-    private InventoryType type;
+    @Property(InventoryType.class)
+    public InventoryType type;
 
-    @Property("contents")
-    private ConfigItemStack[] contents;
+    @Property(ConfigItemStack.class)
+    public ConfigItemStack[] contents;
 
     @NonNull
     public static ConfigInventory of(@NonNull Inventory inventory) {

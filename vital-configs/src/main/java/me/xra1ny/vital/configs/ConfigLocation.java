@@ -1,38 +1,34 @@
 package me.xra1ny.vital.configs;
 
-import com.google.j2objc.annotations.Property;
-import lombok.Data;
 import lombok.NonNull;
+import me.xra1ny.essentia.configs.annotation.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-
-import java.util.Optional;
 
 /**
  * Wrapper class to store location data to a config file.
  *
  * @author xRa1ny
  */
-@Data
 public class ConfigLocation {
-    @Property("world")
-    private String world;
+    @Property(String.class)
+    public String world;
 
-    @Property("x")
-    private double x;
+    @Property(double.class)
+    public double x;
 
-    @Property("y")
-    private double y;
+    @Property(double.class)
+    public double y;
 
-    @Property("z")
-    private double z;
+    @Property(double.class)
+    public double z;
 
-    @Property("pitch")
-    private float pitch;
+    @Property(float.class)
+    public float pitch;
 
-    @Property("yaw")
-    private float yaw;
+    @Property(float.class)
+    public float yaw;
 
     @NonNull
     public static ConfigLocation of(@NonNull Location location) {
@@ -49,10 +45,10 @@ public class ConfigLocation {
     }
 
     @NonNull
-    public Optional<Location> toLocation() {
-        final Optional<World> optionalWorld = Optional.ofNullable(Bukkit.getWorld(world));
+    public Location toLocation() {
+        final World world = Bukkit.getWorld(this.world);
 
-        return optionalWorld.map(world -> new Location(world, x, y, z, pitch, yaw));
+        return new Location(world, x, y, z, pitch, yaw);
 
     }
 }

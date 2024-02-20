@@ -1,8 +1,7 @@
 package me.xra1ny.vital.configs;
 
-import com.google.j2objc.annotations.Property;
-import lombok.Data;
 import lombok.NonNull;
+import me.xra1ny.essentia.configs.annotation.Property;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,10 +10,9 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author xRa1ny
  */
-@Data
 public class ConfigItemStack {
-    @Property("type")
-    private Material type;
+    @Property(Material.class)
+    public Material type;
 
     @NonNull
     public static ConfigItemStack of(@NonNull ItemStack itemStack) {

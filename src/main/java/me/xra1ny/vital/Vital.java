@@ -1,6 +1,7 @@
 package me.xra1ny.vital;
 
 import lombok.NonNull;
+import me.xra1ny.except.EssentiaExcept;
 import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,7 +27,8 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
 
     @Override
     public void onDisable() {
-
+        // accept any class based exception handlers.
+        EssentiaExcept.run(getJavaPlugin().getLogger(), getJavaPlugin().getClass().getPackageName(), "me.xra1ny.vital");
     }
 
     @Override

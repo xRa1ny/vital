@@ -1,6 +1,7 @@
 package me.xra1ny.vital.inventories;
 
 import lombok.NonNull;
+import me.xra1ny.essentia.inject.annotation.Component;
 import me.xra1ny.vital.core.VitalListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,7 @@ import java.util.Optional;
  *
  * @author xRa1ny
  */
+@Component
 public final class VitalInventoryListener extends VitalListener {
     /**
      * Handles the event when a player opens an inventory.

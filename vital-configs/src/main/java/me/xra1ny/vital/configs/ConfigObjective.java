@@ -1,8 +1,7 @@
 package me.xra1ny.vital.configs;
 
-import com.google.j2objc.annotations.Property;
-import lombok.Data;
 import lombok.NonNull;
+import me.xra1ny.essentia.configs.annotation.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -13,19 +12,18 @@ import org.bukkit.scoreboard.Scoreboard;
  *
  * @author xRa1ny
  */
-@Data
 public class ConfigObjective {
-    @Property("criteria")
-    private String criteria;
+    @Property(String.class)
+    public String criteria;
 
-    @Property("slot")
-    private DisplaySlot slot;
+    @Property(DisplaySlot.class)
+    public DisplaySlot slot;
 
-    @Property("title")
-    private String title;
+    @Property(String.class)
+    public String title;
 
-    @Property("lines")
-    private String[] lines;
+    @Property(String.class)
+    public String[] lines;
 
     @NonNull
     public static ConfigObjective of(@NonNull Objective objective) {

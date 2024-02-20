@@ -78,6 +78,11 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
             }
 
             @Override
+            public void onReset() {
+                VitalCountdownMinigameState.this.onCountdownReset();
+            }
+
+            @Override
             public void onRestart() {
                 VitalCountdownMinigameState.this.onCountdownRestart();
             }
@@ -96,6 +101,13 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
      */
     public final void stopCountdown() {
         vitalCountdownTask.stop();
+    }
+
+    /**
+     * Reset the countdown to its initial value.
+     */
+    public final void resetCountdown() {
+        vitalCountdownTask.reset();
     }
 
     /**
@@ -134,7 +146,14 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
     }
 
     /**
-     * Called when the countdown is told to restart
+     * Called when the countdown is told to reset to its initial value.
+     */
+    public void onCountdownReset() {
+
+    }
+
+    /**
+     * Called when the countdown is told to restart.
      *
      * @see VitalCountdownMinigameState#restartCountdown()
      */
@@ -153,5 +172,9 @@ public abstract class VitalCountdownMinigameState extends VitalMinigameState imp
 
     public int getCountdown() {
         return vitalCountdownTask.getCountdown();
+    }
+
+    public void setCountdown(int countdown) {
+        vitalCountdownTask.setCountdown(countdown);
     }
 }

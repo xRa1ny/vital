@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import me.xra1ny.essentia.inject.DIContainer;
 import me.xra1ny.essentia.inject.EssentiaInject;
-import me.xra1ny.except.EssentiaExcept;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
@@ -34,6 +33,10 @@ public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
     @Override
     public void unregisterComponent(@NonNull Object o) {
         componentClassObjectMap.remove(o.getClass(), o);
+
+        if(o instanceof VitalComponent vitalComponent) {
+            vitalComponent.onUnregistered();
+        }
     }
 
     @Override
@@ -43,6 +46,10 @@ public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
         }
 
         componentClassObjectMap.put(o.getClass(), o);
+
+        if(o instanceof VitalComponent vitalComponent) {
+            vitalComponent.onRegistered();
+        }
     }
 
     private static VitalCore<?> instance;
@@ -112,9 +119,6 @@ public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
         }
 
         log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
-
-        // accept any class based exception handlers.
-        EssentiaExcept.run(javaPlugin.getLogger(), javaPlugin.getClass().getPackageName(), "me.xra1ny.vital");
 
         onEnable();
 

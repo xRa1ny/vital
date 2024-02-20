@@ -1,8 +1,7 @@
 package me.xra1ny.vital.configs;
 
-import com.google.j2objc.annotations.Property;
-import lombok.Data;
 import lombok.NonNull;
+import me.xra1ny.essentia.configs.annotation.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -14,22 +13,21 @@ import java.util.UUID;
  *
  * @author xRa1ny
  */
-@Data
 public class ConfigPlayer {
-    @Property("name")
-    private String name;
+    @Property(String.class)
+    public String name;
 
-    @Property("uuid")
-    private UUID uuid;
+    @Property(UUID.class)
+    public UUID uuid;
 
-    @Property("location")
-    private ConfigLocation location;
+    @Property(ConfigLocation.class)
+    public ConfigLocation location;
 
-    @Property("health")
-    private double health;
+    @Property(double.class)
+    public double health;
 
-    @Property("food-level")
-    private double foodLevel;
+    @Property(double.class)
+    public double foodLevel;
 
     @NonNull
     public static ConfigPlayer of(@NonNull Player player) {
