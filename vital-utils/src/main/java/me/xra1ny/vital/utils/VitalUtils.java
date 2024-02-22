@@ -1,6 +1,7 @@
 package me.xra1ny.vital.utils;
 
 import lombok.NonNull;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.CreativeCategory;
@@ -43,13 +44,13 @@ public class VitalUtils {
 
     /**
      * Broadcasts a message to all players currently connected to the server.
-     * Identical to {@link Bukkit#broadcastMessage(String)}.
+     * Identical to {@link Bukkit#broadcast(Component)}.
      * This method is supplied for convenience.
      *
      * @param message The message to broadcast.
      */
     public static void broadcastMessage(@NonNull String message) {
-        broadcastAction(player -> player.sendMessage(message));
+        Bukkit.broadcast(Component.text(message));
     }
 
     /**
@@ -59,7 +60,26 @@ public class VitalUtils {
      * @param playerPredicate The Predicate specifying the condition in which the message should be broadcast.
      */
     public static void broadcastMessage(@NonNull String message, @NonNull Predicate<Player> playerPredicate) {
-        broadcastAction(player -> player.sendMessage(message), playerPredicate);
+        broadcastAction(player -> player.sendMessage(Component.text(message)), playerPredicate);
+    }
+
+    /**
+     * Broadcasts a component to all players currently connected to the server.
+     *
+     * @param component The component to broadcast.
+     */
+    public static void broadcastComponent(@NonNull Component component) {
+        Bukkit.broadcast(component);
+    }
+
+    /**
+     * Broadcasts a component to all players currently connected to the server, matching the given {@link Predicate}.
+     *
+     * @param component       The component to broadcast.
+     * @param playerPredicate The Predicate specifying the condition in which the message should be broadcast.
+     */
+    public static void broadcastComponent(@NonNull Component component, @NonNull Predicate<Player> playerPredicate) {
+        broadcastAction(player -> player.sendMessage(component), playerPredicate);
     }
 
     /**
@@ -328,7 +348,7 @@ public class VitalUtils {
      *
      * @param location1 The first location.
      * @param location2 The second location.
-     * @param location The location to check if it is contained within the area.
+     * @param location  The location to check if it is contained within the area.
      * @return true if the location is within the area; false otherwise.
      */
     public static boolean isInsideLocationArea(@NonNull Location location1, @NonNull Location location2, @NonNull Location location) {
@@ -379,9 +399,9 @@ public class VitalUtils {
      * Gets the centered offset block location of the given location.
      *
      * @param location The block location.
-     * @param xOffset The x offset.
-     * @param yOffset The y offset.
-     * @param zOffset The z offset.
+     * @param xOffset  The x offset.
+     * @param yOffset  The y offset.
+     * @param zOffset  The z offset.
      * @return The centered offset location.
      */
     @NonNull
@@ -426,6 +446,7 @@ public class VitalUtils {
     /**
      * Takes the given world and "cleans" all gamerules for minigame purposes.
      *
+     * @param world The world.
      * @apiNote This calling this method sets the following values:
      * <ul>
      *  <li>DO_DAYLIGHT_CYCLE       : false</li>
@@ -443,7 +464,6 @@ public class VitalUtils {
      *  <li>TIME                    : 0</li>
      *  <li>DIFFICULTY              : PEACEFUL</li>
      * </ul>
-     * @param world The world.
      */
     public static void cleanGamerules(@NonNull World world) {
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
