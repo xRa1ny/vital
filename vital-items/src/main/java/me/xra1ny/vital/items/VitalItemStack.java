@@ -2,8 +2,9 @@ package me.xra1ny.vital.items;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
+import me.xra1ny.vital.core.VitalAutoRegisterable;
+import me.xra1ny.vital.core.VitalCore;
 import me.xra1ny.vital.items.annotation.VitalItemStackInfo;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -12,9 +13,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Used to create {@link ItemStack} that can be interacted with.
@@ -24,19 +25,19 @@ import java.util.UUID;
  * @author xRa1ny
  */
 @SuppressWarnings("unused")
-public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo> {
+public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo>, VitalAutoRegisterable {
     /**
-     * The current Cooldown of this VitalItemStack.
+     * The initial cooldown of this VitalItemStack.
      */
     @Getter
-    @Setter
-    private int currentCooldown = 0;
+    private int initialCooldown = 0;
 
     /**
-     * The Cooldown of this VitalItemStack.
+     * The map of all currently active cooldowns for each player.
      */
     @Getter
-    private int cooldown = 0;
+    @NonNull
+    private final Map<Player, Integer> playerCooldownMap = new HashMap<>();
 
     /**
      * Creates a new VitalItemStack based on annotation-defined properties.
@@ -63,7 +64,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
         setType(itemStack.getType());
         setAmount(itemStack.getAmount());
         setItemMeta(meta);
-        this.cooldown = info.cooldown();
+        this.initialCooldown = info.cooldown();
     }
 
     @Override
@@ -136,12 +137,25 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
     }
 
     /**
+     * Called on every cooldown timer tick for the given player.
+     *
+     * @param player The player.
+     */
+    public void onCooldownTick(@NonNull Player player) {
+
+    }
+
+    /**
      * Handles player interaction with this item, considering cool-downs.
      *
      * @param e The player interact event.
      */
     public final void handleInteraction(@NonNull PlayerInteractEvent e) {
-        if (currentCooldown >= 1) {
+        if(!playerCooldownMap.containsKey(e.getPlayer())) {
+            playerCooldownMap.put(e.getPlayer(), 0);
+        }
+
+        if (playerCooldownMap.get(e.getPlayer()) >= 1) {
             onCooldown(e);
             return;
         }
@@ -154,7 +168,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
             onRightClick(e);
         }
 
-        currentCooldown = cooldown;
+        playerCooldownMap.put(e.getPlayer(), initialCooldown);
     }
 
     @Override
@@ -167,6 +181,10 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
     public final boolean equals(Object obj) {
         if (!(obj instanceof ItemStack item)) {
             return false;
+        }
+
+        if(item.getItemMeta() == null) {
+            return item.equals(this);
         }
 
         if (!item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING)) {
@@ -188,6 +206,20 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      */
     public final boolean isEnchanted() {
         return !getItemMeta().getEnchants().isEmpty();
+    }
+
+    @Override
+    public final void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
+        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
+
+        final Optional<VitalItemStackManager> optionalVitalItemStackManager = vitalCore.getVitalComponent(VitalItemStackManager.class);
+        final VitalItemStackManager vitalItemStackManager = optionalVitalItemStackManager.get();
+
+        vitalItemStackManager.registerVitalComponent(this);
+    }
+
+    public int getCooldown(@NonNull Player player) {
+        return playerCooldownMap.getOrDefault(player, 0);
     }
 }
 

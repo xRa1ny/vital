@@ -102,7 +102,7 @@ public final class VitalMinigameManager implements VitalComponent {
 
     @Override
     public void onRegistered() {
-
+        instance = this;
     }
 
     @Override
