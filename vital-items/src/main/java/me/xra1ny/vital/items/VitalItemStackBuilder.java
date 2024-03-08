@@ -2,7 +2,9 @@ package me.xra1ny.vital.items;
 
 import lombok.Getter;
 import lombok.NonNull;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -24,33 +26,26 @@ import java.util.Map.Entry;
  */
 public final class VitalItemStackBuilder {
     @Getter
-    private String name;
-
-    @Getter
-    @NonNull
-    private Material type = Material.COBBLESTONE;
-
-    @Getter
-    private int amount = 1;
-
-    @Getter
-    private boolean unbreakable;
-
-    @Getter
     @NonNull
     private final List<String> lore = new ArrayList<>();
-
     @Getter
     @NonNull
     private final List<ItemFlag> itemFlagList = new ArrayList<>();
-
     @Getter
     @NonNull
     private final Map<Enchantment, Integer> enchantmentLevelMap = new HashMap<>();
-
     @Getter
     @NonNull
     private final Map<NamespacedKey, Map.Entry<PersistentDataType<?, ?>, ?>> namespacedKeyMap = new HashMap<>();
+    @Getter
+    private String name;
+    @Getter
+    @NonNull
+    private Material type = Material.COBBLESTONE;
+    @Getter
+    private int amount = 1;
+    @Getter
+    private boolean unbreakable;
 
     /**
      * Define the name for this {@link ItemStack}.
@@ -119,7 +114,7 @@ public final class VitalItemStackBuilder {
      * @return This builder instance.
      */
     public VitalItemStackBuilder itemFlag(@NonNull ItemFlag itemFlag) {
-        this.itemFlagList.add(itemFlag);
+        itemFlagList.add(itemFlag);
 
         return this;
     }
@@ -144,7 +139,7 @@ public final class VitalItemStackBuilder {
      * @return This builder instance.
      */
     public VitalItemStackBuilder enchantment(@NonNull Enchantment enchantment, int enchantmentLevel) {
-        this.enchantmentLevelMap.put(enchantment, enchantmentLevel);
+        enchantmentLevelMap.put(enchantment, enchantmentLevel);
 
         return this;
     }
@@ -211,21 +206,22 @@ public final class VitalItemStackBuilder {
      * @param <Z> Placeholder for {@link PersistentDataType} IGNORE.
      * @return The constructed ItemStack.
      */
-    @SuppressWarnings("deprecation")
     @NonNull
     public <Z> ItemStack build() {
         // Create ItemStack and ItemMeta
         final ItemStack item = new ItemStack(type, amount);
 
-        if (this.type != Material.AIR) {
+        if (type != Material.AIR) {
             final ItemMeta meta = item.getItemMeta();
-            meta.getPersistentDataContainer().set(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING, UUID.randomUUID().toString());
+            final PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
 
-            if (this.name != null) {
-                if (this.name.isBlank()) {
-                    meta.setDisplayName(ChatColor.RESET.toString());
-                } else {
-                    meta.setDisplayName(ChatColor.RESET + this.name);
+            persistentDataContainer.set(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING, UUID.randomUUID().toString());
+
+            if (name != null) {
+                if (!name.isBlank()) {
+                    meta.displayName(MiniMessage.miniMessage().deserialize("<reset><white><name>",
+                            Placeholder.parsed("name", name))
+                            .decoration(TextDecoration.ITALIC, false));
                 }
             }
 
@@ -249,14 +245,15 @@ public final class VitalItemStackBuilder {
 
             // Set Lore if set
             if (!lore.isEmpty()) {
-                meta.setLore(lore);
+                meta.lore(lore.stream()
+                        .map(l -> MiniMessage.miniMessage().deserialize(l)
+                                .decoration(TextDecoration.ITALIC, false))
+                        .toList());
             }
 
             meta.setUnbreakable(unbreakable);
 
             if (!namespacedKeyMap.isEmpty()) {
-                final PersistentDataContainer persistentDataContainer = meta.getPersistentDataContainer();
-
                 for (Map.Entry<NamespacedKey, Map.Entry<PersistentDataType<?, ?>, ?>> entry : namespacedKeyMap.entrySet()) {
                     final NamespacedKey namespacedKey = entry.getKey();
                     final PersistentDataType<?, Z> persistentDataType = (PersistentDataType<?, Z>) entry.getValue().getKey();

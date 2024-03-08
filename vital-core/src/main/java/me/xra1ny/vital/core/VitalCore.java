@@ -5,7 +5,6 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import me.xra1ny.essentia.inject.DIContainer;
-import me.xra1ny.essentia.inject.EssentiaInject;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
@@ -20,40 +19,7 @@ import java.util.*;
  */
 @SuppressWarnings("unused")
 @Log
-public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
-    @Getter
-    @NonNull
-    private final Map<Class<?>, Object> componentClassObjectMap = new HashMap<>();
-
-    @Override
-    public void unregisterComponent(@NonNull Class<?> type) {
-        componentClassObjectMap.remove(type);
-    }
-
-    @Override
-    public void unregisterComponent(@NonNull Object o) {
-        componentClassObjectMap.remove(o.getClass(), o);
-
-        if(o instanceof VitalComponent vitalComponent) {
-            vitalComponent.onUnregistered();
-        }
-    }
-
-    @Override
-    public void registerComponent(@NonNull Object o) {
-        if(isRegistered(o)) {
-            return;
-        }
-
-        componentClassObjectMap.put(o.getClass(), o);
-
-        if(o instanceof VitalComponent vitalComponent) {
-            vitalComponent.onRegistered();
-        }
-    }
-
-    private static VitalCore<?> instance;
-
+public abstract class VitalCore<T extends JavaPlugin> implements VitalComponent, DIContainer {
     /**
      * Holds a list of all classes registered on this classpath for later use of dependency injection.
      *
@@ -62,16 +28,16 @@ public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
     @Getter
     @NonNull
     private static final Set<Class<? extends VitalComponent>> scannedClassSet = new Reflections().getSubTypesOf(VitalComponent.class);
-
+    private static VitalCore<?> instance;
+    @Getter
+    @NonNull
+    private final Map<Class<?>, Object> componentClassObjectMap = new HashMap<>();
     /**
      * The JavaPlugin instance associated with this {@link VitalCore}.
      */
     @Getter
     @NonNull
     private final T javaPlugin;
-
-    @Getter
-    private boolean enabled;
 
     /**
      * Constructs a new {@link VitalCore} instance.
@@ -80,7 +46,6 @@ public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
      */
     public VitalCore(@NonNull T javaPlugin) {
         this.javaPlugin = javaPlugin;
-        instance = this;
         registerComponent(this);
         registerComponent(javaPlugin);
     }
@@ -109,24 +74,55 @@ public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
         return instance;
     }
 
+    @Override
+    public final void onRegistered() {
+        instance = this;
+    }
+
+    @Override
+    public void onUnregistered() {
+
+    }
+
+    @Override
+    public void unregisterComponentByType(@NonNull Class<?> type) {
+        componentClassObjectMap.remove(type);
+    }
+
+    @Override
+    public void unregisterComponent(@NonNull Object o) {
+        componentClassObjectMap.remove(o.getClass(), o);
+
+        if (o instanceof VitalComponent vitalComponent) {
+            vitalComponent.onUnregistered();
+        }
+    }
+
+    @Override
+    public void registerComponent(@NonNull Object o) {
+        if (isRegistered(o)) {
+            return;
+        }
+
+        componentClassObjectMap.put(o.getClass(), o);
+
+        if (o instanceof VitalComponent vitalComponent) {
+            vitalComponent.onRegistered();
+        }
+    }
+
     /**
      * Enables the Vital-Framework, initialising needed systems.
      */
     @SneakyThrows // TODO
     public final void enable() {
-        if (enabled) {
-            return;
-        }
-
-        log.info("Enabling VitalCore<" + getJavaPlugin() + ">");
+        log.info("Enabling VitalCore<%s>"
+                .formatted(getJavaPlugin()));
 
         onEnable();
 
-        // register both plugin package and Vital's package.
-        EssentiaInject.run(this, javaPlugin.getClass().getPackageName(), "me.xra1ny.vital");
-
-        enabled = true;
-        log.info("VitalCore<" + getJavaPlugin() + "> enabled!");
+        log.info("VitalCore<%s> enabled!"
+                .formatted(getJavaPlugin()));
         log.info("Hello from Vital!");
     }
 
@@ -141,22 +137,51 @@ public abstract class VitalCore<T extends JavaPlugin> implements DIContainer {
     public abstract void onDisable();
 
     public Optional<VitalComponent> getComponent(@NotNull UUID uniqueId) {
-        return getComponentList().stream()
+        return getComponents().stream()
                 .filter(VitalComponent.class::isInstance)
                 .map(VitalComponent.class::cast)
-                .filter(component -> component.getUniqueId().equals(uniqueId))
+                .filter(component -> component.getUuid().equals(uniqueId))
                 .findFirst();
     }
 
+    /**
+     * Checks whether the specified submodule is used or not.
+     *
+     * @param subModuleName The submodule's name (e.g. vital, vital-core, vital-commands, etc.)
+     * @return True if the given submodule is used; false otherwise.
+     */
+    public boolean isUsingSubModule(@NonNull String subModuleName) {
+        return getUsedSubModuleNames().stream()
+                .map(String::toLowerCase)
+                .toList()
+                .contains(subModuleName.toLowerCase());
+    }
+
+    /**
+     * Checks whether the specified submodule is used or not.
+     *
+     * @param subModuleType The submodule class.
+     * @return True if the submodule is used; false otherwise.
+     */
     public boolean isUsingSubModule(@NonNull Class<? extends VitalSubModule> subModuleType) {
         return isRegistered(subModuleType);
     }
 
+    /**
+     * Gets a list of all used submodules.
+     *
+     * @return A list of all used submodules.
+     */
     @NonNull
     public List<? extends VitalSubModule> getUsedSubModules() {
-        return getComponentList(VitalSubModule.class);
+        return getComponentsByType(VitalSubModule.class);
     }
 
+    /**
+     * Gets a list of all submodules by name.
+     *
+     * @return A list of all used submodule names.
+     */
     @NonNull
     public List<String> getUsedSubModuleNames() {
         return getUsedSubModules().stream()

@@ -1,19 +1,22 @@
 package me.xra1ny.vital.core;
 
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 
-public interface VitalSubModule extends VitalComponent {
+@Log
+public abstract class VitalSubModule implements VitalComponent {
     @Override
     @NotNull
-    String getName();
+    public abstract String getName();
 
     @Override
-    default void onRegistered() {
-
+    public final void onRegistered() {
+        log.info("Using %s"
+                .formatted(getName()));
     }
 
     @Override
-    default void onUnregistered() {
+    public final void onUnregistered() {
 
     }
 }

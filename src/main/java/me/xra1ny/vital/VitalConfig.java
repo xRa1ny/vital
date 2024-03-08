@@ -3,6 +3,7 @@ package me.xra1ny.vital;
 import me.xra1ny.essentia.configs.Config;
 import me.xra1ny.essentia.configs.annotation.ConfigInfo;
 import me.xra1ny.essentia.configs.annotation.Property;
+import me.xra1ny.essentia.configs.processor.YMLFileProcessor;
 import me.xra1ny.essentia.inject.annotation.Component;
 
 /**
@@ -12,7 +13,7 @@ import me.xra1ny.essentia.inject.annotation.Component;
  * @author xRa1ny
  */
 @Component
-@ConfigInfo("config.yml")
+@ConfigInfo(name = "config.yml", processor = YMLFileProcessor.class)
 public final class VitalConfig extends Config {
 
     /**

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
 import me.xra1ny.vital.inventories.annotation.VitalInventoryInfo;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -38,7 +39,17 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      */
     @Getter
     private final int size;
-
+    /**
+     * The background item of this inventory menu.
+     */
+    @Getter
+    @NonNull
+    private final ItemStack background;
+    /**
+     * The previous menu of this inventory menu, if any.
+     */
+    @Getter
+    private final Inventory previousInventory;
     /**
      * The inventory of this inventory menu.
      */
@@ -47,38 +58,25 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     private Inventory inventory;
 
     /**
-     * The background item of this inventory menu.
-     */
-    @Getter
-    @NonNull
-    private final ItemStack background;
-
-    /**
-     * The previous menu of this inventory menu, if any.
-     */
-    @Getter
-    private final Inventory previousInventory;
-
-    /**
      * Constructs a new VitalInventoryMenu instance.
      */
     public VitalInventory() {
         final VitalInventoryInfo info = getRequiredAnnotation();
 
-        this.title = info.value();
-        this.size = info.size();
+        title = info.value();
+        size = info.size();
 
         final ItemStack backgroundItemStack = new ItemStack(info.background());
         final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
 
         if (backgroundItemMeta != null) {
-            backgroundItemMeta.setDisplayName(null);
+            backgroundItemMeta.displayName(null);
             backgroundItemStack.setItemMeta(backgroundItemMeta);
         }
 
-        this.background = backgroundItemStack;
-        this.previousInventory = null;
-        this.inventory = Bukkit.createInventory(this, size, title);
+        background = backgroundItemStack;
+        previousInventory = null;
+        inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(title));
     }
 
     /**
@@ -89,20 +87,20 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
     public VitalInventory(@Nullable Inventory previousInventory) {
         final VitalInventoryInfo info = getRequiredAnnotation();
 
-        this.title = info.value();
-        this.size = info.size();
+        title = info.value();
+        size = info.size();
 
         final ItemStack backgroundItemStack = new ItemStack(info.background());
         final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
 
         if (backgroundItemMeta != null) {
-            backgroundItemMeta.setDisplayName(null);
+            backgroundItemMeta.displayName(null);
             backgroundItemStack.setItemMeta(backgroundItemMeta);
         }
 
-        this.background = backgroundItemStack;
+        background = backgroundItemStack;
         this.previousInventory = previousInventory;
-        this.inventory = Bukkit.createInventory(this, size, title);
+        inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(title));
     }
 
     @Override
@@ -186,9 +184,9 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      * Sets the background items in the inventory.
      */
     public final void setBackground() {
-        for (int i = 0; i < this.inventory.getSize(); i++) {
-            if (this.inventory.getItem(i) == null) {
-                this.inventory.setItem(i, this.background);
+        for (int i = 0; i < inventory.getSize(); i++) {
+            if (inventory.getItem(i) == null) {
+                inventory.setItem(i, background);
             }
         }
     }
@@ -200,9 +198,7 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
      * @apiNote Use this method to build an {@link Inventory} and then show it to the player using {@link Player#openInventory(Inventory)}
      */
     public final Inventory build() {
-        inventory = Bukkit.createInventory(this, size, title);
-
-        return inventory;
+        return inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(title));
     }
 
     /**

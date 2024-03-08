@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.kyori.adventure.text.Component.text;
+
 /**
  * Represents a hologram in the Vital-Framework.
  *
@@ -91,51 +93,50 @@ public final class VitalHologram implements VitalComponent {
      * Removes this hologram and its associated entities.
      */
     public void remove() {
-        for (Entity entity : this.base.getPassengers()) {
+        for (Entity entity : base.getPassengers()) {
             entity.remove();
         }
 
-        for (ArmorStand armorStand : this.baseLines) {
+        for (ArmorStand armorStand : baseLines) {
             armorStand.remove();
         }
 
-        this.base.remove();
+        base.remove();
     }
 
     /**
      * Updates the hologram by recreating its elements.
      */
-    @SuppressWarnings("deprecation")
     public void update() {
         if (base == null) {
             base = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
         }
 
-        this.base.setVisible(false);
-        this.base.setMarker(true);
+        base.setVisible(false);
+        base.setMarker(true);
         base.teleport(location);
 
-        if (this.displayType != null) {
+        if (displayType != null) {
             for (Entity entity : base.getPassengers()) {
                 entity.remove();
             }
 
-            final Item item = this.location.getWorld().dropItem(this.base.getEyeLocation(), new ItemStack(this.displayType));
+            final Item item = location.getWorld().dropItem(base.getEyeLocation(), new ItemStack(displayType));
 
             item.setPickupDelay(Integer.MAX_VALUE);
-            this.base.addPassenger(item);
+            base.addPassenger(item);
         }
 
         final int initialBaseLineSize = baseLines.size();
 
-        for (int i = this.lines.size() - 1; i > -1; i--) {
-            final String line = this.lines.get(i);
-            final Location lineLocation = this.location.clone().add(0, this.lines.size(), 0);
+        for (int i = lines.size() - 1; i > -1; i--) {
+            final String line = lines.get(i);
+            final Location lineLocation = location.clone().add(0, lines.size(), 0);
             final ArmorStand armorStand;
 
             if (i >= initialBaseLineSize) {
-                armorStand = (ArmorStand) this.location.getWorld().spawnEntity(lineLocation.subtract(0, 2 + (.25 * i), 0), EntityType.ARMOR_STAND);
-                this.baseLines.add(armorStand);
+                armorStand = (ArmorStand) location.getWorld().spawnEntity(lineLocation.subtract(0, 2 + (.25 * i), 0), EntityType.ARMOR_STAND);
+                baseLines.add(armorStand);
             } else {
                 armorStand = baseLines.get(i);
                 armorStand.teleport(lineLocation);
@@ -143,7 +144,7 @@ public final class VitalHologram implements VitalComponent {
 
             armorStand.setVisible(false);
             armorStand.setMarker(true);
-            armorStand.setCustomName(line);
+            armorStand.customName(text(line));
             armorStand.setCustomNameVisible(true);
         }
     }

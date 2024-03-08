@@ -4,7 +4,7 @@ import me.xra1ny.essentia.inject.annotation.Component;
 import org.jetbrains.annotations.NotNull;
 
 @Component
-public class VitalCoreSubModule implements VitalSubModule {
+public class VitalCoreSubModule extends VitalSubModule {
     @Override
     @NotNull
     public String getName() {

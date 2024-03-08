@@ -3,8 +3,10 @@ package me.xra1ny.vital.scoreboards;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -27,20 +29,18 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
     @Getter
     @NonNull
     private final VitalScoreboardContent vitalScoreboardContent;
-
-    /**
-     * The lines of this global scoreboard.
-     */
-    @Getter
-    @NonNull
-    private List<Supplier<String>> lines;
-
     /**
      * The list of users associated with this global scoreboard.
      */
     @Getter
     @NonNull
     private final List<Player> playerList = new ArrayList<>();
+    /**
+     * The lines of this global scoreboard.
+     */
+    @Getter
+    @NonNull
+    private List<Supplier<String>> lines;
 
     /**
      * Creates a new instance of the VitalGlobalScoreboard class.
@@ -51,7 +51,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
     @SafeVarargs
     @SneakyThrows
     public VitalGlobalScoreboard(@NonNull String title, @NonNull Supplier<String>... lines) {
-        this.vitalScoreboardContent = new VitalScoreboardContent(title);
+        vitalScoreboardContent = new VitalScoreboardContent(title);
         this.lines = Arrays.asList(lines);
     }
 
@@ -69,10 +69,9 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      *
      * @param player The player for whom to update the scoreboard.
      */
-    @SuppressWarnings("DataFlowIssue")
     private void update(@NonNull Player player) {
-        player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
-        player.getPlayer().setScoreboard(this.vitalScoreboardContent.getBukkitScoreboard());
+        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        player.setScoreboard(vitalScoreboardContent.getBukkitScoreboard());
     }
 
     /**
@@ -81,7 +80,7 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
     public void update() {
         updateContent();
 
-        for (Player player : this.playerList) {
+        for (Player player : playerList) {
             update(player);
         }
     }
@@ -89,18 +88,21 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
     /**
      * Updates the content of this scoreboard, including titles and scores.
      */
-    @SuppressWarnings({"DataFlowIssue", "deprecation"})
     public void updateContent() {
-        this.vitalScoreboardContent.update();
+        vitalScoreboardContent.update();
 
-        final Objective objective = this.vitalScoreboardContent.getBukkitScoreboard().getObjective(ChatColor.stripColor(this.vitalScoreboardContent.getTitle()));
+        final Objective objective = vitalScoreboardContent.getBukkitScoreboard().getObjective(PlainTextComponentSerializer.plainText()
+                .serialize(LegacyComponentSerializer.legacySection()
+                        .deserialize(vitalScoreboardContent.getTitle())));
 
-        for (int i = 0; i < this.lines.size(); i++) {
+        for (int i = 0; i < lines.size(); i++) {
             final Supplier<String> lineSupplier = lines.get(i);
             final String line = lineSupplier.get();
-            final Score score = objective.getScore(line + String.valueOf(ChatColor.RESET).repeat(i));
+            final Score score = objective.getScore(LegacyComponentSerializer.legacySection()
+                    .serialize(MiniMessage.miniMessage()
+                            .deserialize(line)) + "\u00A7".repeat(i));
 
-            score.setScore(this.lines.size() - i);
+            score.setScore(lines.size() - i);
         }
     }
 
@@ -110,11 +112,11 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      * @param player The player to add.
      */
     public void addPlayer(@NonNull Player player) {
-        if (this.playerList.contains(player)) {
+        if (playerList.contains(player)) {
             return;
         }
 
-        this.playerList.add(player);
+        playerList.add(player);
         update();
     }
 
@@ -125,16 +127,13 @@ public final class VitalGlobalScoreboard extends VitalScoreboard {
      */
     @SuppressWarnings("DataFlowIssue")
     public void removePlayer(@NonNull Player player) {
-        if (!this.playerList.contains(player)) {
+        if (!playerList.contains(player)) {
             return;
         }
 
-        this.playerList.remove(player);
+        playerList.remove(player);
         player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
 
         update();
     }
-
-
 }
-

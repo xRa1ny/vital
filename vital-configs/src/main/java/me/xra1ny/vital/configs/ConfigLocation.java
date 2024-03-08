@@ -5,6 +5,7 @@ import me.xra1ny.essentia.configs.annotation.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 
 /**
  * Wrapper class to store location data to a config file.
@@ -46,9 +47,15 @@ public class ConfigLocation {
 
     @NonNull
     public Location toLocation() {
-        final World world = Bukkit.getWorld(this.world);
+        World world = Bukkit.getWorld(this.world);
 
-        return new Location(world, x, y, z, pitch, yaw);
+        if(world == null) {
+            // load world if null
+            world = new WorldCreator(this.world)
+                    .createWorld();
+        }
+
+        return new Location(world, x, y, z, yaw, pitch);
 
     }
 }

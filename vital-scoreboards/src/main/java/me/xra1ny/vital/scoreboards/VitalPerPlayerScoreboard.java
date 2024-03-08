@@ -3,8 +3,10 @@ package me.xra1ny.vital.scoreboards;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -25,20 +27,18 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
     @Getter
     @NonNull
     private final String title;
-
-    /**
-     * the lines of this per player scoreboard
-     */
-    @Getter
-    @NonNull
-    private List<Function<Player, String>> lineList;
-
     /**
      * the scoreboard contents for each member of this per player scoreboard
      */
     @Getter
     @NonNull
     private final Map<Player, VitalScoreboardContent> vitalScoreboardContentMap = new HashMap<>();
+    /**
+     * the lines of this per player scoreboard
+     */
+    @Getter
+    @NonNull
+    private List<Function<Player, String>> lineList;
 
     /**
      * Constructs a new per player scoreboard instance with the specified title and lines.
@@ -70,33 +70,37 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      */
     @SuppressWarnings("DataFlowIssue")
     public void update(@NonNull Player player) {
-        if (!this.vitalScoreboardContentMap.containsKey(player)) {
+        if (!vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
 
         player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         updateContent(player);
 
-        final VitalScoreboardContent scoreboard = this.vitalScoreboardContentMap.get(player);
+        final VitalScoreboardContent scoreboard = vitalScoreboardContentMap.get(player);
 
         player.getPlayer().setScoreboard(scoreboard.getBukkitScoreboard());
     }
 
-    @SuppressWarnings({"DataFlowIssue", "deprecation"})
+    @SuppressWarnings({"DataFlowIssue"})
     private void updateContent(@NonNull Player player) {
-        if (!this.vitalScoreboardContentMap.containsKey(player)) {
+        if (!vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
 
-        final VitalScoreboardContent scoreboard = this.vitalScoreboardContentMap.get(player);
+        final VitalScoreboardContent scoreboard = vitalScoreboardContentMap.get(player);
 
         scoreboard.update();
 
-        final Objective objective = scoreboard.getBukkitScoreboard().getObjective(ChatColor.stripColor(scoreboard.getTitle()));
+        final Objective objective = scoreboard.getBukkitScoreboard().getObjective(PlainTextComponentSerializer.plainText()
+                .serialize(LegacyComponentSerializer.legacySection()
+                        .deserialize(scoreboard.getTitle())));
         final List<String> lines = applyLines(player);
 
         for (int i = 0; i < lines.size(); i++) {
-            final Score score = objective.getScore(lines.get(i) + String.valueOf(ChatColor.RESET).repeat(i));
+            final Score score = objective.getScore(LegacyComponentSerializer.legacySection()
+                    .serialize(MiniMessage.miniMessage()
+                            .deserialize(lines.get(i))) + "\u00A7".repeat(i));
 
             score.setScore(lines.size() - i);
         }
@@ -108,11 +112,11 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      * @param player the player
      */
     public void addPlayer(@NonNull Player player) {
-        if (this.vitalScoreboardContentMap.containsKey(player)) {
+        if (vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
 
-        this.vitalScoreboardContentMap.put(player, new VitalScoreboardContent(title));
+        vitalScoreboardContentMap.put(player, new VitalScoreboardContent(title));
         update(player);
     }
 
@@ -123,11 +127,11 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
      */
     @SuppressWarnings("DataFlowIssue")
     public void removePlayer(@NonNull Player player) {
-        if (!this.vitalScoreboardContentMap.containsKey(player)) {
+        if (!vitalScoreboardContentMap.containsKey(player)) {
             return;
         }
 
-        this.vitalScoreboardContentMap.remove(player);
+        vitalScoreboardContentMap.remove(player);
         player.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
     }
 
@@ -135,7 +139,7 @@ public final class VitalPerPlayerScoreboard extends VitalScoreboard {
     private List<String> applyLines(@NonNull Player player) {
         final List<String> lines = new ArrayList<>();
 
-        for (Function<Player, String> line : this.lineList) {
+        for (Function<Player, String> line : lineList) {
             lines.add(line.apply(player));
         }
 

@@ -5,7 +5,7 @@ import me.xra1ny.vital.core.VitalSubModule;
 import org.jetbrains.annotations.NotNull;
 
 @Component
-public class VitalMinigameSubModule implements VitalSubModule {
+public class VitalMinigameSubModule extends VitalSubModule {
     @Override
     @NotNull
     public String getName() {

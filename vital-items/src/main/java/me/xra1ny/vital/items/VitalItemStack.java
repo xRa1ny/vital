@@ -3,8 +3,6 @@ package me.xra1ny.vital.items;
 import lombok.Getter;
 import lombok.NonNull;
 import me.xra1ny.vital.core.AnnotatedVitalComponent;
-import me.xra1ny.vital.core.VitalAutoRegisterable;
-import me.xra1ny.vital.core.VitalCore;
 import me.xra1ny.vital.items.annotation.VitalItemStackInfo;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -13,9 +11,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Used to create {@link ItemStack} that can be interacted with.
@@ -25,7 +25,7 @@ import java.util.*;
  * @author xRa1ny
  */
 @SuppressWarnings("unused")
-public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo>, VitalAutoRegisterable {
+public abstract class VitalItemStack extends ItemStack implements AnnotatedVitalComponent<VitalItemStackInfo> {
     /**
      * The initial cooldown of this VitalItemStack.
      */
@@ -151,7 +151,7 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      * @param e The player interact event.
      */
     public final void handleInteraction(@NonNull PlayerInteractEvent e) {
-        if(!playerCooldownMap.containsKey(e.getPlayer())) {
+        if (!playerCooldownMap.containsKey(e.getPlayer())) {
             playerCooldownMap.put(e.getPlayer(), 0);
         }
 
@@ -173,7 +173,8 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
 
     @Override
     public final String toString() {
-        return super.toString().replace(getType() + " x " + getAmount(), getType() + " x 1");
+        return super.toString().replace("%s x %d"
+                        .formatted(getType(), getAmount()), getType() + " x 1");
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -183,14 +184,15 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
             return false;
         }
 
-        if(item.getItemMeta() == null) {
+        if (item.getItemMeta() == null) {
             return item.equals(this);
         }
 
         if (!item.getItemMeta().getPersistentDataContainer().has(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING)) {
             String toString = toString();
 
-            return toString.equals(item.toString().replace(item.getType() + " x " + item.getAmount(), item.getType() + " x 1"));
+            return toString.equals(item.toString().replace("%s x %d"
+                    .formatted(item.getType(), item.getAmount()), item.getType() + " x 1"));
         }
 
         final UUID uuid = UUID.fromString(getItemMeta().getPersistentDataContainer().get(NamespacedKeys.ITEM_UUID, PersistentDataType.STRING));
@@ -206,16 +208,6 @@ public abstract class VitalItemStack extends ItemStack implements AnnotatedVital
      */
     public final boolean isEnchanted() {
         return !getItemMeta().getEnchants().isEmpty();
-    }
-
-    @Override
-    public final void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
-        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
-
-        final Optional<VitalItemStackManager> optionalVitalItemStackManager = vitalCore.getVitalComponent(VitalItemStackManager.class);
-        final VitalItemStackManager vitalItemStackManager = optionalVitalItemStackManager.get();
-
-        vitalItemStackManager.registerVitalComponent(this);
     }
 
     public int getCooldown(@NonNull Player player) {

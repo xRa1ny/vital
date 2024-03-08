@@ -10,15 +10,6 @@ dependencies {
     implementation(project(":vital-commands-processor"))
 }
 
-tasks.javadoc {
-    (options as StandardJavadocDocletOptions)
-            .tags(
-                    "apiNote:a:API Note:",
-                    "implSpec:a:Implementation Requirements:",
-                    "implNote:a:Implementation Note:"
-            )
-}
-
 allprojects {
     group = "me.xra1ny.vital"
     version = "1.0"
@@ -37,7 +28,11 @@ allprojects {
         annotationProcessor("org.projectlombok:lombok:1.18.28")
         implementation("org.reflections:reflections:0.10.2")
         compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+
+        // needed for dependency injection.
         implementation("me.xra1ny.essentia:essentia-inject:1.0")
+
+        // needed for exception handler methods.
         implementation("me.xra1ny.essentia:essentia-except:1.0")
     }
 

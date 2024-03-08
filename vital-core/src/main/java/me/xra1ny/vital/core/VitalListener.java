@@ -16,17 +16,11 @@ public class VitalListener implements VitalComponent, Listener {
         Bukkit.getPluginManager().registerEvents(this, javaPlugin);
     }
 
-    /**
-     * Called when this {@link VitalListener} is registered.
-     */
     @Override
     public void onRegistered() {
 
     }
 
-    /**
-     * Called when this {@link VitalListener} is unregistered.
-     */
     @Override
     public void onUnregistered() {
 

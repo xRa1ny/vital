@@ -63,15 +63,10 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
     public VitalCommand() {
         final VitalCommandInfo vitalCommandInfo = getRequiredAnnotation();
 
-        this.name = vitalCommandInfo.value();
-        this.permission = vitalCommandInfo.permission();
-        this.requiresPlayer = vitalCommandInfo.requiresPlayer();
-        this.vitalCommandArgs = vitalCommandInfo.args();
-    }
-
-    @AfterInit
-    public final void afterInit(JavaPlugin javaPlugin) {
-        javaPlugin.getCommand(name).setExecutor(this);
+        name = vitalCommandInfo.value();
+        permission = vitalCommandInfo.permission();
+        requiresPlayer = vitalCommandInfo.requiresPlayer();
+        vitalCommandArgs = vitalCommandInfo.args();
     }
 
     /**
@@ -189,6 +184,11 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
                 });
     }
 
+    @AfterInit
+    public final void afterInit(JavaPlugin javaPlugin) {
+        javaPlugin.getCommand(name).setExecutor(this);
+    }
+
     @Override
     public final void onRegistered() {
 
@@ -217,19 +217,21 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
     @Override
     public final boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, @NonNull String[] args) {
         // Check if the command requires a player sender.
-        if (this.requiresPlayer) {
+        if (requiresPlayer) {
             // Check if the sender is not a Player.
             if (!(sender instanceof Player)) {
                 // Execute the onCommandRequiresPlayer method and return true.
                 onCommandRequiresPlayer(sender);
+
                 return true;
             }
         }
 
         // Check if a permission is required and if the sender has it.
-        if (!this.permission.isBlank() && !sender.hasPermission(this.permission)) {
+        if (!permission.isBlank() && !sender.hasPermission(permission)) {
             // Execute the onCommandRequiresPermission method and return true.
             onCommandRequiresPermission(sender);
+
             return true;
         }
 
@@ -245,7 +247,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
                 boolean contains = false;
 
                 // Loop through the command arguments specified for this command.
-                for (VitalCommandArg commandArg : this.vitalCommandArgs) {
+                for (VitalCommandArg commandArg : vitalCommandArgs) {
                     // Split the command argument into individual parts.
                     final String[] splitCommandArg = commandArg.value().split(" ");
                     // Initialize a flag to check if the argument is recognized for this commandArg.
@@ -285,7 +287,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
             VitalCommandArg finalCommandArg = null;
 
             // Loop through the specified command arguments for this command.
-            for (VitalCommandArg commandArg : this.vitalCommandArgs) {
+            for (VitalCommandArg commandArg : vitalCommandArgs) {
                 // Replace placeholders with "?" and check if it matches the formattedArgsBuilder.
                 if (commandArg.value().replaceAll("%[A-Za-z0-9]*%", "?").equalsIgnoreCase(formattedArgsBuilder.toString())) {
                     // Assign the matched commandArg to finalCommandArg.
@@ -303,7 +305,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
                 commandReturnState = executeCommandArgHandlerMethod(sender, finalCommandArg, values.toArray(new String[0]));
             } else {
                 // Loop through the specified command arguments for this command.
-                for (VitalCommandArg commandArg : this.vitalCommandArgs) {
+                for (VitalCommandArg commandArg : vitalCommandArgs) {
                     // Check if formattedArgsBuilder starts with a recognized command argument.
                     if (!formattedArgsBuilder.toString().startsWith(commandArg.value().replaceAll("%[A-Za-z0-9]*%", "?").replace("*", ""))) {
                         continue;
@@ -409,7 +411,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         final List<String> tabCompleted = new ArrayList<>();
 
         // Loop through the specified command arguments for this command.
-        for (VitalCommandArg arg : this.vitalCommandArgs) {
+        for (VitalCommandArg arg : vitalCommandArgs) {
             // Split the value of the command argument into individual parts.
             final String[] originalArgs = arg.value().split(" ");
             // Clone the originalArgs to avoid modification.
@@ -483,7 +485,7 @@ public abstract class VitalCommand implements AnnotatedVitalComponent<VitalComma
         final List<String> commandTabCompleted = onCommandTabComplete(sender, formattedArgs);
 
         // when our OWN implementation is not empty, clear all of Vital's defaults.
-        if(!commandTabCompleted.isEmpty()) {
+        if (!commandTabCompleted.isEmpty()) {
             tabCompleted.clear();
         }
 

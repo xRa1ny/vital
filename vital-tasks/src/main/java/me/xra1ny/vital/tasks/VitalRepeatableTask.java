@@ -19,37 +19,23 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
     @Getter
     @NonNull
     private final JavaPlugin javaPlugin;
-
-    @Override
-    public void onRegistered() {
-
-    }
-
-    @Override
-    public void onUnregistered() {
-
-    }
-
     /**
      * The interval at which this repeatable task should execute, in milliseconds.
      */
     @Getter
     @Setter
     private int interval;
-
     /**
      * The BukkitRunnable associated with this repeatable task, defining its logic.
      */
     @Getter
     @NonNull
     private BukkitRunnable runnable;
-
     /**
      * The BukkitTask representing this repeatable task.
      */
     @Getter
     private BukkitTask task;
-
     /**
      * If true this repeatable tasks tick Method is called.
      * If false, skips tick Method call.
@@ -69,7 +55,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
 
         final VitalRepeatableTaskInfo vitalRepeatableTaskInfo = getRequiredAnnotation();
 
-        this.interval = vitalRepeatableTaskInfo.value();
+        interval = vitalRepeatableTaskInfo.value();
     }
 
     /**
@@ -81,6 +67,16 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
     public VitalRepeatableTask(@NonNull JavaPlugin javaPlugin, int interval) {
         this.javaPlugin = javaPlugin;
         this.interval = interval;
+    }
+
+    @Override
+    public void onRegistered() {
+
+    }
+
+    @Override
+    public void onUnregistered() {
+
     }
 
     @Override
@@ -97,7 +93,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
         }
 
         onStart();
-        this.runnable = new BukkitRunnable() {
+        runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if (!allowTick) {
@@ -107,7 +103,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
                 onTick();
             }
         };
-        this.task = this.runnable.runTaskTimer(javaPlugin, 0L, (long) ((this.interval / 1000D) * 20L));
+        task = runnable.runTaskTimer(javaPlugin, 0L, (long) ((interval / 1000D) * 20L));
     }
 
     /**
@@ -126,10 +122,10 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
         }
 
         onStop();
-        this.task.cancel();
-        this.runnable.cancel();
-        this.task = null;
-        this.runnable = null;
+        task.cancel();
+        runnable.cancel();
+        task = null;
+        runnable = null;
     }
 
     /**
@@ -145,7 +141,7 @@ public abstract class VitalRepeatableTask implements AnnotatedVitalComponent<Vit
      * @return True if the task is running, false otherwise.
      */
     public final boolean isRunning() {
-        return this.runnable != null && !this.runnable.isCancelled() && this.task != null && !this.task.isCancelled();
+        return runnable != null && !runnable.isCancelled() && task != null && !task.isCancelled();
     }
 
     /**

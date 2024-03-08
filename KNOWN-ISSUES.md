@@ -8,7 +8,6 @@
 
 ## vital-core
 
-- Developers currently still need to implement the `plugin.yml`
 - Developers currently still need to implement the `requiredAnnotation()` Method in all `AnnotatedVitalComponent`
   Implementations
 
@@ -16,7 +15,3 @@
 
 - Developers can currently not display items for every line initialized
 - Displayed Items currently will despawn after a while
-
-## vital-commands
-
-- `executeBaseCommand()` will currently still be executed on every `INVALID_ARGS` command return state

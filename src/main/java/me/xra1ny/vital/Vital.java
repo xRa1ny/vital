@@ -1,6 +1,7 @@
 package me.xra1ny.vital;
 
 import lombok.NonNull;
+import me.xra1ny.essentia.inject.EssentiaInject;
 import me.xra1ny.except.EssentiaExcept;
 import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,17 +26,6 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
         registerComponent(this);
     }
 
-    @Override
-    public void onDisable() {
-        // accept any class based exception handlers.
-        EssentiaExcept.run(getJavaPlugin().getLogger(), getJavaPlugin().getClass().getPackageName(), "me.xra1ny.vital");
-    }
-
-    @Override
-    public void onEnable() {
-
-    }
-
     /**
      * Gets this generic {@link Vital} instance.
      *
@@ -54,5 +44,19 @@ public final class Vital<T extends JavaPlugin> extends VitalCore<T> {
      */
     public static <T extends JavaPlugin> Vital<T> getVitalInstance(@NonNull Class<T> type) {
         return (Vital<T>) getVitalCoreInstance(type);
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
+
+    @Override
+    public void onEnable() {
+        // register both plugin package and Vital's package for dependency injection using essentia-inject.
+        EssentiaInject.run(this, getJavaPlugin().getClass().getPackageName(), getClass().getPackageName());
+
+        // register both plugin package and Vital's package for exception handling using essentia-except.
+        EssentiaExcept.run(getJavaPlugin().getLogger(), getJavaPlugin().getClass().getPackageName(), getClass().getPackageName());
     }
 }

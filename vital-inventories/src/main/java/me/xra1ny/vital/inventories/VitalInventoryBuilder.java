@@ -30,40 +30,31 @@ public class VitalInventoryBuilder implements InventoryHolder {
     @Getter
     @NonNull
     private final Map<ItemStack, VitalInventoryClickEvent> itemStackClickEventMap = new HashMap<>();
-
-    private int size = 9;
-
-    private InventoryType inventoryType;
-
-    private String name = "VitalInventory";
-
-    @Getter
-    @Setter
-    private Inventory previousInventory;
-
-    @Getter
-    private Inventory inventory;
-
-    @Getter
-    @NonNull
-    private VitalInventoryOpenEvent vitalInventoryOpenEvent = (player) -> {
-    };
-
-    @Getter
-    @NonNull
-    private VitalInventoryClickEvent vitalInventoryClickEvent = (player, itemStack) -> VitalInventoryClickEvent.Action.DO_NOTHING;
-
-    @Getter
-    @NonNull
-    private VitalInventoryCloseEvent vitalInventoryCloseEvent = player -> {
-    };
-
     /**
      * Stores all players that currently have this inventory open.
      */
     @Getter
     @NonNull
     private final List<Player> playerList = new ArrayList<>();
+    private int size = 9;
+    private InventoryType inventoryType;
+    private String name = "VitalInventory";
+    @Getter
+    @Setter
+    private Inventory previousInventory;
+    @Getter
+    private Inventory inventory;
+    @Getter
+    @NonNull
+    private VitalInventoryOpenEvent vitalInventoryOpenEvent = (player) -> {
+    };
+    @Getter
+    @NonNull
+    private VitalInventoryClickEvent vitalInventoryClickEvent = (player, itemStack) -> VitalInventoryClickEvent.Action.DO_NOTHING;
+    @Getter
+    @NonNull
+    private VitalInventoryCloseEvent vitalInventoryCloseEvent = player -> {
+    };
 
     /**
      * Define the size of this inventory.
@@ -188,7 +179,7 @@ public class VitalInventoryBuilder implements InventoryHolder {
      * Updates this inventory for all players that have it open.
      */
     public void update() {
-        for(Player player : playerList) {
+        for (Player player : playerList) {
             player.openInventory(build());
         }
     }

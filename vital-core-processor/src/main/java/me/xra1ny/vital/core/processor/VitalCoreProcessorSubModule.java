@@ -5,7 +5,7 @@ import me.xra1ny.vital.core.VitalSubModule;
 import org.jetbrains.annotations.NotNull;
 
 @Component
-public class VitalCoreProcessorSubModule implements VitalSubModule {
+public class VitalCoreProcessorSubModule extends VitalSubModule {
     @Override
     @NotNull
     public String getName() {
