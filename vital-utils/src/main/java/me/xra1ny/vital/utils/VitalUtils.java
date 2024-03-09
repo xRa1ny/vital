@@ -479,9 +479,15 @@ public class VitalUtils {
      */
     @NonNull
     public static Location getCenterBlockLocation(@NonNull Location location, double xOffset, double yOffset, double zOffset) {
-        return location.getBlock().getLocation().clone()
+        final Location finalLocation = location.getBlock().getLocation().clone()
                 .add(.5, .5, .5)
                 .add(xOffset, yOffset, zOffset);
+
+        finalLocation.setPitch(location.getPitch());
+        finalLocation.setYaw(location.getYaw());
+        finalLocation.setDirection(location.getDirection());
+
+        return finalLocation;
     }
 
     /**
