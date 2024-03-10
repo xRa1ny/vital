@@ -10,61 +10,42 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
-/**
- * An abstract class for creating interactive inventories.
- *
- * @author xRa1ny
- */
-public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInventoryInfo>, InventoryHolder {
+public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<VitalInventoryInfo> {
+    @NonNull
+    private Map<Integer, ItemStack> slotItemMap = new HashMap<>();
 
-    /**
-     * The title of this inventory.
-     */
     @Getter
     @NonNull
-    private final String title;
+    private final Map<ItemStack, Consumer<InventoryClickEvent>> itemActionMap = new HashMap<>();
 
-    /**
-     * The size in slots of this inventory.
-     */
+    @Nullable
+    private ItemStack background;
+
     @Getter
+    @Nullable
+    private Inventory previousInventory;
+
+    @Range(from = 0, to = 54)
     private final int size;
-    /**
-     * The background item of this inventory menu.
-     */
-    @Getter
-    @NonNull
-    private final ItemStack background;
-    /**
-     * The previous menu of this inventory menu, if any.
-     */
-    @Getter
-    private final Inventory previousInventory;
-    /**
-     * The inventory of this inventory menu.
-     */
-    @Getter
-    @NonNull
-    private Inventory inventory;
 
-    /**
-     * Constructs a new VitalInventoryMenu instance.
-     */
+    @Getter
+    @NonNull
+    private final Inventory inventory;
+
     public VitalInventory() {
         final VitalInventoryInfo info = getRequiredAnnotation();
-
-        title = info.value();
-        size = info.size();
 
         final ItemStack backgroundItemStack = new ItemStack(info.background());
         final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
@@ -75,20 +56,13 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
         }
 
         background = backgroundItemStack;
-        previousInventory = null;
-        inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(title));
+        size = info.size();
+        inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(info.value()));
+        update();
     }
 
-    /**
-     * Constructs a new VitalInventoryMenu instance.
-     *
-     * @param previousInventory The previous menu to navigate back to, or null if there is none.
-     */
-    public VitalInventory(@Nullable Inventory previousInventory) {
+    public VitalInventory(@NonNull Inventory previousInventory) {
         final VitalInventoryInfo info = getRequiredAnnotation();
-
-        title = info.value();
-        size = info.size();
 
         final ItemStack backgroundItemStack = new ItemStack(info.background());
         final ItemMeta backgroundItemMeta = backgroundItemStack.getItemMeta();
@@ -100,7 +74,79 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
 
         background = backgroundItemStack;
         this.previousInventory = previousInventory;
-        inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(title));
+        size = info.size();
+        inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(info.value()));
+    }
+
+    protected void setItem(@Range(from = 0, to = 54) int slot, @NonNull ItemStack itemStack) {
+        slotItemMap.put(slot, itemStack);
+    }
+
+    protected void onOpen(@NonNull Player player) {
+
+    }
+
+    protected void onClose(@NonNull Player player) {
+
+    }
+
+    protected void onClick(@NonNull Player player, @NonNull ItemStack itemStack) {
+
+    }
+
+    protected void onClick(@NonNull ItemStack itemStack, @NonNull Consumer<InventoryClickEvent> event) {
+        itemActionMap.put(itemStack, event);
+    }
+
+    /**
+     * Called when this inventory is updated.
+     */
+    public void onUpdate() {
+
+    }
+
+    /**
+     * Called when this inventory is updated;
+     *
+     * @param player The player.
+     * @apiNote This method is called for every player this inventory is updated.
+     */
+    public void onUpdate(@NonNull Player player) {
+
+    }
+
+    private void updateItems() {
+        getInventory().clear();
+
+        for(int i = 0; i < size; i++) {
+            getInventory().setItem(i, background);
+        }
+
+        slotItemMap.forEach(getInventory()::setItem);
+    }
+
+    /**
+     * Updates this inventory removing all items and resetting them for all players that have this inventory open.
+     *
+     * @see VitalInventory#onUpdate(Player)
+     * @see VitalInventory#onUpdate()
+     */
+    public final void update() {
+        updateItems();
+        onUpdate();
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            final InventoryHolder inventoryHolder = player.getOpenInventory().getTopInventory().getHolder();
+
+            if (!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.getClass().equals(getClass())) {
+                continue;
+            }
+
+            onUpdate(player);
+
+            // open the newly updated inventory for the player that has this inventory holder open.
+            player.openInventory(player.getOpenInventory().getTopInventory());
+        }
     }
 
     @Override
@@ -115,33 +161,6 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
 
     @Override
     public void onUnregistered() {
-
-    }
-
-    /**
-     * Called when this inventory menu opens and asks to be filled with items.
-     *
-     * @param player The player for whom the menu is opened.
-     */
-    public void setItems(@NonNull Player player) {
-
-    }
-
-    /**
-     * Called when this inventory menu opens.
-     *
-     * @param e The InventoryOpenEvent.
-     */
-    public void onOpen(@NonNull InventoryOpenEvent e) {
-
-    }
-
-    /**
-     * Called when this inventory menu closes.
-     *
-     * @param e The InventoryCloseEvent.
-     */
-    public void onClose(@NonNull InventoryCloseEvent e) {
 
     }
 
@@ -168,77 +187,9 @@ public abstract class VitalInventory implements AnnotatedVitalComponent<VitalInv
 
         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, .3f, 1f);
 
-        onClick(e);
-    }
+        final Optional<Consumer<InventoryClickEvent>> optionalItemAction = Optional.ofNullable(itemActionMap.getOrDefault(itemStack, null));
 
-    /**
-     * Called when a player clicks within this inventory menu.
-     *
-     * @param e The InventoryClickEvent.
-     */
-    public void onClick(@NonNull InventoryClickEvent e) {
-
-    }
-
-    /**
-     * Sets the background items in the inventory.
-     */
-    public final void setBackground() {
-        for (int i = 0; i < inventory.getSize(); i++) {
-            if (inventory.getItem(i) == null) {
-                inventory.setItem(i, background);
-            }
-        }
-    }
-
-    /**
-     * Builds this {@link Inventory} instance with all specified information.
-     *
-     * @return The {@link Inventory} built.
-     * @apiNote Use this method to build an {@link Inventory} and then show it to the player using {@link Player#openInventory(Inventory)}
-     */
-    public final Inventory build() {
-        return inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(title));
-    }
-
-    /**
-     * Updates this inventory removing all items and resetting them for all players that have this inventory open.
-     *
-     * @see VitalInventory#setItems(Player)
-     */
-    public final void update() {
-        inventory.clear();
-        onUpdate();
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            final InventoryHolder inventoryHolder = player.getOpenInventory().getTopInventory().getHolder();
-
-            if (!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.getClass().equals(getClass())) {
-                continue;
-            }
-
-            onUpdate(player);
-            setItems(player);
-
-            // open the newly updated inventory for the player that has this inventory holder open.
-            player.openInventory(player.getOpenInventory().getTopInventory());
-        }
-    }
-
-    /**
-     * Called when this inventory is updated.
-     */
-    public void onUpdate() {
-
-    }
-
-    /**
-     * Called when this inventory is updated;
-     *
-     * @param player The player.
-     * @apiNote This method is called for every player this inventory is updated.
-     */
-    public void onUpdate(@NonNull Player player) {
-
+        optionalItemAction.ifPresentOrElse(itemAction -> itemAction.accept(e),
+                () -> onClick(player, itemStack));
     }
 }
