@@ -40,9 +40,10 @@ public final class VitalInventoryListener extends VitalListener {
             vitalInventory.onUpdate(player);
             vitalInventory.update();
 
-            if (vitalInventory instanceof VitalPagedInventory vitalPagedInventoryMenu) {
-                vitalPagedInventoryMenu.setPage(1, player);
-            }
+//            TODO: page 1 should only be set when opening FIRST TIME, NOT UPDATING (reopen)
+//            if (vitalInventory instanceof VitalPagedInventory vitalPagedInventoryMenu) {
+//                vitalPagedInventoryMenu.setPage(1, player);
+//            }
         }
     }
 

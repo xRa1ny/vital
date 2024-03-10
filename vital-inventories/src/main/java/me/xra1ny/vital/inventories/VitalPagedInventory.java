@@ -31,7 +31,7 @@ public abstract class VitalPagedInventory extends VitalInventory {
      *
      * @param previousInventory The previous {@link Inventory} to open after clicking out of inventory bounds.
      */
-    public VitalPagedInventory(@Nullable Inventory previousInventory) {
+    public VitalPagedInventory(@NonNull Inventory previousInventory) {
         super(previousInventory);
     }
 
@@ -58,5 +58,6 @@ public abstract class VitalPagedInventory extends VitalInventory {
 
         this.page = page;
         onPageChange(page, player);
+        update();
     }
 }
