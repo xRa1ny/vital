@@ -1,7 +1,5 @@
 package me.xra1ny.vital.core;
 
-import me.xra1ny.vital.core.exception.VitalComponentNotAnnotatedException;
-
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
@@ -17,16 +15,12 @@ public interface AnnotatedVitalComponent<T extends Annotation> extends VitalComp
      * Retrieves the required annotation associated with the component.
      *
      * @return The required annotation.
-     * @throws VitalComponentNotAnnotatedException If the required annotation is not found on the component.
+     * @throws RuntimeException If the required annotation is not found on the component.
      */
     default T getRequiredAnnotation() {
-        final Optional<T> optionalAnnotation = Optional.ofNullable(getClass().getDeclaredAnnotation(requiredAnnotationType()));
-
-        if (optionalAnnotation.isEmpty()) {
-            throw new VitalComponentNotAnnotatedException(this, requiredAnnotationType());
-        }
-
-        return optionalAnnotation.get();
+        return Optional.ofNullable(getClass().getAnnotation(requiredAnnotationType()))
+                .orElseThrow(() -> new RuntimeException("%s must be annotated with @%s"
+                        .formatted(getClass().getSimpleName(), requiredAnnotationType().getSimpleName())));
     }
 
     /**

@@ -20,4 +20,18 @@ public abstract class VitalMinigameState implements VitalComponent, Listener {
     public void onUnregistered() {
 
     }
+
+    /**
+     * Called when this state is enabled.
+     */
+    public void onEnable() {
+
+    }
+
+    /**
+     * Called when this state is disabled.
+     */
+    public void onDisable() {
+
+    }
 }

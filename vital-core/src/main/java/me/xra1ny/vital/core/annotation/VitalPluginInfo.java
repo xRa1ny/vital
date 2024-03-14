@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @author xRa1ny
  * @apiNote If combined with vital-core-processor dependency as annotation processor, can automatically generate the plugin.yml on compile-time.
  */
-@Target({ElementType.TYPE})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface VitalPluginInfo {
     /**

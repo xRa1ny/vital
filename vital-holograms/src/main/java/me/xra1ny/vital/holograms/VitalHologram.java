@@ -4,12 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import me.xra1ny.vital.configs.VitalConfigSerializable;
-import me.xra1ny.vital.configs.annotation.VitalConfigEnum;
-import me.xra1ny.vital.configs.annotation.VitalConfigPath;
-import me.xra1ny.vital.core.VitalAutoRegisterable;
 import me.xra1ny.vital.core.VitalComponent;
-import me.xra1ny.vital.core.VitalCore;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -17,19 +12,19 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static net.kyori.adventure.text.Component.text;
 
 /**
  * Represents a hologram in the Vital-Framework.
  *
  * @author xRa1ny
  */
-public final class VitalHologram implements VitalComponent, VitalConfigSerializable, VitalAutoRegisterable {
+public final class VitalHologram implements VitalComponent {
 
     /**
      * The name of this hologram.
@@ -37,7 +32,6 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Getter
     @Setter
     @NonNull
-    @VitalConfigPath("name")
     private String name;
 
     /**
@@ -61,7 +55,6 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Getter
     @Setter
     @NonNull
-    @VitalConfigPath("lines")
     private List<String> lines = new ArrayList<>();
 
     /**
@@ -70,7 +63,6 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Getter
     @Setter
     @NonNull
-    @VitalConfigPath("location")
     private Location location;
 
     /**
@@ -79,16 +71,7 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Getter
     @Setter
     @NonNull
-    @VitalConfigPath("display-type")
-    @VitalConfigEnum
     private Material displayType;
-
-    /**
-     * Constructor for config deserialization.
-     */
-    public VitalHologram() {
-
-    }
 
     /**
      * Constructs a new VitalHologram instance.
@@ -110,51 +93,50 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
      * Removes this hologram and its associated entities.
      */
     public void remove() {
-        for (Entity entity : this.base.getPassengers()) {
+        for (Entity entity : base.getPassengers()) {
             entity.remove();
         }
 
-        for (ArmorStand armorStand : this.baseLines) {
+        for (ArmorStand armorStand : baseLines) {
             armorStand.remove();
         }
 
-        this.base.remove();
+        base.remove();
     }
 
     /**
      * Updates the hologram by recreating its elements.
      */
-    @SuppressWarnings("deprecation")
     public void update() {
         if (base == null) {
             base = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND);
         }
 
-        this.base.setVisible(false);
-        this.base.setMarker(true);
+        base.setVisible(false);
+        base.setMarker(true);
         base.teleport(location);
 
-        if (this.displayType != null) {
+        if (displayType != null) {
             for (Entity entity : base.getPassengers()) {
                 entity.remove();
             }
 
-            final Item item = this.location.getWorld().dropItem(this.base.getEyeLocation(), new ItemStack(this.displayType));
+            final Item item = location.getWorld().dropItem(base.getEyeLocation(), new ItemStack(displayType));
 
             item.setPickupDelay(Integer.MAX_VALUE);
-            this.base.addPassenger(item);
+            base.addPassenger(item);
         }
 
         final int initialBaseLineSize = baseLines.size();
 
-        for (int i = this.lines.size() - 1; i > -1; i--) {
-            final String line = this.lines.get(i);
-            final Location lineLocation = this.location.clone().add(0, this.lines.size(), 0);
+        for (int i = lines.size() - 1; i > -1; i--) {
+            final String line = lines.get(i);
+            final Location lineLocation = location.clone().add(0, lines.size(), 0);
             final ArmorStand armorStand;
 
             if (i >= initialBaseLineSize) {
-                armorStand = (ArmorStand) this.location.getWorld().spawnEntity(lineLocation.subtract(0, 2 + (.25 * i), 0), EntityType.ARMOR_STAND);
-                this.baseLines.add(armorStand);
+                armorStand = (ArmorStand) location.getWorld().spawnEntity(lineLocation.subtract(0, 2 + (.25 * i), 0), EntityType.ARMOR_STAND);
+                baseLines.add(armorStand);
             } else {
                 armorStand = baseLines.get(i);
                 armorStand.teleport(lineLocation);
@@ -162,7 +144,7 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
 
             armorStand.setVisible(false);
             armorStand.setMarker(true);
-            armorStand.setCustomName(line);
+            armorStand.customName(text(line));
             armorStand.setCustomNameVisible(true);
         }
     }
@@ -183,15 +165,5 @@ public final class VitalHologram implements VitalComponent, VitalConfigSerializa
     @Override
     public void onUnregistered() {
         remove();
-    }
-
-    @Override
-    public void autoRegister(@NonNull Class<? extends JavaPlugin> javaPluginType) {
-        final VitalCore<? extends JavaPlugin> vitalCore = VitalCore.getVitalCoreInstance(javaPluginType);
-
-        final Optional<VitalHologramManager> optionalVitalHologramManager = vitalCore.getVitalComponent(VitalHologramManager.class);
-        final VitalHologramManager vitalHologramManager = optionalVitalHologramManager.get();
-
-        vitalHologramManager.registerVitalComponent(this);
     }
 }

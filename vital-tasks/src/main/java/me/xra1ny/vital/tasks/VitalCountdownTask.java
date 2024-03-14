@@ -8,11 +8,9 @@ import me.xra1ny.vital.tasks.annotation.VitalCountdownTaskInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class VitalCountdownTask implements AnnotatedVitalComponent<VitalCountdownTaskInfo> {
-    private VitalRepeatableTask vitalRepeatableTask;
-
     @Getter
     private final int initialCountdown;
-
+    private VitalRepeatableTask vitalRepeatableTask;
     @Getter
     @Setter
     private int countdown;
@@ -20,16 +18,16 @@ public class VitalCountdownTask implements AnnotatedVitalComponent<VitalCountdow
     public VitalCountdownTask(@NonNull JavaPlugin javaPlugin) {
         final VitalCountdownTaskInfo vitalCountdownTaskInfo = getRequiredAnnotation();
 
-        this.initialCountdown = vitalCountdownTaskInfo.value();
-        this.countdown = this.initialCountdown;
+        initialCountdown = vitalCountdownTaskInfo.value();
+        countdown = initialCountdown;
 
         run(javaPlugin, vitalCountdownTaskInfo.interval());
     }
 
 
     public VitalCountdownTask(@NonNull JavaPlugin javaPlugin, int interval, int countdown) {
-        this.initialCountdown = countdown;
-        this.countdown = this.initialCountdown;
+        initialCountdown = countdown;
+        this.countdown = initialCountdown;
 
         run(javaPlugin, interval);
     }
@@ -104,11 +102,19 @@ public class VitalCountdownTask implements AnnotatedVitalComponent<VitalCountdow
     }
 
     /**
+     * Resets the countdown to its initial value.
+     */
+    public final void reset() {
+        countdown = initialCountdown;
+        onReset();
+    }
+
+    /**
      * Resets the countdown to its initial value, restarting its responsible {@link VitalRepeatableTask}.
      */
     public final void restart() {
         vitalRepeatableTask.stop();
-        countdown = initialCountdown;
+        reset();
         vitalRepeatableTask.start();
         onRestart();
     }
@@ -142,7 +148,14 @@ public class VitalCountdownTask implements AnnotatedVitalComponent<VitalCountdow
     }
 
     /**
-     * Called when the countdown is told to reset
+     * Called when the countdown is told to reset to its initial value.
+     */
+    public void onReset() {
+
+    }
+
+    /**
+     * Called when the countdown is told to restart.
      *
      * @see VitalCountdownTask#restart()
      */

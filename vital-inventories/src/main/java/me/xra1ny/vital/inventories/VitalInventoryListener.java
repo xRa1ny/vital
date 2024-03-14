@@ -1,8 +1,8 @@
 package me.xra1ny.vital.inventories;
 
 import lombok.NonNull;
+import me.xra1ny.essentia.inject.annotation.Component;
 import me.xra1ny.vital.core.VitalListener;
-import me.xra1ny.vital.core.annotation.VitalDI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -12,7 +12,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -20,7 +19,7 @@ import java.util.Optional;
  *
  * @author xRa1ny
  */
-@VitalDI
+@Component
 public final class VitalInventoryListener extends VitalListener {
     /**
      * Handles the event when a player opens an inventory.
@@ -29,24 +28,22 @@ public final class VitalInventoryListener extends VitalListener {
      */
     @EventHandler
     public void onPlayerOpenInventory(@NonNull InventoryOpenEvent e) {
-        final InventoryHolder inventoryHolder = e.getInventory().getHolder();
+        final InventoryHolder inventoryHolder = e.getView().getTopInventory().getHolder();
         final Player player = (Player) e.getPlayer();
 
         if (inventoryHolder instanceof VitalInventory vitalInventory) {
-            vitalInventory.onOpen(e);
-
-            vitalInventory.setBackground();
-            vitalInventory.setItems(player);
-
-            if (vitalInventory instanceof VitalPagedInventory vitalPagedInventoryMenu) {
-                vitalPagedInventoryMenu.setPage(1, player);
+            // only call on open when the two inventories are different
+            if(!vitalInventory.getClass().equals(player.getOpenInventory().getTopInventory().getHolder().getClass())) {
+                vitalInventory.onOpen(player);
             }
-        } else if (inventoryHolder instanceof VitalInventoryBuilder vitalInventoryBuilder) {
-            vitalInventoryBuilder.getPlayerList().add(player);
 
-            final VitalInventoryOpenEvent vitalInventoryOpenEvent = vitalInventoryBuilder.getVitalInventoryOpenEvent();
+            vitalInventory.onUpdate(player);
+            vitalInventory.update();
 
-            vitalInventoryOpenEvent.onVitalInventoryOpen(player);
+//            TODO: page 1 should only be set when opening FIRST TIME, NOT UPDATING (reopen)
+//            if (vitalInventory instanceof VitalPagedInventory vitalPagedInventoryMenu) {
+//                vitalPagedInventoryMenu.setPage(1, player);
+//            }
         }
     }
 
@@ -81,65 +78,6 @@ public final class VitalInventoryListener extends VitalListener {
 
             vitalInventory.handleClick(e);
             e.setCancelled(true);
-        } else if (inventoryHolder instanceof VitalInventoryBuilder vitalInventoryBuilder) {
-            // If the User clicks outside of Inventory Window, close it
-            final Optional<Inventory> optionalPreviousInventory = Optional.ofNullable(vitalInventoryBuilder.getPreviousInventory());
-
-            if (optionalClickedInventory.isEmpty() && optionalPreviousInventory.isPresent()) {
-                final Inventory previousInventory = optionalPreviousInventory.get();
-
-                player.openInventory(previousInventory);
-
-                return;
-            }
-
-            final Optional<ItemStack> optionalCurrentItem = Optional.ofNullable(e.getCurrentItem());
-
-            if (optionalCurrentItem.isEmpty()) {
-                return;
-            }
-
-            // Default click event (global)
-            final VitalInventoryClickEvent vitalInventoryClickEvent = vitalInventoryBuilder.getVitalInventoryClickEvent();
-
-            // Slot based click event
-            final Map<Integer, VitalInventoryClickEvent> slotClickEventMap = vitalInventoryBuilder.getSlotClickEventMap();
-
-            // ItemStack based click event
-            final Map<ItemStack, VitalInventoryClickEvent> itemStackClickEventMap = vitalInventoryBuilder.getItemStackClickEventMap();
-
-            final VitalInventoryClickEvent.Action inventoryAction;
-
-            // Compute the associated click event with mapped elements.
-            if (slotClickEventMap.containsKey(e.getSlot())) {
-                // If we mapped a by SLOT element click event, handle it here...
-                final VitalInventoryClickEvent clickEvent = slotClickEventMap.get(e.getSlot());
-
-                inventoryAction = clickEvent.onVitalInventoryClick(player, e.getCurrentItem());
-            } else if (itemStackClickEventMap.containsKey(e.getCurrentItem())) {
-                // If we mapped a by ITEMSTACK element click event, handle it here...
-                final VitalInventoryClickEvent clickEvent = itemStackClickEventMap.get(e.getCurrentItem());
-
-                inventoryAction = clickEvent.onVitalInventoryClick(player, e.getCurrentItem());
-            } else {
-                // Call the general click event if no other events have been mapped.
-                inventoryAction = vitalInventoryClickEvent.onVitalInventoryClick(player, e.getCurrentItem());
-            }
-
-            // check the action of our click result, if set to `CLOSE_INVENTORY`, close the inventory accordingly.
-            if (inventoryAction == VitalInventoryClickEvent.Action.CLOSE_INVENTORY) {
-                player.closeInventory();
-            } else if (inventoryAction == VitalInventoryClickEvent.Action.OPEN_PREVIOUS_INVENTORY) {
-                final Optional<Inventory> optionalPreviousBuilderInventory = Optional.ofNullable(vitalInventoryBuilder.getPreviousInventory());
-
-                if (optionalPreviousBuilderInventory.isPresent()) {
-                    final Inventory previousBuilderInventory = optionalPreviousBuilderInventory.get();
-
-                    player.openInventory(previousBuilderInventory);
-                }
-            }
-
-            e.setCancelled(true);
         }
     }
 
@@ -154,10 +92,7 @@ public final class VitalInventoryListener extends VitalListener {
         final Player player = (Player) e.getPlayer();
 
         if (inventoryHolder instanceof VitalInventory vitalInventory) {
-            vitalInventory.onClose(e);
-        } else if (inventoryHolder instanceof VitalInventoryBuilder vitalInventoryBuilder) {
-            vitalInventoryBuilder.getPlayerList().remove(player);
-            vitalInventoryBuilder.getVitalInventoryCloseEvent().onVitalInventoryClose(player);
+            vitalInventory.onClose(player);
         }
     }
 }

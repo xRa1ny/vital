@@ -1,101 +1,39 @@
-group = "me.xra1ny.vital"
-version = "1.0"
-
 plugins {
-    id("java")
-    id("maven-publish")
-    id("com.github.johnrengelman.shadow") version ("8.1.1")
+    java
+    `maven-publish`
 }
 
 dependencies {
-    implementation(project(":vital-core"))
-    implementation(project(":vital-configs"))
-    implementation(project(":vital-commands"))
-    implementation(project(":vital-holograms"))
-    implementation(project(":vital-items"))
-    implementation(project(":vital-tasks"))
-    implementation(project(":vital-inventories"))
-    implementation(project(":vital-scoreboards"))
-    implementation(project(":vital-players"))
-    implementation(project(":vital-minigames"))
-    implementation(project(":vital-databases"))
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = group.toString()
-            artifactId = project.name
-            version = version
-
-            from(components["java"])
-        }
-    }
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
-tasks.build {
-    dependsOn(tasks.shadowJar)
-}
-
-tasks.publishToMavenLocal {
-    dependsOn(tasks.shadowJar)
-}
-
-tasks.javadoc {
-    (options as StandardJavadocDocletOptions)
-            .tags(
-                    "apiNote:a:API Note:",
-                    "implSpec:a:Implementation Requirements:",
-                    "implNote:a:Implementation Note:"
-            )
+    compileOnly(project(":vital-core"))
+    compileOnly("me.xra1ny.essentia:essentia-configure:1.0")
+    implementation(project(":vital-core-processor"))
+    implementation(project(":vital-commands-processor"))
 }
 
 allprojects {
-    apply(plugin = "java")
-    apply(plugin = "maven-publish")
-    apply(plugin = "com.github.johnrengelman.shadow")
+    group = "me.xra1ny.vital"
+    version = "1.0"
+
+    apply<JavaPlugin>()
+    apply<MavenPublishPlugin>()
 
     repositories {
         mavenLocal()
         mavenCentral()
-
-        // PaperMC
-        rootProject.property("paper-repo")?.let {
-            maven(it)
-        }
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 
     dependencies {
-        // Jetbrains Annotations
-        rootProject.property("annotations-vendor")?.let {
-            implementation(it)
-            testImplementation(it)
-        }
+        compileOnly("org.projectlombok:lombok:1.18.28")
+        annotationProcessor("org.projectlombok:lombok:1.18.28")
+        implementation("org.reflections:reflections:0.10.2")
+        compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
 
-        // Lombok
-        rootProject.property("lombok-vendor")?.let {
-            compileOnly(it)
-            testCompileOnly(it)
-            annotationProcessor(it)
-            testAnnotationProcessor(it)
-        }
+        // needed for dependency injection.
+        implementation("me.xra1ny.essentia:essentia-inject:1.0")
 
-        // Reflections
-        rootProject.property("reflection-vendor")?.let {
-            implementation(it)
-            testImplementation(it)
-        }
-
-        // PaperMC
-        rootProject.property("paper-vendor")?.let {
-            compileOnly(it)
-            testCompileOnly(it)
-        }
+        // needed for exception handler methods.
+        implementation("me.xra1ny.essentia:essentia-except:1.0")
     }
 
     java {
@@ -103,12 +41,16 @@ allprojects {
         withJavadocJar()
     }
 
-    tasks.build {
-        dependsOn(tasks.shadowJar)
-    }
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = group.toString()
+                artifactId = project.name
+                version = version
 
-    tasks.publishToMavenLocal {
-        dependsOn(tasks.shadowJar)
+                from(components["java"])
+            }
+        }
     }
 
     tasks.javadoc {

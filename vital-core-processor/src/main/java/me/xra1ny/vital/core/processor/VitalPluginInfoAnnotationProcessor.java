@@ -62,7 +62,7 @@ public class VitalPluginInfoAnnotationProcessor extends AbstractProcessor {
 
         // If scan could not resolve the main class, cancel automatic `plugin.yml` creation.
         if (classNameVitalPluginInfoEntry == null) {
-            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "No Main Plugin Class Found! Main Plugin Class Must Be Annotated With @VitalPluginInfo");
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "No Main Plugin Class Found! Main Plugin Class Must Be Annotated With @VitalPluginInfo");
 
             return false;
         }

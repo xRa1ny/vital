@@ -44,7 +44,7 @@ public class VitalPlayer implements VitalComponent {
      */
     @Override
     @NonNull
-    public UUID getUniqueId() {
+    public UUID getUuid() {
         return player.getUniqueId();
     }
 

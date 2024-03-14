@@ -3,12 +3,16 @@ package me.xra1ny.vital.scoreboards;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
+
+import static net.kyori.adventure.text.Component.text;
 
 /**
  * Represents a team within a scoreboard in the Vital plugin framework.
@@ -78,47 +82,47 @@ public final class VitalScoreboardTeam {
      *
      * @param name The name of the team.
      */
-    @SuppressWarnings("deprecation")
     VitalScoreboardTeam(@NonNull String name, @NonNull Scoreboard scoreboard) {
         this.name = name;
-        this.bukkitTeam = scoreboard.registerNewTeam(ChatColor.stripColor(name));
+        bukkitTeam = scoreboard.registerNewTeam(PlainTextComponentSerializer.plainText()
+                .serialize(LegacyComponentSerializer.legacySection()
+                        .deserialize(name)));
     }
 
     /**
      * Updates the properties and members of this scoreboard team.
      */
-    @SuppressWarnings("deprecation")
     public void update() {
-        this.bukkitTeam.setDisplayName(this.name);
-        this.bukkitTeam.setAllowFriendlyFire(this.friendlyFire);
-        this.bukkitTeam.setCanSeeFriendlyInvisibles(this.canSeeFriendlyInvisibles);
+        bukkitTeam.displayName(text(name));
+        bukkitTeam.setAllowFriendlyFire(friendlyFire);
+        bukkitTeam.setCanSeeFriendlyInvisibles(canSeeFriendlyInvisibles);
 
-        if (this.prefix != null) {
-            this.bukkitTeam.setPrefix(this.prefix);
+        if (prefix != null) {
+            bukkitTeam.prefix(MiniMessage.miniMessage().deserialize(prefix));
         }
 
-        if (this.suffix != null) {
-            this.bukkitTeam.setSuffix(this.suffix);
+        if (suffix != null) {
+            bukkitTeam.suffix(MiniMessage.miniMessage().deserialize(suffix));
         }
 
         // Update all options
-        for (Map.Entry<Team.Option, Team.OptionStatus> entry : this.options.entrySet()) {
+        for (Map.Entry<Team.Option, Team.OptionStatus> entry : options.entrySet()) {
             final Team.Option option = entry.getKey();
             final Team.OptionStatus status = entry.getValue();
 
-            this.bukkitTeam.setOption(option, status);
+            bukkitTeam.setOption(option, status);
         }
 
         // Clear all members
-        final Set<String> entries = this.bukkitTeam.getEntries();
+        final Set<String> entries = bukkitTeam.getEntries();
 
         for (String entry : entries) {
-            this.bukkitTeam.removeEntry(entry);
+            bukkitTeam.removeEntry(entry);
         }
 
         // Add new members
-        for (Player player : this.playerList) {
-            this.bukkitTeam.addPlayer(player);
+        for (Player player : playerList) {
+            bukkitTeam.addPlayer(player);
         }
     }
 
@@ -129,7 +133,7 @@ public final class VitalScoreboardTeam {
      * @param status The team option status.
      */
     public void setOption(@NonNull Team.Option option, @NonNull Team.OptionStatus status) {
-        this.options.put(option, status);
+        options.put(option, status);
     }
 
     /**
@@ -138,11 +142,11 @@ public final class VitalScoreboardTeam {
      * @param player The player to add.
      */
     public void addPlayer(@NonNull Player player) {
-        if (this.playerList.contains(player)) {
+        if (playerList.contains(player)) {
             return;
         }
 
-        this.playerList.add(player);
+        playerList.add(player);
         update();
     }
 
@@ -152,11 +156,11 @@ public final class VitalScoreboardTeam {
      * @param player The player to remove.
      */
     public void removePlayer(@NonNull Player player) {
-        if (!this.playerList.contains(player)) {
+        if (!playerList.contains(player)) {
             return;
         }
 
-        this.playerList.remove(player);
+        playerList.remove(player);
         update();
     }
 }

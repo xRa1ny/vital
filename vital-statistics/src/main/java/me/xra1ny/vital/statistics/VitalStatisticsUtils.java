@@ -31,7 +31,8 @@ public class VitalStatisticsUtils {
      * @throws Exception If an error occurs while fetching.
      */
     public static int getClassCount(@NonNull String className) throws Exception {
-        final Pattern pattern = Pattern.compile("\\s*\\d+:\\s*(\\d+)\\s*\\d+\\s*" + className);
+        final Pattern pattern = Pattern.compile("\\s*\\d+:\\s*(\\d+)\\s*\\d+\\s*%s"
+                .formatted(className));
         final String classHistogram = getClassHistogram(getMBeanServer());
 
         return Arrays.stream(classHistogram.split("\\n"))
