@@ -28,7 +28,7 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
 
     @Getter
     @NonNull
-    private final Map<ItemStack, Consumer<InventoryClickEvent>> itemActionMap = new HashMap<>();
+    private final Map<Map.Entry<Player, ItemStack>, Consumer<InventoryClickEvent>> itemActionMap = new HashMap<>();
 
     @Nullable
     private ItemStack background;
@@ -58,7 +58,6 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
         background = backgroundItemStack;
         size = info.size();
         inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(info.value()));
-        update();
     }
 
     public VitalInventory(@NonNull Inventory previousInventory) {
@@ -73,9 +72,9 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
         }
 
         background = backgroundItemStack;
-        this.previousInventory = previousInventory;
         size = info.size();
         inventory = Bukkit.createInventory(this, size, MiniMessage.miniMessage().deserialize(info.value()));
+        this.previousInventory = previousInventory;
     }
 
     protected void setItem(@Range(from = 0, to = 54) int slot, @NonNull ItemStack itemStack) {
@@ -94,8 +93,8 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
 
     }
 
-    protected void onClick(@NonNull ItemStack itemStack, @NonNull Consumer<InventoryClickEvent> event) {
-        itemActionMap.put(itemStack, event);
+    protected void onClick(@NonNull Player player, @NonNull ItemStack itemStack, @NonNull Consumer<InventoryClickEvent> event) {
+        itemActionMap.put(Map.entry(player, itemStack), event);
     }
 
     /**
@@ -187,7 +186,7 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
 
         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, .3f, 1f);
 
-        final Optional<Consumer<InventoryClickEvent>> optionalItemAction = Optional.ofNullable(itemActionMap.getOrDefault(itemStack, null));
+        final Optional<Consumer<InventoryClickEvent>> optionalItemAction = Optional.ofNullable(itemActionMap.getOrDefault(Map.entry(player, itemStack), null));
 
         optionalItemAction.ifPresentOrElse(itemAction -> itemAction.accept(e),
                 () -> onClick(player, itemStack));
