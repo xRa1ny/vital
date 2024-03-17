@@ -28,22 +28,18 @@ public final class VitalInventoryListener extends VitalListener {
      */
     @EventHandler
     public void onPlayerOpenInventory(@NonNull InventoryOpenEvent e) {
-        final InventoryHolder inventoryHolder = e.getView().getTopInventory().getHolder();
+        final InventoryHolder inventoryHolder = e.getInventory().getHolder();
         final Player player = (Player) e.getPlayer();
 
         if (inventoryHolder instanceof VitalInventory vitalInventory) {
-            // only call on open when the two inventories are different
-            if(!vitalInventory.getClass().equals(player.getOpenInventory().getTopInventory().getHolder().getClass())) {
-                vitalInventory.onOpen(player);
-            }
+            vitalInventory.onOpen(player);
 
             vitalInventory.onUpdate(player);
             vitalInventory.update();
 
-//            TODO: page 1 should only be set when opening FIRST TIME, NOT UPDATING (reopen)
-//            if (vitalInventory instanceof VitalPagedInventory vitalPagedInventoryMenu) {
-//                vitalPagedInventoryMenu.setPage(1, player);
-//            }
+            if(vitalInventory instanceof VitalPagedInventory vitalPagedInventory) {
+                vitalPagedInventory.setPage(1, player);
+            }
         }
     }
 

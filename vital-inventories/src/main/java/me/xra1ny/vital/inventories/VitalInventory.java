@@ -77,7 +77,7 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
         this.previousInventory = previousInventory;
     }
 
-    protected void setItem(@Range(from = 0, to = 54) int slot, @NonNull ItemStack itemStack) {
+    protected void setItem(@Range(from = 0, to = 54) int slot, @Nullable ItemStack itemStack) {
         slotItemMap.put(slot, itemStack);
     }
 
@@ -131,21 +131,22 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
      * @see VitalInventory#onUpdate()
      */
     public final void update() {
-        updateItems();
+        // first call developer onUpdate
         onUpdate();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             final InventoryHolder inventoryHolder = player.getOpenInventory().getTopInventory().getHolder();
 
-            if (!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.getClass().equals(getClass())) {
+            if (!(inventoryHolder instanceof VitalInventory vitalInventory) || !vitalInventory.equals(this)) {
                 continue;
             }
 
+            // update the inventory for the looping player.
             onUpdate(player);
-
-            // open the newly updated inventory for the player that has this inventory holder open.
-            player.openInventory(player.getOpenInventory().getTopInventory());
         }
+
+        // finally set all items accordingly
+        updateItems();
     }
 
     @Override
