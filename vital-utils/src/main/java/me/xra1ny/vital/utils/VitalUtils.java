@@ -35,7 +35,7 @@ public class VitalUtils {
      * @param action          The action to perform for each player.
      * @param playerPredicate The {@link Predicate} specifying the condition in which each action is performed.
      */
-    public static void broadcastAction(@NonNull Consumer<Player> action, @NonNull Predicate<Player> playerPredicate) {
+    public static void broadcastAction(@NonNull Predicate<Player> playerPredicate, @NonNull Consumer<Player> action) {
         Bukkit.getOnlinePlayers().stream()
                 .filter(playerPredicate)
                 .forEach(action);
@@ -47,7 +47,7 @@ public class VitalUtils {
      * @param action The action to perform for each player.
      */
     public static void broadcastAction(@NonNull Consumer<Player> action) {
-        broadcastAction(action, p -> true);
+        broadcastAction(p -> true, action);
     }
 
     /**
@@ -58,7 +58,7 @@ public class VitalUtils {
      * @param tagResolvers    Any tag resolvers for custom minimessage tag syntax.
      */
     public static void broadcastMessage(@NonNull String message, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
-        broadcastAction(player -> player.sendRichMessage(message, tagResolvers), playerPredicate);
+        broadcastAction(playerPredicate, player -> player.sendRichMessage(message, tagResolvers));
     }
 
     /**
@@ -81,7 +81,7 @@ public class VitalUtils {
      * @param playerPredicate The Predicate specifying the condition in which the sound is broadcast.
      */
     public static void broadcastSound(@NonNull Sound sound, float volume, float pitch, @NonNull Predicate<Player> playerPredicate) {
-        broadcastAction(player -> player.playSound(player, sound, volume, pitch), playerPredicate);
+        broadcastAction(playerPredicate, player -> player.playSound(player, sound, volume, pitch));
     }
 
     /**
@@ -282,7 +282,7 @@ public class VitalUtils {
      * @param playerPredicate  The {@link Predicate} specifying the condition in which the potion effect is broadcast.
      */
     public static void broadcastPotionEffect(@NonNull PotionEffectType potionEffectType, int duration, int amplifier, @NonNull Predicate<Player> playerPredicate) {
-        broadcastAction(player -> player.addPotionEffect(new PotionEffect(potionEffectType, duration, amplifier)), playerPredicate);
+        broadcastAction(playerPredicate, player -> player.addPotionEffect(new PotionEffect(potionEffectType, duration, amplifier)));
     }
 
     /**
@@ -303,7 +303,7 @@ public class VitalUtils {
      * @param playerPredicate  The {@link Predicate} specifying the condition in which the potion effect is removed.
      */
     public static void broadcastClearPotionEffect(@NonNull PotionEffectType potionEffectType, @NonNull Predicate<Player> playerPredicate) {
-        broadcastAction(player -> player.removePotionEffect(potionEffectType), playerPredicate);
+        broadcastAction(playerPredicate, player -> player.removePotionEffect(potionEffectType));
     }
 
     /**
@@ -321,9 +321,9 @@ public class VitalUtils {
      * @param playerPredicate The {@link Predicate} specifying the condition in which all potion effects are removed.
      */
     public static void broadcastClearPotionEffects(@NonNull Predicate<Player> playerPredicate) {
-        broadcastAction(player -> player.getActivePotionEffects().stream()
+        broadcastAction(playerPredicate, player -> player.getActivePotionEffects().stream()
                 .map(PotionEffect::getType)
-                .forEach(player::removePotionEffect), playerPredicate);
+                .forEach(player::removePotionEffect));
     }
 
     /**
