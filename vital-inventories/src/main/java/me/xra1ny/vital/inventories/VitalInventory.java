@@ -81,6 +81,19 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
         slotItemMap.put(slot, itemStack);
     }
 
+    /**
+     * Sets the given item to the specified slot while also binding an action to the given item and player in this inventory.
+     *
+     * @param slot The slot the item may occupy
+     * @param itemStack The item itself.
+     * @param player The player object for the click handler.
+     * @param event The click handler itself.
+     */
+    protected void setItem(@Range(from = 0, to = 54) int slot, @NonNull ItemStack itemStack, @NonNull Player player, @NonNull Consumer<InventoryClickEvent> event) {
+        setItem(slot, itemStack);
+        onClick(player, itemStack, event);
+    }
+
     protected void onOpen(@NonNull Player player) {
 
     }
