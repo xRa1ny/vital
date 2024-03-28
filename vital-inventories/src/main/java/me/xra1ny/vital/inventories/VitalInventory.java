@@ -28,7 +28,7 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
 
     @Getter
     @NonNull
-    private final Map<Map.Entry<Player, ItemStack>, Consumer<InventoryClickEvent>> itemActionMap = new HashMap<>();
+    private final Map<Map.Entry<Player, Integer>, Consumer<InventoryClickEvent>> slotActionMap = new HashMap<>();
 
     @Nullable
     private ItemStack background;
@@ -91,7 +91,7 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
      */
     protected void setItem(@Range(from = 0, to = 54) int slot, @NonNull ItemStack itemStack, @NonNull Player player, @NonNull Consumer<InventoryClickEvent> event) {
         setItem(slot, itemStack);
-        onClick(player, itemStack, event);
+        onClick(player, slot, event);
     }
 
     protected void onOpen(@NonNull Player player) {
@@ -102,12 +102,12 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
 
     }
 
-    protected void onClick(@NonNull Player player, @NonNull ItemStack itemStack) {
+    protected void onClick(@NonNull Player player, int slot, @NonNull ItemStack itemStack) {
 
     }
 
-    protected void onClick(@NonNull Player player, @NonNull ItemStack itemStack, @NonNull Consumer<InventoryClickEvent> event) {
-        itemActionMap.put(Map.entry(player, itemStack), event);
+    protected void onClick(@NonNull Player player, int slot, @NonNull Consumer<InventoryClickEvent> event) {
+        slotActionMap.put(Map.entry(player, slot), event);
     }
 
     /**
@@ -200,9 +200,9 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
 
         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, .3f, 1f);
 
-        final Optional<Consumer<InventoryClickEvent>> optionalItemAction = Optional.ofNullable(itemActionMap.getOrDefault(Map.entry(player, itemStack), null));
+        final Optional<Consumer<InventoryClickEvent>> optionalItemAction = Optional.ofNullable(slotActionMap.getOrDefault(Map.entry(player, e.getSlot()), null));
 
         optionalItemAction.ifPresentOrElse(itemAction -> itemAction.accept(e),
-                () -> onClick(player, itemStack));
+                () -> onClick(player, e.getSlot(), itemStack));
     }
 }

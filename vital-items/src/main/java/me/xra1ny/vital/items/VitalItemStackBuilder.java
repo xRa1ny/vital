@@ -24,7 +24,7 @@ import java.util.Map.Entry;
  *
  * @author xRa1ny
  */
-public final class VitalItemStackBuilder {
+public class VitalItemStackBuilder {
     @Getter
     @NonNull
     private final List<String> lore = new ArrayList<>();
@@ -220,7 +220,7 @@ public final class VitalItemStackBuilder {
             if (name != null) {
                 if (!name.isBlank()) {
                     meta.displayName(MiniMessage.miniMessage().deserialize("<reset><white><name>",
-                            Placeholder.parsed("name", name))
+                                    Placeholder.parsed("name", name))
                             .decoration(TextDecoration.ITALIC, false));
                 }
             }
@@ -274,4 +274,3 @@ public final class VitalItemStackBuilder {
         return item;
     }
 }
-
