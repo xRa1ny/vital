@@ -2,9 +2,10 @@ package me.xra1ny.vital.inventories;
 
 import lombok.Getter;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.inventory.InventoryHolder;
 
 /**
  * Used to easily create an interactive paged Inventory Menu.
@@ -59,5 +60,21 @@ public abstract class VitalPagedInventory extends VitalInventory {
         this.page = page;
         onPageChange(page, player);
         update();
+    }
+
+    @Override
+    public void update() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            final InventoryHolder inventoryHolder = player.getOpenInventory().getTopInventory().getHolder();
+
+            if (!(inventoryHolder instanceof VitalPagedInventory vitalInventory) || !vitalInventory.equals(this)) {
+                continue;
+            }
+
+            // update the inventory for the looping player.
+            onPageChange(page, player);
+        }
+
+        super.update();
     }
 }

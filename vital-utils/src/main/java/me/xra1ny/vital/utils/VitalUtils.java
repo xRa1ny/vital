@@ -28,14 +28,14 @@ import static net.kyori.adventure.text.Component.empty;
  * @apiNote This class can be used standalone, detached from any Vital project. It only contains utilities for easier interaction with the SpigotAPI.
  */
 @SuppressWarnings("unused")
-public class VitalUtils {
+public interface VitalUtils {
     /**
      * Broadcasts an action to be performed for each player currently connected to this server.
      *
      * @param action          The action to perform for each player.
      * @param playerPredicate The {@link Predicate} specifying the condition in which each action is performed.
      */
-    public static void broadcastAction(@NonNull Predicate<Player> playerPredicate, @NonNull Consumer<Player> action) {
+    static void broadcastAction(@NonNull Predicate<Player> playerPredicate, @NonNull Consumer<Player> action) {
         Bukkit.getOnlinePlayers().stream()
                 .filter(playerPredicate)
                 .forEach(action);
@@ -46,7 +46,7 @@ public class VitalUtils {
      *
      * @param action The action to perform for each player.
      */
-    public static void broadcastAction(@NonNull Consumer<Player> action) {
+    static void broadcastAction(@NonNull Consumer<Player> action) {
         broadcastAction(p -> true, action);
     }
 
@@ -57,7 +57,7 @@ public class VitalUtils {
      * @param playerPredicate The Predicate specifying the condition in which the message should be broadcast.
      * @param tagResolvers    Any tag resolvers for custom minimessage tag syntax.
      */
-    public static void broadcastMessage(@NonNull String message, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastMessage(@NonNull String message, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastAction(playerPredicate, player -> player.sendRichMessage(message, tagResolvers));
     }
 
@@ -68,7 +68,7 @@ public class VitalUtils {
      * @param tagResolvers Any tag resolvers for custom minimessage tag syntax.
      * @apiNote The given message will be broadcast in minimessage syntax.
      */
-    public static void broadcastMessage(@NonNull String message, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastMessage(@NonNull String message, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastMessage(message, player -> true, tagResolvers);
     }
 
@@ -80,7 +80,7 @@ public class VitalUtils {
      * @param pitch           The pitch of the sound.
      * @param playerPredicate The Predicate specifying the condition in which the sound is broadcast.
      */
-    public static void broadcastSound(@NonNull Sound sound, float volume, float pitch, @NonNull Predicate<Player> playerPredicate) {
+    static void broadcastSound(@NonNull Sound sound, float volume, float pitch, @NonNull Predicate<Player> playerPredicate) {
         broadcastAction(playerPredicate, player -> player.playSound(player, sound, volume, pitch));
     }
 
@@ -91,7 +91,7 @@ public class VitalUtils {
      * @param volume The volume of the sound.
      * @param pitch  The pitch of the sound.
      */
-    public static void broadcastSound(@NonNull Sound sound, float volume, float pitch) {
+    static void broadcastSound(@NonNull Sound sound, float volume, float pitch) {
         broadcastSound(sound, volume, pitch, player -> true);
     }
 
@@ -101,7 +101,7 @@ public class VitalUtils {
      * @param sound           The sound to broadcast.
      * @param playerPredicate The Predicate specifying the condition in which the sound should be broadcast.
      */
-    public static void broadcastSound(@NonNull Sound sound, @NonNull Predicate<Player> playerPredicate) {
+    static void broadcastSound(@NonNull Sound sound, @NonNull Predicate<Player> playerPredicate) {
         broadcastSound(sound, 1f, 1f, playerPredicate);
     }
 
@@ -111,7 +111,7 @@ public class VitalUtils {
      *
      * @param sound The sound to broadcast.
      */
-    public static void broadcastSound(@NonNull Sound sound) {
+    static void broadcastSound(@NonNull Sound sound) {
         broadcastSound(sound, player -> true);
     }
 
@@ -127,7 +127,7 @@ public class VitalUtils {
      * @param playerPredicate The predicate the player MUST MATCH when sending the title.
      * @param tagResolvers    Any custom tag resolvers for custom minimessage tags.
      */
-    public static void sendTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @Range(from = 0, to = 72_000) int stay, @Range(from = 0, to = 72_000) int fadeOut, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void sendTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @Range(from = 0, to = 72_000) int stay, @Range(from = 0, to = 72_000) int fadeOut, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
         if (playerPredicate.test(player)) {
             player.showTitle(Title.title(
                     title == null ? empty() : MiniMessage.miniMessage().deserialize(title, tagResolvers),
@@ -148,12 +148,12 @@ public class VitalUtils {
      * @param fadeOut      The fade out times (measured in ticks).
      * @param tagResolvers Any custom tag resolvers for custom minimessage tags.
      */
-    public static void sendTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @Range(from = 0, to = 72_000) int stay, @Range(from = 0, to = 72_000) int fadeOut, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void sendTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @Range(from = 0, to = 72_000) int stay, @Range(from = 0, to = 72_000) int fadeOut, @NonNull TagResolver @NonNull ... tagResolvers) {
         sendTitle(player, title, subtitle, fadeIn, stay, fadeOut, p -> true, tagResolvers);
     }
 
-    public static void sendTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
-        if(playerPredicate.test(player)) {
+    static void sendTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+        if (playerPredicate.test(player)) {
             player.showTitle(Title.title(
                     title == null ? empty() : MiniMessage.miniMessage().deserialize(title, tagResolvers),
                     subtitle == null ? empty() : MiniMessage.miniMessage().deserialize(subtitle, tagResolvers)
@@ -161,7 +161,7 @@ public class VitalUtils {
         }
     }
 
-    public static void sendTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void sendTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @NonNull TagResolver @NonNull ... tagResolvers) {
         sendTitle(player, title, subtitle, p -> true, tagResolvers);
     }
 
@@ -176,7 +176,7 @@ public class VitalUtils {
      * @param playerPredicate The {@link Predicate} specifying the condition in which the title is broadcast.
      * @param tagResolvers    Any tag resolvers for custom minimessage replacement syntax.
      */
-    public static void broadcastTitle(@Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @Range(from = 0, to = 72_000) int stay, @Range(from = 0, to = 72_000) int fadeOut, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastTitle(@Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @Range(from = 0, to = 72_000) int stay, @Range(from = 0, to = 72_000) int fadeOut, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastAction(player -> sendTitle(player, title, subtitle, fadeIn, stay, fadeOut, tagResolvers));
     }
 
@@ -188,7 +188,7 @@ public class VitalUtils {
      * @param playerPredicate The {@link Predicate} specifying the condition in which the title is broadcast.
      * @param tagResolvers    Any tag resolvers for custom minimessage tag syntax.
      */
-    public static void broadcastTitle(@Nullable String title, @Nullable String subtitle, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastTitle(@Nullable String title, @Nullable String subtitle, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastAction(player -> sendTitle(player, title, subtitle, playerPredicate, tagResolvers));
     }
 
@@ -199,7 +199,7 @@ public class VitalUtils {
      * @param subtitle     The subtitle to broadcast.
      * @param tagResolvers Any tag resolvers for custom minimessage tag syntax.
      */
-    public static void broadcastTitle(@Nullable String title, @Nullable String subtitle, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastTitle(@Nullable String title, @Nullable String subtitle, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastTitle(title, subtitle, player -> true, tagResolvers);
     }
 
@@ -213,7 +213,7 @@ public class VitalUtils {
      * @param fadeOut      The fade-out amount (in ticks).
      * @param tagResolvers Any tag resolvers for custom minimessage tag syntax.
      */
-    public static void broadcastTitle(@Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastTitle(@Nullable String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastTitle(title, subtitle, fadeIn, stay, fadeOut, player -> true, tagResolvers);
     }
 
@@ -228,7 +228,7 @@ public class VitalUtils {
      * @param tagResolvers    Any custom tag resolvers for custom minimessage tags.
      * @apiNote The title will stay approx. 1h
      */
-    public static void sendPersistentTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void sendPersistentTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
         sendTitle(player, title, subtitle, fadeIn, 72_000 /* 1h */, 0, playerPredicate, tagResolvers);
     }
 
@@ -242,7 +242,7 @@ public class VitalUtils {
      * @param tagResolvers Any custom tag resolvers for custom minimessage tags.
      * @apiNote The title will stay approx. 1h
      */
-    public static void sendPersistentTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void sendPersistentTitle(@NonNull Player player, @Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @NonNull TagResolver @NonNull ... tagResolvers) {
         sendTitle(player, title, subtitle, fadeIn, 72_000 /* 1h */, 0, p -> true, tagResolvers);
     }
 
@@ -256,7 +256,7 @@ public class VitalUtils {
      * @param tagResolvers    Any custom tag resolvers for custom minimessage tags.
      * @apiNote The title will stay approx. 1h
      */
-    public static void broadcastPersistentTitle(@Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastPersistentTitle(@Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastAction(player -> sendPersistentTitle(player, title, subtitle, fadeIn, playerPredicate, tagResolvers));
     }
 
@@ -269,7 +269,7 @@ public class VitalUtils {
      * @param tagResolvers Any custom tag resolvers for custom minimessage tags.
      * @apiNote The title will stay approx. 1h
      */
-    public static void broadcastPersistentTitle(@Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastPersistentTitle(@Nullable String title, @Nullable String subtitle, @Range(from = 0, to = 72_000) int fadeIn, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastAction(player -> sendPersistentTitle(player, title, subtitle, fadeIn, tagResolvers));
     }
 
@@ -281,7 +281,7 @@ public class VitalUtils {
      * @param amplifier        The amplifier.
      * @param playerPredicate  The {@link Predicate} specifying the condition in which the potion effect is broadcast.
      */
-    public static void broadcastPotionEffect(@NonNull PotionEffectType potionEffectType, int duration, int amplifier, @NonNull Predicate<Player> playerPredicate) {
+    static void broadcastPotionEffect(@NonNull PotionEffectType potionEffectType, int duration, int amplifier, @NonNull Predicate<Player> playerPredicate) {
         broadcastAction(playerPredicate, player -> player.addPotionEffect(new PotionEffect(potionEffectType, duration, amplifier)));
     }
 
@@ -292,7 +292,7 @@ public class VitalUtils {
      * @param duration         The duration (in ticks).
      * @param amplifier        The amplifier.
      */
-    public static void broadcastPotionEffect(@NonNull PotionEffectType potionEffectType, int duration, int amplifier) {
+    static void broadcastPotionEffect(@NonNull PotionEffectType potionEffectType, int duration, int amplifier) {
         broadcastPotionEffect(potionEffectType, duration, amplifier, player -> true);
     }
 
@@ -302,7 +302,7 @@ public class VitalUtils {
      * @param potionEffectType The {@link PotionEffectType}.
      * @param playerPredicate  The {@link Predicate} specifying the condition in which the potion effect is removed.
      */
-    public static void broadcastClearPotionEffect(@NonNull PotionEffectType potionEffectType, @NonNull Predicate<Player> playerPredicate) {
+    static void broadcastClearPotionEffect(@NonNull PotionEffectType potionEffectType, @NonNull Predicate<Player> playerPredicate) {
         broadcastAction(playerPredicate, player -> player.removePotionEffect(potionEffectType));
     }
 
@@ -311,7 +311,7 @@ public class VitalUtils {
      *
      * @param potionEffectType The {@link PotionEffectType}.
      */
-    public static void broadcastClearPotionEffect(@NonNull PotionEffectType potionEffectType) {
+    static void broadcastClearPotionEffect(@NonNull PotionEffectType potionEffectType) {
         broadcastClearPotionEffect(potionEffectType, player -> true);
     }
 
@@ -320,7 +320,7 @@ public class VitalUtils {
      *
      * @param playerPredicate The {@link Predicate} specifying the condition in which all potion effects are removed.
      */
-    public static void broadcastClearPotionEffects(@NonNull Predicate<Player> playerPredicate) {
+    static void broadcastClearPotionEffects(@NonNull Predicate<Player> playerPredicate) {
         broadcastAction(playerPredicate, player -> player.getActivePotionEffects().stream()
                 .map(PotionEffect::getType)
                 .forEach(player::removePotionEffect));
@@ -329,7 +329,7 @@ public class VitalUtils {
     /**
      * Clears all potion effects for all players currently connected to this server.
      */
-    public static void broadcastClearPotionEffects() {
+    static void broadcastClearPotionEffects() {
         broadcastClearPotionEffects(player -> true);
     }
 
@@ -339,7 +339,7 @@ public class VitalUtils {
      * @param material The {@link Material} type.
      * @return true if the type can be placed in midair; false otherwise.
      */
-    public static boolean canBePlacedInMidAir(@NonNull Material material) {
+    static boolean canBePlacedInMidAir(@NonNull Material material) {
         return !material.hasGravity() &&
                 !isVegetation(material) &&
                 (material != Material.REDSTONE &&
@@ -359,7 +359,7 @@ public class VitalUtils {
      * @param material The {@link Material} type.
      * @return true if the given type is vegetation; false otherwise.
      */
-    public static boolean isVegetation(@NonNull Material material) {
+    static boolean isVegetation(@NonNull Material material) {
         return material.name().contains("SAPLING") ||
                 material.name().contains("FLOWER") ||
                 material.name().contains("WHEAT") ||
@@ -397,7 +397,7 @@ public class VitalUtils {
      * @param material The {@link Material} type.
      * @return true if the type is a redstone machine; false otherwise.
      */
-    public static boolean isRedstoneMachine(@NonNull Material material) {
+    static boolean isRedstoneMachine(@NonNull Material material) {
         return material.getCreativeCategory() == CreativeCategory.REDSTONE && (
                 material == Material.REDSTONE_TORCH ||
                         material.name().contains("PISTON") ||
@@ -424,7 +424,7 @@ public class VitalUtils {
      * @param location  The location to check if it is contained within the area.
      * @return true if the location is within the area; false otherwise.
      */
-    public static boolean isInsideLocationArea(@NonNull Location location1, @NonNull Location location2, @NonNull Location location) {
+    static boolean isInsideLocationArea(@NonNull Location location1, @NonNull Location location2, @NonNull Location location) {
         final double ourMinX = Math.min(location1.getX(), location2.getX());
         final double ourMaxX = Math.max(location1.getX(), location2.getX());
 
@@ -451,7 +451,7 @@ public class VitalUtils {
      * @return The randomly calculated area location.
      */
     @NonNull
-    public static Location getRandomLocationInLocationArea(@NonNull Location location1, @NonNull Location location2) {
+    static Location getRandomLocationInLocationArea(@NonNull Location location1, @NonNull Location location2) {
         final double ourMinX = Math.min(location1.getX(), location2.getX());
         final double ourMaxX = Math.max(location1.getX(), location2.getX());
 
@@ -478,7 +478,7 @@ public class VitalUtils {
      * @return The centered offset location.
      */
     @NonNull
-    public static Location getCenterBlockLocation(@NonNull Location location, double xOffset, double yOffset, double zOffset) {
+    static Location getCenterBlockLocation(@NonNull Location location, double xOffset, double yOffset, double zOffset) {
         final Location finalLocation = location.getBlock().getLocation().clone()
                 .add(.5, .5, .5)
                 .add(xOffset, yOffset, zOffset);
@@ -496,7 +496,7 @@ public class VitalUtils {
      * @return The centered block location.
      */
     @NonNull
-    public static Location getCenterBlockLocation(@NonNull Location location) {
+    static Location getCenterBlockLocation(@NonNull Location location) {
         return getCenterBlockLocation(location, 0, 0, 0);
     }
 
@@ -507,7 +507,7 @@ public class VitalUtils {
      * @return The location.
      */
     @NonNull
-    public static Location getCenterBlockTopLocation(@NonNull Location location) {
+    static Location getCenterBlockTopLocation(@NonNull Location location) {
         return getCenterBlockLocation(location, 0, .5, 0);
     }
 
@@ -518,7 +518,7 @@ public class VitalUtils {
      * @return The location.
      */
     @NonNull
-    public static Location getCenterBlockSideLocation(@NonNull Location location) {
+    static Location getCenterBlockSideLocation(@NonNull Location location) {
         return getCenterBlockLocation(location, 0, -.5, 0);
     }
 
@@ -546,7 +546,7 @@ public class VitalUtils {
      *  <li>WEATHER_DURATION        : 0</li>
      * </ul>
      */
-    public static void cleanGameRules(@NonNull World world) {
+    static void cleanGameRules(@NonNull World world) {
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_FIRE_TICK, false);
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
@@ -572,7 +572,7 @@ public class VitalUtils {
      * @param worldName The name of the world to clean.
      * @see VitalUtils#cleanGameRules(World) for more information about cleansed world rules.
      */
-    public static void cleanGameRules(@NonNull String worldName) {
+    static void cleanGameRules(@NonNull String worldName) {
         final World world = Optional.ofNullable(Bukkit.getWorld(worldName))
                 .orElseThrow(() -> new RuntimeException("World %s does not exist"
                         .formatted(worldName)));
@@ -583,13 +583,13 @@ public class VitalUtils {
     /**
      * Sends an action bar message to the given player in minimessage syntax.
      *
-     * @param player The player.
-     * @param message The message in minimessage syntax.
+     * @param player          The player.
+     * @param message         The message in minimessage syntax.
      * @param playerPredicate The predicate the player MUST MATCH WITH.
-     * @param tagResolvers Any custom tag resolvers for minimessage tag syntax.
+     * @param tagResolvers    Any custom tag resolvers for minimessage tag syntax.
      */
-    public static void sendActionBar(@NonNull Player player, @NonNull String message, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
-        if(playerPredicate.test(player)) {
+    static void sendActionBar(@NonNull Player player, @NonNull String message, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+        if (playerPredicate.test(player)) {
             player.sendActionBar(MiniMessage.miniMessage().deserialize(message, tagResolvers));
         }
     }
@@ -597,43 +597,43 @@ public class VitalUtils {
     /**
      * Sends an action bar message to the given player in minimessage syntax.
      *
-     * @param player The player.
-     * @param message The message in minimessage syntax.
+     * @param player       The player.
+     * @param message      The message in minimessage syntax.
      * @param tagResolvers Any custom tag resolver for minimessage tag syntax.
      */
-    public static void sendActionBar(@NonNull Player player, @NonNull String message, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void sendActionBar(@NonNull Player player, @NonNull String message, @NonNull TagResolver @NonNull ... tagResolvers) {
         sendActionBar(player, message, p -> true, tagResolvers);
     }
 
     /**
      * Broadcasts an action bar message for all players in minimessage syntax.
      *
-     * @param message The message.
+     * @param message         The message.
      * @param playerPredicate The predicate every player MUST MATCH WITH.
-     * @param tagResolvers Any custom tag resolvers for minimessage tag syntax.
+     * @param tagResolvers    Any custom tag resolvers for minimessage tag syntax.
      */
-    public static void broadcastActionBar(@NonNull String message, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastActionBar(@NonNull String message, @NonNull Predicate<Player> playerPredicate, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastAction(player -> sendActionBar(player, message, playerPredicate, tagResolvers));
     }
 
     /**
      * Broadcasts an action bar message for all players in minimessage syntax.
      *
-     * @param message The message.
+     * @param message      The message.
      * @param tagResolvers Any custom tag resolvers for minimessage tag syntax.
      */
-    public static void broadcastActionBar(@NonNull String message, @NonNull TagResolver @NonNull ... tagResolvers) {
+    static void broadcastActionBar(@NonNull String message, @NonNull TagResolver @NonNull ... tagResolvers) {
         broadcastActionBar(message, player -> true, tagResolvers);
     }
 
     /**
      * Teleports the given player to the specified location with the given effect.
      *
-     * @param player The player to teleport.
-     * @param location The location to teleport the player to.
+     * @param player           The player to teleport.
+     * @param location         The location to teleport the player to.
      * @param potionEffectType The potion effect for the teleportation.
      */
-    public static void teleport(@NonNull Player player, @NonNull Location location, @NonNull PotionEffectType potionEffectType) {
+    static void teleport(@NonNull Player player, @NonNull Location location, @NonNull PotionEffectType potionEffectType) {
         player.removePotionEffect(potionEffectType);
         player.addPotionEffect(new PotionEffect(potionEffectType, 2, Integer.MAX_VALUE));
         player.teleport(location);
@@ -643,10 +643,10 @@ public class VitalUtils {
     /**
      * Teleports the given player to the specified location with an effect.
      *
-     * @param player The player to teleport.
+     * @param player   The player to teleport.
      * @param location The location to teleport the player to.
      */
-    public static void teleport(@NonNull Player player, @NonNull Location location) {
+    static void teleport(@NonNull Player player, @NonNull Location location) {
         teleport(player, location, PotionEffectType.SLOW);
     }
 
@@ -654,9 +654,9 @@ public class VitalUtils {
      * Teleports the given player to the specified target entity with an effect.
      *
      * @param player The player to teleport.
-     * @param to The entity to teleport to.
+     * @param to     The entity to teleport to.
      */
-    public static void teleport(@NonNull Player player, @NonNull Entity to) {
+    static void teleport(@NonNull Player player, @NonNull Entity to) {
         teleport(player, to.getLocation(), PotionEffectType.SLOW);
     }
 }

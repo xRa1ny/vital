@@ -143,7 +143,7 @@ public class VitalInventory implements InventoryHolder, AnnotatedVitalComponent<
      * @see VitalInventory#onUpdate(Player)
      * @see VitalInventory#onUpdate()
      */
-    public final void update() {
+    public void update() {
         // first call developer onUpdate
         onUpdate();
 
